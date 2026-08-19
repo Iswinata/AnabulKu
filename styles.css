@@ -57,8 +57,9 @@ img { display: block; max-width: 100%; }
   min-height: 100vh;
   min-height: 100dvh;
   background: var(--frame-bg);
-  padding: 20px 16px 0;
+  padding: 20px 22px 0;          /* 22px sides → 349px content @393 frame (Figma) */
   overflow-x: hidden;
+
   box-shadow: 0 0 40px -10px rgba(0, 0, 0, 0.18);
 }
 
@@ -132,47 +133,82 @@ img { display: block; max-width: 100%; }
 }
 
 /* ===================================================================
-   Hero banner (fluid; aspect kept so pet art sits nicely)
+   Hero banner — spec: 349 x 142 (positions expressed as % to stay fluid)
+   Rectangle 1: linear-gradient(180deg,#FF9800 0%,#FEDCA9 100%),
+                shadow 2px 2px 0 #000, radius 13.
 =================================================================== */
 .hero {
   position: relative;
   margin-top: 22px;
+  aspect-ratio: 349 / 142;
   border-radius: 13px;
-  background: var(--orange) url("Banner1.png") center / cover;
+  background: linear-gradient(180deg, #ff9800 0%, #fedca9 100%);
   box-shadow: var(--shadow-hard);
   overflow: hidden;
-  min-height: 142px;
-  padding: 20px 18px 22px;
+  isolation: isolate;
 }
 
-.hero-text { position: relative; z-index: 2; max-width: 58%; }
+/* Group 8 paw texture — full cover, soft-light blend */
+.hero-texture {
+  position: absolute;
+  inset: 0;
+  background: url("Banner1.png") center / cover;
+  mix-blend-mode: soft-light;
+  opacity: 0.9;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Ellipse 1 & 2 — 70x70 white blurred glows */
+.hero-glow {
+  position: absolute;
+  width: 20.06%;   /* 70 / 349 */
+  aspect-ratio: 1;
+  background: #ffffff;
+  border-radius: 50%;
+  z-index: 0;
+  pointer-events: none;
+}
+.hero-glow-1 { left: 79.37%; top: 2.82%;  filter: blur(15.8px); }   /* 277,4  */
+.hero-glow-2 { left: 44.41%; top: 57.04%; filter: blur(17.85px); }  /* 155,81 */
+
+/* Text block — Group 4 at left 38 (rel 16), top 135 (rel 32); width 149 */
+.hero-text {
+  position: absolute;
+  left: 4.58%;    /* 16 / 349 */
+  top: 22.5%;     /* 32 / 142 */
+  width: 42.7%;   /* 149 / 349 */
+  z-index: 2;
+}
 
 .hero-title {
   color: var(--white);
   font-weight: 600;
-  font-size: clamp(18px, 5.2vw, 21px);
-  line-height: 1.2;
-  margin-bottom: 8px;
+  font-size: clamp(15px, 5.35vw, 18.7px);  /* spec 18.68px */
+  line-height: 1.07;
 }
 
 .hero-sub {
-  color: rgba(255, 255, 255, 0.92);
+  margin-top: 6px;                /* raised */
+  color: #a36233;                 /* spec brown */
   font-weight: 400;
-  font-size: clamp(9px, 2.6vw, 11px);
-  line-height: 1.35;
+  font-size: clamp(7px, 2.45vw, 8.6px);    /* spec 8.56px */
+  line-height: 1.28;
 }
 
+/* Pet art — 199x134 at left 172 (rel 150); raised above spec top */
 .hero-pet {
   position: absolute;
-  right: 4px;
-  bottom: 0;
-  width: 50%;
-  max-width: 200px;
+  left: 42.98%;   /* 150 / 349 */
+  top: -8%;       /* raised */
+  width: 57.02%;  /* 199 / 349 */
   height: auto;
   object-fit: contain;
   z-index: 1;
   filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.18));
 }
+
+
 
 /* Pagination dots */
 .dots {
@@ -188,84 +224,143 @@ img { display: block; max-width: 100%; }
 /* ===================================================================
    Sections
 =================================================================== */
-.section { margin-top: 26px; }
+.section { margin-top: 14px; }   /* raised */
+
 
 .section-title {
   font-weight: 600;
-  font-size: 13px;
-  color: var(--ink-title);
+  font-size: 12.7847px;     /* spec */
+  line-height: 20px;
+  color: #ac6600;
   margin-bottom: 14px;
 }
 
-/* ---------- Kategori Klinik ---------- */
+
+/* ---------- Kategori Klinik ----------
+   Figma: content width 349, four 56.19px tiles at x 1/98/195/292
+   → 16.1% tiles distributed edge-to-edge (space-between). */
 .category-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
 }
 
-.cat { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.cat {
+  width: 16.1%;             /* 56.19 / 349 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;                 /* tile(56.19)→label(top rel 63) ≈ 7px */
+}
+
 
 .cat-tile {
   width: 100%;
   aspect-ratio: 1 / 1;
-  border-radius: 6px;
-  background: var(--cream-tile);
+  border-radius: 9px;                                       /* spec */
+  background: linear-gradient(180deg, #ffdeae 0%, #fec166 100%);  /* spec */
   box-shadow: var(--shadow-hard);
   display: grid;
-  place-items: center;
+  place-items: end center;      /* icons sit at the bottom of the tile */
+  overflow: hidden;
   transition: transform 0.1s ease;
 }
 .cat:active .cat-tile { transform: translate(1px, 1px); }
 
-.cat-ico { width: 68%; height: 68%; object-fit: contain; }
+.cat-ico {
+  width: 92%;
+  height: 92%;
+  object-fit: contain;
+  object-position: bottom center;
+  align-self: end;              /* flush to tile bottom */
+}
+
+/* Turtle art has internal bottom whitespace — enlarge & pull it flush */
+.cat-ico-turtle {
+  width: 100%;
+  height: 100%;
+  margin-bottom: -8%;
+}
+
+
 
 .cat-label {
   font-weight: 600;
-  font-size: 10px;
-  color: var(--orange-ffbd5d);
+  font-size: 10.168px;      /* spec */
+  line-height: 16px;
+  color: #ffaf3a;           /* spec */
   text-align: center;
 }
 
-/* ---------- Kategori Grooming ---------- */
+
+/* ---------- Kategori Grooming ----------
+   Figma: two 165x264 cards at x 22 / 206 (gap 19) within the 349 content.
+   Gradient #FF9800 → #FFDCA8, radius 13, hard shadow. */
 .grooming-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 14px;
+  gap: 5.44%;              /* 19 / 349 */
 }
 
 .g-card {
   position: relative;
   border-radius: 13px;
-  background: var(--orange) url("Banner2.png") center / cover;
+  background: linear-gradient(180deg, #ff9800 0%, #ffdca8 100%);  /* spec */
   box-shadow: var(--shadow-hard);
   overflow: hidden;
   aspect-ratio: 165 / 264;
-  padding: 14px 12px;
+  isolation: isolate;
 }
 
+/* Banner2 paw texture fills the card */
+.g-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url("Banner2.png") center / cover;
+  mix-blend-mode: soft-light;
+  opacity: 0.9;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Title — 102x48 at rel left 11 (33-22), rel top 14 (428-414) */
 .g-title {
-  position: relative;
+  position: absolute;
+  left: 6.67%;            /* 11 / 165 */
+  top: 5.3%;              /* 14 / 264 */
+  width: 61.8%;          /* 102 / 165 */
   z-index: 2;
-  color: var(--white);
+  color: #ffe5bf;        /* spec */
   font-weight: 700;
-  font-size: clamp(15px, 4.6vw, 19px);
+  font-size: clamp(15px, 5.5vw, 19.11px);   /* spec 19.1104px */
   line-height: 1.25;
-  max-width: 90%;
 }
 
 .g-img {
   position: absolute;
-  left: 50%;
-  bottom: 0;
-  transform: translateX(-50%);
-  width: 92%;
-  height: 74%;
+  z-index: 1;
   object-fit: cover;
   object-position: bottom center;
-  z-index: 1;
   filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.18));
 }
+/* Cat — 145x192 at rel left 12 (34-22), rel top 72 (486-414).
+   Spec mirrors it, but keeping it facing left per earlier request. */
+.g-img-cat {
+  left: 7.27%;           /* 12 / 165 */
+  top: 27.27%;           /* 72 / 264 */
+  width: 87.88%;         /* 145 / 165 */
+  height: 72.73%;        /* 192 / 264 */
+}
+
+/* Dog — 149x187 at rel left -10 (212-206-... ) top 77 (491-414) */
+.g-img-dog {
+  left: 3.64%;           /* 6 / 165 (212-206) */
+  top: 29.17%;           /* 77 / 264 */
+  width: 90.3%;          /* 149 / 165 */
+  height: 70.83%;        /* 187 / 264 */
+}
+
 
 /* ===================================================================
    Bottom navigation (fixed pill, fluid width)
@@ -305,9 +400,9 @@ img { display: block; max-width: 100%; }
    Responsive: keep it comfortable on very small / larger phones
 =================================================================== */
 @media (max-width: 340px) {
-  .app { padding-left: 12px; padding-right: 12px; }
-  .category-grid { gap: 9px; }
+  .app { padding-left: 16px; padding-right: 16px; }
 }
+
 
 /* On tablets/desktop the app stays a centered phone-width column */
 @media (min-width: 394px) {
