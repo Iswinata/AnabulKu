@@ -3,130 +3,154 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="theme-color" content="#FFF7F0" />
+  <meta name="theme-color" content="#FCECE3" />
   <title>PetCare — Beranda</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div class="app">
+  <div class="viewport">
+    <div class="stage">
+      <div class="frame">
 
-    <!-- ===== Top bar ===== -->
-    <header class="topbar">
-      <div class="user">
-        <span class="avatar" aria-hidden="true">RI</span>
-        <span class="user-text">
-          <span class="welcome">Welcome <span class="emoji">👋</span></span>
-          <span class="username">Ramadani Iswinata</span>
-        </span>
-      </div>
+        <!-- ===== Top bar: user ===== -->
+        <div class="user-info">
+          <span class="avatar" aria-hidden="true">RI</span>
+          <span class="user-text">
+            <span class="welcome">Welcome <span class="emoji">👋</span></span>
+            <span class="username">Ramadani Iswinata</span>
+          </span>
+        </div>
 
-      <div class="top-actions">
-        <button class="icon-btn" type="button" aria-label="Cari">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <circle cx="11" cy="11" r="7" />
-            <line x1="21" y1="21" x2="16.65" y2="16.65" />
-          </svg>
-        </button>
-        <button class="icon-btn has-dot" type="button" aria-label="Notifikasi">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9" />
-            <path d="M13.5 21a1.5 1.5 0 0 1-3 0" />
-          </svg>
-        </button>
-      </div>
-    </header>
+        <!-- ===== Top bar: actions ===== -->
+        <div class="actions">
+          <button class="act-btn" type="button" aria-label="Cari">
+            <svg viewBox="0 0 20 20" fill="none" stroke="#4B5563" stroke-width="1.667" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="9" cy="9" r="6" />
+              <line x1="17.5" y1="17.5" x2="13.2" y2="13.2" />
+            </svg>
+          </button>
+          <button class="act-btn" type="button" aria-label="Notifikasi">
+            <svg viewBox="0 0 20 20" fill="none" stroke="#4B5563" stroke-width="1.667" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M15 7.5a5 5 0 0 0-10 0c0 5.8-2.5 7.5-2.5 7.5h15S15 13.3 15 7.5" />
+              <path d="M11.25 17.5a1.25 1.25 0 0 1-2.5 0" />
+            </svg>
+            <span class="badge" aria-hidden="true"></span>
+          </button>
+        </div>
 
-    <!-- ===== Hero banner / carousel ===== -->
-    <section class="hero" aria-label="Promosi">
-      <article class="hero-card paw-bg">
-        <div class="hero-text">
+        <!-- ===== Hero banner ===== -->
+        <section class="hero">
+          <span class="paw" aria-hidden="true"></span>
+          <span class="ell ell-1" aria-hidden="true"></span>
+          <span class="ell ell-2" aria-hidden="true"></span>
           <h1 class="hero-title">Perawatan Ada di Dekatmu</h1>
           <p class="hero-sub">Temukan klinik hewan terdekat dan dapatkan perawatan terbaik untuk si kecil.</p>
+        </section>
+        <img class="hero-pet" src="anjing%20Kucing.png" alt="Anjing dan kucing memakai topi dan kacamata" />
+
+        <!-- ===== Pagination ===== -->
+        <div class="dots" role="tablist" aria-label="Slide">
+          <span class="dot active" role="tab" aria-selected="true" aria-label="Slide 1"></span>
+          <span class="dot" role="tab" aria-label="Slide 2"></span>
+          <span class="dot" role="tab" aria-label="Slide 3"></span>
         </div>
-        <img class="hero-img" src="anjing%20Kucing.png" alt="Kucing dan anjing memakai topi jerami" />
-      </article>
 
-      <div class="dots" role="tablist" aria-label="Slide">
-        <span class="dot" role="tab" aria-label="Slide 1"></span>
-        <span class="dot active" role="tab" aria-selected="true" aria-label="Slide 2"></span>
-        <span class="dot" role="tab" aria-label="Slide 3"></span>
-      </div>
-    </section>
+        <!-- ===== Kategori Klinik ===== -->
+        <h2 class="sec-title title-klinik">Kategori Klinik</h2>
 
-    <!-- ===== Kategori Klinik ===== -->
-    <section class="section" aria-labelledby="klinik-title">
-      <h2 class="section-title" id="klinik-title">Kategori Klinik</h2>
-      <div class="category-grid">
-        <button class="category" type="button">
-          <span class="category-tile tile-strong"><span class="emoji">🐈</span></span>
-          <span class="category-label">Kucing</span>
-        </button>
-        <button class="category" type="button">
-          <span class="category-tile"><span class="emoji">🐶</span></span>
-          <span class="category-label">Anjing</span>
-        </button>
-        <button class="category" type="button">
-          <span class="category-tile"><span class="emoji">🐢</span></span>
-          <span class="category-label">Reptile</span>
-        </button>
-        <button class="category" type="button">
-          <span class="category-tile">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#1c1c1c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M12 21s7-6.4 7-11a7 7 0 0 0-14 0c0 4.6 7 11 7 11z" />
-              <circle cx="12" cy="10" r="2.6" />
-            </svg>
+        <button class="cat cat-1" type="button">
+          <span class="cat-tile tile-active">
+            <img class="cat-ico" src="cat%20icon.png" alt="" aria-hidden="true" />
           </span>
-          <span class="category-label">Terdekat</span>
+
+          <span class="cat-label label-active">Kucing</span>
         </button>
-      </div>
-    </section>
+        <button class="cat cat-2" type="button">
+          <span class="cat-tile">
+            <img class="cat-ico" src="dog%20icon.png" alt="" aria-hidden="true" />
+          </span>
+          <span class="cat-label">Anjing</span>
 
-    <!-- ===== Kategori Grooming ===== -->
-    <section class="section" aria-labelledby="grooming-title">
-      <h2 class="section-title" id="grooming-title">Kategori Grooming</h2>
-      <div class="grooming-grid">
-        <article class="grooming-card paw-bg">
-          <h3 class="grooming-title">Grooming Kucing</h3>
-          <img class="grooming-img" src="kucing.png" alt="Kucing memakai kacamata hitam" />
+        </button>
+        <button class="cat cat-3" type="button">
+          <span class="cat-tile">
+            <img class="cat-ico" src="turtle%20icon.png" alt="" aria-hidden="true" />
+          </span>
+          <span class="cat-label">Reptile</span>
+
+        </button>
+        <button class="cat cat-4" type="button">
+          <span class="cat-tile">
+            <img class="cat-ico" src="lokasi%20icon.png" alt="" aria-hidden="true" />
+          </span>
+          <span class="cat-label">Terdekat</span>
+
+        </button>
+
+
+        <!-- ===== Kategori Grooming ===== -->
+        <h2 class="sec-title title-grooming">Kategori Grooming</h2>
+
+        <article class="g-card g-card-left">
+          <span class="paw" aria-hidden="true"></span>
+          <h3 class="g-title">Grooming Kucing</h3>
+          <img class="g-img g-img-cat" src="kucing.png" alt="Kucing memakai kacamata" />
         </article>
-        <article class="grooming-card paw-bg">
-          <h3 class="grooming-title">Grooming Anjing</h3>
-          <img class="grooming-img" src="anjing.png" alt="Anjing memakai kacamata hitam" />
+
+        <article class="g-card g-card-right">
+          <span class="paw" aria-hidden="true"></span>
+          <h3 class="g-title">Grooming Anjing</h3>
+          <img class="g-img g-img-dog" src="anjing.png" alt="Anjing memakai kacamata" />
         </article>
+
+        <!-- ===== Bottom navigation ===== -->
+        <nav class="bottomnav" aria-label="Navigasi utama">
+          <button class="nav-btn" type="button" aria-label="Beranda" aria-current="page">
+            <svg viewBox="0 0 24 24" fill="#F97316" aria-hidden="true">
+              <path d="M12 3 2.4 11.1a1 1 0 0 0 .65 1.76H4.5V20a1 1 0 0 0 1 1H9.5v-5.5h5V21H18.5a1 1 0 0 0 1-1v-7.14h1.45a1 1 0 0 0 .65-1.76L12 3z" />
+            </svg>
+          </button>
+          <button class="nav-btn" type="button" aria-label="Pesan">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-3.8-.9L3 21l1.9-5.7a8.5 8.5 0 0 1-.9-3.8A8.38 8.38 0 0 1 12.5 3 8.5 8.5 0 0 1 21 11.5z" />
+            </svg>
+          </button>
+          <button class="nav-btn" type="button" aria-label="Favorit">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z" />
+            </svg>
+          </button>
+          <button class="nav-btn" type="button" aria-label="Profil">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="8" r="4" />
+              <path d="M5 20a7 7 0 0 1 14 0" />
+            </svg>
+          </button>
+        </nav>
+
       </div>
-    </section>
-
-    <div class="nav-spacer" aria-hidden="true"></div>
-
-    <!-- ===== Bottom navigation ===== -->
-    <nav class="bottom-nav" aria-label="Navigasi utama">
-      <button class="nav-item active" type="button" aria-label="Beranda" aria-current="page">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M3 9.5 12 3l9 6.5" />
-          <path d="M5 9v10a1 1 0 0 0 1 1h3v-6h6v6h3a1 1 0 0 0 1-1V9" />
-        </svg>
-      </button>
-      <button class="nav-item" type="button" aria-label="Pesan">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-3.8-.9L3 21l1.9-5.7a8.5 8.5 0 0 1-.9-3.8A8.38 8.38 0 0 1 12.5 3 8.5 8.5 0 0 1 21 11.5z" />
-        </svg>
-      </button>
-      <button class="nav-item" type="button" aria-label="Favorit">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z" />
-        </svg>
-      </button>
-      <button class="nav-item" type="button" aria-label="Profil">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <circle cx="12" cy="8" r="4" />
-          <path d="M4.5 20a7.5 7.5 0 0 1 15 0" />
-        </svg>
-      </button>
-    </nav>
-
+    </div>
   </div>
+
+  <script>
+    // Uniform scale-to-fit: keep the 393×852 design exact on any screen.
+    (function () {
+      var W = 393, H = 852;
+      var root = document.documentElement;
+      function fit() {
+        var pad = window.innerWidth > W ? 24 : 0; // breathing room on desktop
+        var s = Math.min((window.innerWidth - pad) / W, (window.innerHeight - pad) / H);
+        root.style.setProperty('--scale', s.toFixed(4));
+      }
+      fit();
+      window.addEventListener('resize', fit, { passive: true });
+      window.addEventListener('orientationchange', fit);
+    })();
+  </script>
 </body>
 </html>
+
+

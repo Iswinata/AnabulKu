@@ -1,56 +1,44 @@
 /* ===================================================================
-   PetCare — Beranda
-   Plain HTML + CSS implementation of the pet-care home screen design.
-   Mobile-first, responsive, no build dependencies.
+   PetCare — Beranda  (iPhone 14 & 15 Pro frame: 393 × 852)
+   Pixel-precise implementation of the provided Figma spec.
+   Fixed design canvas + uniform scale-to-fit for responsiveness.
 =================================================================== */
 
 :root {
-  /* Palette */
-  --cream: #fff7f0;
-  --cream-frame: #ece3da;
+  --scale: 1;
+
+  /* Palette (from Figma) */
+  --frame-bg: #fcece3;
+  --orange: #ff9800;
+  --orange-903: #ff9903;
+  --orange-f97316: #f97316;
+  --orange-fb923c: #fb923c;
+  --orange-ffbd5d: #ffbd5d;
+  --cream-tile: #ffdeae;
+  --dot-active: #ffc698;
+  --gray-d1: #d1d5db;
+  --gray-9c: #9ca3af;
+  --gray-4b: #4b5563;
+  --gray-6b: #6b7280;
+  --gray-e5: #e5e7eb;
+  --ink-title: #2c3e50;
+  --red: #ef4444;
+  --black: #000000;
   --white: #ffffff;
 
-  --orange: #ff8a3d;
-  --orange-deep: #f9722a;
-  --orange-soft: #ffd9b8;
-  --orange-tint: #fff0e2;
-
-  --ink: #1c1c1c;
-  --text-dark: #2b2b2b;
-  --text-gray: #9b9b9b;
-  --text-mute: #b8b8b8;
-
-  --red: #ff4747;
-
-  /* Shape */
-  --r-lg: 24px;
-  --r-md: 18px;
-  --r-sm: 14px;
-
-  --shadow-card: 0 14px 30px -18px rgba(249, 114, 42, 0.55);
-  --shadow-soft: 0 8px 20px -12px rgba(0, 0, 0, 0.25);
-
-  /* Reusable paw-print background tile */
-  --paw: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72'%3E%3Cg fill='%23ffffff' fill-opacity='0.14'%3E%3Cellipse cx='36' cy='45' rx='12' ry='10'/%3E%3Cellipse cx='19' cy='31' rx='5' ry='7'/%3E%3Cellipse cx='30' cy='23' rx='5' ry='7.5'/%3E%3Cellipse cx='42' cy='23' rx='5' ry='7.5'/%3E%3Cellipse cx='53' cy='31' rx='5' ry='7'/%3E%3C/g%3E%3C/svg%3E");
+  /* Reusable paw texture (soft-light white paws) */
+  --paw: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='70' height='70' viewBox='0 0 70 70'%3E%3Cg fill='%23ffffff'%3E%3Cellipse cx='35' cy='44' rx='11' ry='9'/%3E%3Cellipse cx='19' cy='31' rx='4.5' ry='6.5'/%3E%3Cellipse cx='29' cy='24' rx='4.5' ry='7'/%3E%3Cellipse cx='41' cy='24' rx='4.5' ry='7'/%3E%3Cellipse cx='51' cy='31' rx='4.5' ry='6.5'/%3E%3C/g%3E%3C/svg%3E");
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
-html { -webkit-text-size-adjust: 100%; }
+html, body { height: 100%; }
 
 body {
   font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-  background: var(--cream-frame);
-  color: var(--text-dark);
-  display: flex;
-  justify-content: center;
-  min-height: 100vh;
-  min-height: 100dvh;
-  line-height: 1.4;
+  background: #e7dbd0;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 .emoji {
@@ -58,338 +46,383 @@ body {
   font-style: normal;
 }
 
-/* ---------- App shell (phone frame on desktop) ---------- */
-.app {
+button { font-family: inherit; border: none; background: none; cursor: pointer; color: inherit; -webkit-tap-highlight-color: transparent; }
+img { display: block; max-width: none; }
+
+/* ---------- Responsive scale-to-fit wrapper ---------- */
+.viewport {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.stage {
+  width: 393px;
+  height: 852px;
+  transform: scale(var(--scale));
+  transform-origin: center center;
+  flex: none;
+}
+
+/* ---------- The design frame ---------- */
+.frame {
   position: relative;
-  width: 100%;
-  max-width: 430px;
-  min-height: 100vh;
-  min-height: 100dvh;
-  background: var(--cream);
-  padding: 20px 20px 0;
-  overflow-x: hidden;
-  box-shadow: 0 0 40px -10px rgba(0, 0, 0, 0.18);
+  width: 393px;
+  height: 852px;
+  background: var(--frame-bg);
+  border-radius: 23px;
+  overflow: hidden;
 }
 
-button {
-  font-family: inherit;
-  border: none;
-  background: none;
-  cursor: pointer;
-  color: inherit;
-  -webkit-tap-highlight-color: transparent;
+/* Shared paw overlay for orange surfaces (fallback texture) */
+.paw {
+  position: absolute;
+  inset: 0;
+  background-image: var(--paw);
+  background-size: 70px 70px;
+  mix-blend-mode: soft-light;
+  opacity: 0.9;
+  pointer-events: none;
 }
 
-img { display: block; max-width: 100%; }
+/* Real Figma banner textures */
+.hero .paw {
+  background-image: url("Banner1.png");
+  background-size: cover;
+  background-position: center;
+  mix-blend-mode: soft-light;
+  opacity: 1;
+}
+.g-card .paw {
+  background-image: url("Banner2.png");
+  background-size: cover;
+  background-position: center;
+  mix-blend-mode: normal;
+  opacity: 1;
+}
 
-/* Shared paw-print overlay */
-.paw-bg { background-image: var(--paw); background-size: 72px 72px; }
 
 /* ===================================================================
-   Top bar
+   Top bar — user info  (left 22, top 47, 193×40, gap 12)
 =================================================================== */
-.topbar {
+.user-info {
+  position: absolute;
+  left: 22px;
+  top: 47px;
+  width: 193px;
+  height: 40px;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding-top: 6px;
-}
-
-.user {
-  display: flex;
+  flex-direction: row;
   align-items: center;
   gap: 12px;
-  min-width: 0;
 }
 
 .avatar {
   flex: none;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  border-radius: 9999px;
+  border: 1px solid var(--gray-e5);
+  background: linear-gradient(135deg, #ffb066 0%, var(--orange-f97316) 100%);
   display: grid;
   place-items: center;
-  font-weight: 700;
-  font-size: 15px;
   color: var(--white);
-  background: linear-gradient(135deg, var(--orange) 0%, var(--orange-deep) 100%);
-  box-shadow: 0 6px 14px -6px rgba(249, 114, 42, 0.8);
+  font-weight: 600;
+  font-size: 14px;
   letter-spacing: 0.5px;
 }
 
-.user-text { display: flex; flex-direction: column; min-width: 0; }
+.user-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 141px;
+  height: 36px;
+}
 
 .welcome {
-  font-size: 13px;
-  color: var(--text-gray);
-  font-weight: 500;
+  height: 16px;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--gray-6b);
+  display: flex;
+  align-items: center;
 }
 
 .username {
-  font-size: 16px;
+  height: 20px;
   font-weight: 700;
-  color: var(--text-dark);
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--ink-title);
+  display: flex;
+  align-items: center;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.top-actions { display: flex; gap: 10px; flex: none; }
-
-.icon-btn {
-  position: relative;
-  width: 44px;
-  height: 44px;
-  border-radius: var(--r-sm);
-  background: var(--white);
-  color: var(--text-dark);
-  display: grid;
-  place-items: center;
-  box-shadow: var(--shadow-soft);
-  transition: transform 0.12s ease, box-shadow 0.12s ease;
-}
-
-.icon-btn svg { width: 21px; height: 21px; }
-.icon-btn:active { transform: scale(0.94); }
-
-.icon-btn.has-dot::after {
-  content: "";
-  position: absolute;
-  top: 10px;
-  right: 11px;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--red);
-  border: 2px solid var(--white);
 }
 
 /* ===================================================================
-   Hero banner
+   Top bar — action buttons  (left 283, top 47, 88×40, gap 8)
 =================================================================== */
-.hero { margin-top: 22px; }
-
-.hero-card {
-  position: relative;
-  overflow: hidden;
-  border-radius: var(--r-lg);
-  background: linear-gradient(135deg, #ff9b52 0%, var(--orange-deep) 100%);
-  padding: 22px 22px 24px;
-  min-height: 168px;
-  box-shadow: var(--shadow-card);
-}
-
-.hero-text { position: relative; z-index: 2; max-width: 62%; }
-
-.hero-title {
-  color: var(--white);
-  font-size: 21px;
-  font-weight: 800;
-  line-height: 1.2;
-  margin-bottom: 8px;
-}
-
-.hero-sub {
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 12px;
-  font-weight: 400;
-  line-height: 1.5;
-}
-
-.hero-img {
+.actions {
   position: absolute;
-  right: 6px;
-  bottom: 0;
-  width: 46%;
-  max-width: 190px;
-  height: auto;
-  object-fit: contain;
-  z-index: 1;
-  filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.18));
-}
-
-.dots {
+  left: 283px;
+  top: 47px;
+  width: 88px;
+  height: 40px;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 7px;
-  margin-top: 14px;
-}
-
-.dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 999px;
-  background: #e2d6ca;
-  transition: width 0.2s ease, background 0.2s ease;
-}
-
-.dot.active { width: 22px; background: var(--text-mute); }
-
-/* ===================================================================
-   Sections
-=================================================================== */
-.section { margin-top: 26px; }
-
-.section-title {
-  font-size: 17px;
-  font-weight: 700;
-  color: var(--text-dark);
-  margin-bottom: 14px;
-}
-
-/* ---------- Kategori Klinik ---------- */
-.category-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
-}
-
-.category {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-direction: row;
+  align-items: flex-start;
   gap: 8px;
 }
 
-.category-tile {
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  border-radius: var(--r-md);
-  border: 1.6px solid var(--ink);
-  background: linear-gradient(160deg, var(--orange-tint) 0%, var(--orange-soft) 100%);
-  display: grid;
-  place-items: center;
-  box-shadow: 0 6px 14px -10px rgba(0, 0, 0, 0.4);
-  transition: transform 0.12s ease;
-}
-
-.category-tile.tile-strong {
-  background: linear-gradient(160deg, #ffb069 0%, var(--orange) 100%);
-}
-
-.category:active .category-tile { transform: translateY(2px); }
-
-.category-tile .emoji { font-size: 28px; line-height: 1; }
-.category-tile svg { width: 26px; height: 26px; }
-
-.category-label {
-  font-size: 12.5px;
-  font-weight: 500;
-  color: var(--text-dark);
-}
-
-/* ---------- Kategori Grooming ---------- */
-.grooming-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
-}
-
-.grooming-card {
+.act-btn {
   position: relative;
-  overflow: hidden;
-  border-radius: var(--r-lg);
-  background: linear-gradient(150deg, #ff9b52 0%, var(--orange-deep) 100%);
-  padding: 18px 16px;
-  min-height: 178px;
-  box-shadow: var(--shadow-card);
-  display: flex;
-}
-
-.grooming-card .grooming-title {
-  position: relative;
-  z-index: 2;
-  color: var(--white);
-  font-size: 15px;
-  font-weight: 700;
-  line-height: 1.25;
-  max-width: 80%;
-}
-
-.grooming-img {
-  position: absolute;
-  right: 0;
-  left: 0;
-  bottom: 0;
-  margin: 0 auto;
-  width: 88%;
-  max-height: 118px;
-  object-fit: contain;
-  object-position: bottom center;
-  z-index: 1;
-  filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.2));
-}
-
-/* ===================================================================
-   Bottom navigation
-=================================================================== */
-.nav-spacer { height: 96px; }
-
-.bottom-nav {
-  position: fixed;
-  left: 50%;
-  transform: translateX(-50%);
-  bottom: 18px;
-  z-index: 50;
-  width: min(100% - 40px, 390px);
-  height: 64px;
+  width: 40px;
+  height: 40px;
   background: var(--white);
-  border: 1.6px solid var(--ink);
-  border-radius: 26px;
+  border: 1px solid var(--gray-e5);
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05);
+  border-radius: 12px;
   display: flex;
   align-items: center;
-  justify-content: space-around;
-  padding: 0 8px;
-  box-shadow: 0 16px 30px -14px rgba(0, 0, 0, 0.35);
+  justify-content: center;
 }
 
-.nav-item {
-  position: relative;
-  width: 48px;
-  height: 48px;
-  border-radius: 16px;
-  display: grid;
-  place-items: center;
-  color: var(--text-mute);
-  transition: transform 0.12s ease, color 0.12s ease, background 0.12s ease;
-}
+.act-btn svg { width: 20px; height: 20px; }
 
-.nav-item svg { width: 24px; height: 24px; }
-.nav-item:active { transform: scale(0.9); }
-
-.nav-item.active {
-  color: var(--orange-deep);
-  background: var(--orange-tint);
+.badge {
+  position: absolute;
+  top: 9px;
+  right: 9px;
+  width: 8px;
+  height: 8px;
+  background: var(--red);
+  border: 1px solid var(--white);
+  border-radius: 9999px;
 }
 
 /* ===================================================================
-   Responsive tweaks
+   Hero banner  (left 22, top 103, 349×142)
 =================================================================== */
-@media (min-width: 431px) {
-  .app {
-    min-height: 100vh;
-    min-height: 100dvh;
-    border-radius: 0;
-  }
+.hero {
+  position: absolute;
+  left: 22px;
+  top: 103px;
+  width: 349px;
+  height: 142px;
+  background: var(--orange);
+  border-radius: 13px;
+  box-shadow: 2px 2px 0px var(--black);
+  overflow: hidden;
 }
 
-/* Larger phones / small tablets: scale up a touch for readability */
-@media (min-width: 380px) {
-  .hero-title { font-size: 22px; }
-  .grooming-card .grooming-title { font-size: 16px; }
+.ell {
+  position: absolute;
+  width: 70px;
+  height: 70px;
+  background: var(--white);
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0.55;
+}
+.ell-1 { left: 255px; top: 4px; filter: blur(15.8px); }
+.ell-2 { left: 133px; top: 81px; filter: blur(17.85px); }
+
+.hero-title {
+  position: absolute;
+  left: 16px;
+  top: 32px;
+  width: 155px;
+  height: 49px;
+  font-weight: 600;
+  font-size: 19.4313px;
+  line-height: 24px;
+  color: var(--white);
+  z-index: 2;
 }
 
-/* Very small devices */
-@media (max-width: 340px) {
-  .app { padding-left: 14px; padding-right: 14px; }
-  .category-grid { gap: 9px; }
-  .hero-title { font-size: 19px; }
-  .username { font-size: 15px; }
+.hero-sub {
+  position: absolute;
+  left: 16px;
+  top: 81px;
+  width: 149px;
+  height: 33px;
+  font-weight: 400;
+  font-size: 8.56337px;
+  line-height: 11px;
+  color: var(--white);
+  z-index: 2;
 }
 
-/* Respect reduced motion */
+/* Pet image overflows the banner top (frame-absolute: left 172, top 80) */
+.hero-pet {
+  position: absolute;
+  left: 172px;
+  top: 80px;
+  width: 199px;
+  height: 165px;
+  object-fit: contain;
+  object-position: bottom right;
+  z-index: 3;
+  filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.18));
+}
+
+/* ===================================================================
+   Pagination dots  (top 257)
+=================================================================== */
+.dots {
+  position: absolute;
+  left: 175px;
+  top: 257px;
+  width: 44px;
+  height: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.dot { width: 8px; height: 8px; border-radius: 9999px; background: var(--gray-d1); flex: none; }
+.dot.active { background: var(--dot-active); }
+
+/* ===================================================================
+   Section titles
+=================================================================== */
+.sec-title {
+  position: absolute;
+  left: 22px;
+  font-weight: 600;
+  font-size: 12.7847px;
+  line-height: 20px;
+  color: var(--ink-title);
+  display: flex;
+  align-items: center;
+}
+.title-klinik { top: 270px; width: 94px; height: 20px; }
+.title-grooming { top: 393px; width: 124px; height: 20px; }
+
+/* ===================================================================
+   Kategori Klinik — tiles (top 305, 56.19²) + labels (top 368)
+=================================================================== */
+.cat {
+  position: absolute;
+  top: 305px;
+  width: 56.19px;
+  height: 79px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.cat-1 { left: 23px; }
+.cat-2 { left: 120px; }
+.cat-3 { left: 217px; }
+.cat-4 { left: 314px; }
+
+.cat-tile {
+  width: 56.19px;
+  height: 56.19px;
+  border-radius: 5.85327px;
+  background: var(--cream-tile);
+  box-shadow: 2px 2px 0px var(--black);
+  display: grid;
+  place-items: center;
+  transition: transform 0.1s ease;
+}
+.cat-tile.tile-active { background: var(--orange-903); }
+.cat:active .cat-tile { transform: translate(1px, 1px); }
+
+.cat-ico { width: 38px; height: 38px; object-fit: contain; }
+.cat-ico.emoji { font-size: 32px; line-height: 1; }
+
+
+.cat-label {
+  position: absolute;
+  top: 63px; /* 368 - 305 */
+  font-weight: 600;
+  font-size: 10.168px;
+  line-height: 16px;
+  color: var(--orange-ffbd5d);
+  text-align: center;
+  white-space: nowrap;
+}
+.cat-label.label-active { color: var(--orange-fb923c); }
+
+/* ===================================================================
+   Kategori Grooming — cards (top 424, 165×264)
+=================================================================== */
+.g-card {
+  position: absolute;
+  top: 424px;
+  width: 165px;
+  height: 264px;
+  background: var(--orange);
+  border-radius: 13px;
+  box-shadow: 2px 2px 0px var(--black);
+  overflow: hidden;
+}
+.g-card-left { left: 22px; }
+.g-card-right { left: 206px; }
+
+.g-title {
+  position: absolute;
+  left: 11px;
+  top: 14px;
+  width: 102px;
+  height: 48px;
+  font-weight: 700;
+  font-size: 19.1104px;
+  line-height: 24px;
+  color: var(--white);
+  z-index: 2;
+}
+
+.g-img {
+  position: absolute;
+  object-fit: cover;
+  object-position: bottom center;
+  z-index: 1;
+  filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.18));
+}
+/* Exact Figma frames. Cat faces left (no mirror). */
+.g-img-cat { left: 12px; top: 72px; width: 145px; height: 192px; }
+.g-img-dog { left: 6px; top: 77px; width: 149px; height: 187px; }
+
+
+
+/* ===================================================================
+   Bottom navigation  (left 22, top 765, 349×58)
+=================================================================== */
+.bottomnav {
+  position: absolute;
+  left: 22px;
+  top: 765px;
+  width: 349px;
+  height: 58px;
+  background: var(--white);
+  border: 2px solid var(--black);
+  box-shadow: 2px 2px 0px var(--black);
+  border-radius: 30px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 15px 33.75px;
+  gap: 61px;
+}
+
+.nav-btn {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.1s ease;
+}
+.nav-btn svg { width: 24px; height: 24px; }
+.nav-btn:active { transform: scale(0.9); }
+
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; }
 }
