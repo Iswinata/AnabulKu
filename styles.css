@@ -49,25 +49,29 @@ body {
 button { font-family: inherit; border: none; background: none; cursor: pointer; color: inherit; -webkit-tap-highlight-color: transparent; }
 img { display: block; max-width: none; }
 
-/* ---------- Responsive scale-to-fit wrapper ---------- */
+/* ---------- Responsive scale wrapper ----------
+   Mobile: scale by width so the design fills the screen edge-to-edge
+           (page scrolls vertically if the device is taller/shorter).
+   Desktop: centered phone frame, scaled to fit the window height.
+------------------------------------------------ */
 .viewport {
-  position: fixed;
-  inset: 0;
   display: flex;
-  align-items: center;
   justify-content: center;
-  overflow: hidden;
+  align-items: flex-start;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
 }
 
+/* Sizing box: JS sets its width/height to the SCALED footprint so the
+   document scrolls correctly and there are no side gaps. */
 .stage {
+  flex: none;
   width: 393px;
   height: 852px;
-  transform: scale(var(--scale));
-  transform-origin: center center;
-  flex: none;
 }
 
-/* ---------- The design frame ---------- */
+/* ---------- The design frame (scaled inside .stage) ---------- */
 .frame {
   position: relative;
   width: 393px;
@@ -75,7 +79,15 @@ img { display: block; max-width: none; }
   background: var(--frame-bg);
   border-radius: 23px;
   overflow: hidden;
+  transform: scale(var(--scale));
+  transform-origin: top left;
 }
+
+
+/* Edge-to-edge on real phones: no rounded corners, no page background gap */
+body.is-mobile { background: var(--frame-bg); }
+body.is-mobile .frame { border-radius: 0; }
+
 
 /* Shared paw overlay for orange surfaces (fallback texture) */
 .paw {
@@ -330,8 +342,10 @@ img { display: block; max-width: none; }
   place-items: center;
   transition: transform 0.1s ease;
 }
-.cat-tile.tile-active { background: var(--orange-903); }
+/* All four tiles share the same fill */
+.cat-tile.tile-active { background: var(--cream-tile); }
 .cat:active .cat-tile { transform: translate(1px, 1px); }
+
 
 .cat-ico { width: 38px; height: 38px; object-fit: contain; }
 .cat-ico.emoji { font-size: 32px; line-height: 1; }
@@ -347,7 +361,8 @@ img { display: block; max-width: none; }
   text-align: center;
   white-space: nowrap;
 }
-.cat-label.label-active { color: var(--orange-fb923c); }
+.cat-label.label-active { color: var(--orange-ffbd5d); }
+
 
 /* ===================================================================
    Kategori Grooming — cards (top 424, 165×264)
