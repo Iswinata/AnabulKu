@@ -1,18 +1,14 @@
 /* ===================================================================
-   PetCare — Beranda  (iPhone 14 & 15 Pro frame: 393 × 852)
-   Pixel-precise implementation of the provided Figma spec.
-   Fixed design canvas + uniform scale-to-fit for responsiveness.
+   PetCare — Beranda
+   Fluid, mobile-first layout. Reflows to fit every screen width.
+   Keeps the Figma palette, real assets, and 2px 2px 0 #000 hard shadows.
 =================================================================== */
 
 :root {
-  --scale: 1;
-
   /* Palette (from Figma) */
   --frame-bg: #fcece3;
   --orange: #ff9800;
-  --orange-903: #ff9903;
   --orange-f97316: #f97316;
-  --orange-fb923c: #fb923c;
   --orange-ffbd5d: #ffbd5d;
   --cream-tile: #ffdeae;
   --dot-active: #ffc698;
@@ -26,19 +22,23 @@
   --black: #000000;
   --white: #ffffff;
 
-  /* Reusable paw texture (soft-light white paws) */
-  --paw: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='70' height='70' viewBox='0 0 70 70'%3E%3Cg fill='%23ffffff'%3E%3Cellipse cx='35' cy='44' rx='11' ry='9'/%3E%3Cellipse cx='19' cy='31' rx='4.5' ry='6.5'/%3E%3Cellipse cx='29' cy='24' rx='4.5' ry='7'/%3E%3Cellipse cx='41' cy='24' rx='4.5' ry='7'/%3E%3Cellipse cx='51' cy='31' rx='4.5' ry='6.5'/%3E%3C/g%3E%3C/svg%3E");
+  --shadow-hard: 2px 2px 0px var(--black);
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-html, body { height: 100%; }
+html { -webkit-text-size-adjust: 100%; }
 
 body {
   font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
   background: #e7dbd0;
+  color: var(--ink-title);
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+  min-height: 100dvh;
   -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
+  line-height: 1.4;
 }
 
 .emoji {
@@ -47,90 +47,33 @@ body {
 }
 
 button { font-family: inherit; border: none; background: none; cursor: pointer; color: inherit; -webkit-tap-highlight-color: transparent; }
-img { display: block; max-width: none; }
+img { display: block; max-width: 100%; }
 
-/* ---------- Responsive scale wrapper ----------
-   Mobile: scale by width so the design fills the screen edge-to-edge
-           (page scrolls vertically if the device is taller/shorter).
-   Desktop: centered phone frame, scaled to fit the window height.
------------------------------------------------- */
-.viewport {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
+/* ---------- App shell: fluid, capped at a phone width ---------- */
+.app {
+  position: relative;
   width: 100%;
+  max-width: 393px;
   min-height: 100vh;
   min-height: 100dvh;
-}
-
-/* Sizing box: JS sets its width/height to the SCALED footprint so the
-   document scrolls correctly and there are no side gaps. */
-.stage {
-  flex: none;
-  width: 393px;
-  height: 852px;
-}
-
-/* ---------- The design frame (scaled inside .stage) ---------- */
-.frame {
-  position: relative;
-  width: 393px;
-  height: 852px;
   background: var(--frame-bg);
-  border-radius: 23px;
-  overflow: hidden;
-  transform: scale(var(--scale));
-  transform-origin: top left;
+  padding: 20px 16px 0;
+  overflow-x: hidden;
+  box-shadow: 0 0 40px -10px rgba(0, 0, 0, 0.18);
 }
-
-
-/* Edge-to-edge on real phones: no rounded corners, no page background gap */
-body.is-mobile { background: var(--frame-bg); }
-body.is-mobile .frame { border-radius: 0; }
-
-
-/* Shared paw overlay for orange surfaces (fallback texture) */
-.paw {
-  position: absolute;
-  inset: 0;
-  background-image: var(--paw);
-  background-size: 70px 70px;
-  mix-blend-mode: soft-light;
-  opacity: 0.9;
-  pointer-events: none;
-}
-
-/* Real Figma banner textures */
-.hero .paw {
-  background-image: url("Banner1.png");
-  background-size: cover;
-  background-position: center;
-  mix-blend-mode: soft-light;
-  opacity: 1;
-}
-.g-card .paw {
-  background-image: url("Banner2.png");
-  background-size: cover;
-  background-position: center;
-  mix-blend-mode: normal;
-  opacity: 1;
-}
-
 
 /* ===================================================================
-   Top bar — user info  (left 22, top 47, 193×40, gap 12)
+   Top bar
 =================================================================== */
-.user-info {
-  position: absolute;
-  left: 22px;
-  top: 47px;
-  width: 193px;
-  height: 40px;
+.topbar {
   display: flex;
-  flex-direction: row;
   align-items: center;
+  justify-content: space-between;
   gap: 12px;
+  padding-top: 6px;
 }
+
+.user { display: flex; align-items: center; gap: 12px; min-width: 0; }
 
 .avatar {
   flex: none;
@@ -147,49 +90,20 @@ body.is-mobile .frame { border-radius: 0; }
   letter-spacing: 0.5px;
 }
 
-.user-text {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  width: 141px;
-  height: 36px;
-}
+.user-text { display: flex; flex-direction: column; min-width: 0; }
 
-.welcome {
-  height: 16px;
-  font-weight: 400;
-  font-size: 12px;
-  line-height: 16px;
-  color: var(--gray-6b);
-  display: flex;
-  align-items: center;
-}
+.welcome { font-size: 12px; font-weight: 400; color: var(--gray-6b); }
 
 .username {
-  height: 20px;
-  font-weight: 700;
   font-size: 14px;
-  line-height: 20px;
+  font-weight: 700;
   color: var(--ink-title);
-  display: flex;
-  align-items: center;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* ===================================================================
-   Top bar — action buttons  (left 283, top 47, 88×40, gap 8)
-=================================================================== */
-.actions {
-  position: absolute;
-  left: 283px;
-  top: 47px;
-  width: 88px;
-  height: 40px;
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  gap: 8px;
-}
+.actions { display: flex; gap: 8px; flex: none; }
 
 .act-btn {
   position: relative;
@@ -199,12 +113,12 @@ body.is-mobile .frame { border-radius: 0; }
   border: 1px solid var(--gray-e5);
   box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05);
   border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: grid;
+  place-items: center;
+  transition: transform 0.12s ease;
 }
-
 .act-btn svg { width: 20px; height: 20px; }
+.act-btn:active { transform: scale(0.94); }
 
 .badge {
   position: absolute;
@@ -218,225 +132,187 @@ body.is-mobile .frame { border-radius: 0; }
 }
 
 /* ===================================================================
-   Hero banner  (left 22, top 103, 349×142)
+   Hero banner (fluid; aspect kept so pet art sits nicely)
 =================================================================== */
 .hero {
-  position: absolute;
-  left: 22px;
-  top: 103px;
-  width: 349px;
-  height: 142px;
-  background: var(--orange);
+  position: relative;
+  margin-top: 22px;
   border-radius: 13px;
-  box-shadow: 2px 2px 0px var(--black);
+  background: var(--orange) url("Banner1.png") center / cover;
+  box-shadow: var(--shadow-hard);
   overflow: hidden;
+  min-height: 142px;
+  padding: 20px 18px 22px;
 }
 
-.ell {
-  position: absolute;
-  width: 70px;
-  height: 70px;
-  background: var(--white);
-  border-radius: 50%;
-  pointer-events: none;
-  opacity: 0.55;
-}
-.ell-1 { left: 255px; top: 4px; filter: blur(15.8px); }
-.ell-2 { left: 133px; top: 81px; filter: blur(17.85px); }
+.hero-text { position: relative; z-index: 2; max-width: 58%; }
 
 .hero-title {
-  position: absolute;
-  left: 16px;
-  top: 32px;
-  width: 155px;
-  height: 49px;
-  font-weight: 600;
-  font-size: 19.4313px;
-  line-height: 24px;
   color: var(--white);
-  z-index: 2;
+  font-weight: 600;
+  font-size: clamp(18px, 5.2vw, 21px);
+  line-height: 1.2;
+  margin-bottom: 8px;
 }
 
 .hero-sub {
-  position: absolute;
-  left: 16px;
-  top: 81px;
-  width: 149px;
-  height: 33px;
+  color: rgba(255, 255, 255, 0.92);
   font-weight: 400;
-  font-size: 8.56337px;
-  line-height: 11px;
-  color: var(--white);
-  z-index: 2;
+  font-size: clamp(9px, 2.6vw, 11px);
+  line-height: 1.35;
 }
 
-/* Pet image overflows the banner top (frame-absolute: left 172, top 80) */
 .hero-pet {
   position: absolute;
-  left: 172px;
-  top: 80px;
-  width: 199px;
-  height: 165px;
+  right: 4px;
+  bottom: 0;
+  width: 50%;
+  max-width: 200px;
+  height: auto;
   object-fit: contain;
-  object-position: bottom right;
-  z-index: 3;
+  z-index: 1;
   filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.18));
 }
 
-/* ===================================================================
-   Pagination dots  (top 257)
-=================================================================== */
+/* Pagination dots */
 .dots {
-  position: absolute;
-  left: 175px;
-  top: 257px;
-  width: 44px;
-  height: 8px;
   display: flex;
+  justify-content: center;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
+  margin-top: 14px;
 }
-.dot { width: 8px; height: 8px; border-radius: 9999px; background: var(--gray-d1); flex: none; }
+.dot { width: 8px; height: 8px; border-radius: 9999px; background: var(--gray-d1); }
 .dot.active { background: var(--dot-active); }
 
 /* ===================================================================
-   Section titles
+   Sections
 =================================================================== */
-.sec-title {
-  position: absolute;
-  left: 22px;
-  font-weight: 600;
-  font-size: 12.7847px;
-  line-height: 20px;
-  color: var(--ink-title);
-  display: flex;
-  align-items: center;
-}
-.title-klinik { top: 270px; width: 94px; height: 20px; }
-.title-grooming { top: 393px; width: 124px; height: 20px; }
+.section { margin-top: 26px; }
 
-/* ===================================================================
-   Kategori Klinik — tiles (top 305, 56.19²) + labels (top 368)
-=================================================================== */
-.cat {
-  position: absolute;
-  top: 305px;
-  width: 56.19px;
-  height: 79px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.section-title {
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--ink-title);
+  margin-bottom: 14px;
 }
-.cat-1 { left: 23px; }
-.cat-2 { left: 120px; }
-.cat-3 { left: 217px; }
-.cat-4 { left: 314px; }
+
+/* ---------- Kategori Klinik ---------- */
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.cat { display: flex; flex-direction: column; align-items: center; gap: 8px; }
 
 .cat-tile {
-  width: 56.19px;
-  height: 56.19px;
-  border-radius: 5.85327px;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 6px;
   background: var(--cream-tile);
-  box-shadow: 2px 2px 0px var(--black);
+  box-shadow: var(--shadow-hard);
   display: grid;
   place-items: center;
   transition: transform 0.1s ease;
 }
-/* All four tiles share the same fill */
-.cat-tile.tile-active { background: var(--cream-tile); }
 .cat:active .cat-tile { transform: translate(1px, 1px); }
 
-
-.cat-ico { width: 38px; height: 38px; object-fit: contain; }
-.cat-ico.emoji { font-size: 32px; line-height: 1; }
-
+.cat-ico { width: 68%; height: 68%; object-fit: contain; }
 
 .cat-label {
-  position: absolute;
-  top: 63px; /* 368 - 305 */
   font-weight: 600;
-  font-size: 10.168px;
-  line-height: 16px;
+  font-size: 10px;
   color: var(--orange-ffbd5d);
   text-align: center;
-  white-space: nowrap;
 }
-.cat-label.label-active { color: var(--orange-ffbd5d); }
 
+/* ---------- Kategori Grooming ---------- */
+.grooming-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
 
-/* ===================================================================
-   Kategori Grooming — cards (top 424, 165×264)
-=================================================================== */
 .g-card {
-  position: absolute;
-  top: 424px;
-  width: 165px;
-  height: 264px;
-  background: var(--orange);
+  position: relative;
   border-radius: 13px;
-  box-shadow: 2px 2px 0px var(--black);
+  background: var(--orange) url("Banner2.png") center / cover;
+  box-shadow: var(--shadow-hard);
   overflow: hidden;
+  aspect-ratio: 165 / 264;
+  padding: 14px 12px;
 }
-.g-card-left { left: 22px; }
-.g-card-right { left: 206px; }
 
 .g-title {
-  position: absolute;
-  left: 11px;
-  top: 14px;
-  width: 102px;
-  height: 48px;
-  font-weight: 700;
-  font-size: 19.1104px;
-  line-height: 24px;
-  color: var(--white);
+  position: relative;
   z-index: 2;
+  color: var(--white);
+  font-weight: 700;
+  font-size: clamp(15px, 4.6vw, 19px);
+  line-height: 1.25;
+  max-width: 90%;
 }
 
 .g-img {
   position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  width: 92%;
+  height: 74%;
   object-fit: cover;
   object-position: bottom center;
   z-index: 1;
   filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.18));
 }
-/* Exact Figma frames. Cat faces left (no mirror). */
-.g-img-cat { left: 12px; top: 72px; width: 145px; height: 192px; }
-.g-img-dog { left: 6px; top: 77px; width: 149px; height: 187px; }
-
-
 
 /* ===================================================================
-   Bottom navigation  (left 22, top 765, 349×58)
+   Bottom navigation (fixed pill, fluid width)
 =================================================================== */
+.nav-spacer { height: 96px; }
+
 .bottomnav {
-  position: absolute;
-  left: 22px;
-  top: 765px;
-  width: 349px;
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 20px;
+  z-index: 50;
+  width: min(100% - 32px, 361px);
   height: 58px;
   background: var(--white);
   border: 2px solid var(--black);
-  box-shadow: 2px 2px 0px var(--black);
+  box-shadow: var(--shadow-hard);
   border-radius: 30px;
   display: flex;
-  flex-direction: row;
-  justify-content: center;
   align-items: center;
-  padding: 15px 33.75px;
-  gap: 61px;
+  justify-content: space-around;
+  padding: 0 20px;
 }
 
 .nav-btn {
-  width: 24px;
-  height: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
   transition: transform 0.1s ease;
 }
 .nav-btn svg { width: 24px; height: 24px; }
 .nav-btn:active { transform: scale(0.9); }
+
+/* ===================================================================
+   Responsive: keep it comfortable on very small / larger phones
+=================================================================== */
+@media (max-width: 340px) {
+  .app { padding-left: 12px; padding-right: 12px; }
+  .category-grid { gap: 9px; }
+}
+
+/* On tablets/desktop the app stays a centered phone-width column */
+@media (min-width: 394px) {
+  .app { border-radius: 0; }
+}
 
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; }
