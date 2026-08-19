@@ -1,0 +1,395 @@
+/* ===================================================================
+   PetCare — Beranda
+   Plain HTML + CSS implementation of the pet-care home screen design.
+   Mobile-first, responsive, no build dependencies.
+=================================================================== */
+
+:root {
+  /* Palette */
+  --cream: #fff7f0;
+  --cream-frame: #ece3da;
+  --white: #ffffff;
+
+  --orange: #ff8a3d;
+  --orange-deep: #f9722a;
+  --orange-soft: #ffd9b8;
+  --orange-tint: #fff0e2;
+
+  --ink: #1c1c1c;
+  --text-dark: #2b2b2b;
+  --text-gray: #9b9b9b;
+  --text-mute: #b8b8b8;
+
+  --red: #ff4747;
+
+  /* Shape */
+  --r-lg: 24px;
+  --r-md: 18px;
+  --r-sm: 14px;
+
+  --shadow-card: 0 14px 30px -18px rgba(249, 114, 42, 0.55);
+  --shadow-soft: 0 8px 20px -12px rgba(0, 0, 0, 0.25);
+
+  /* Reusable paw-print background tile */
+  --paw: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72'%3E%3Cg fill='%23ffffff' fill-opacity='0.14'%3E%3Cellipse cx='36' cy='45' rx='12' ry='10'/%3E%3Cellipse cx='19' cy='31' rx='5' ry='7'/%3E%3Cellipse cx='30' cy='23' rx='5' ry='7.5'/%3E%3Cellipse cx='42' cy='23' rx='5' ry='7.5'/%3E%3Cellipse cx='53' cy='31' rx='5' ry='7'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  background: var(--cream-frame);
+  color: var(--text-dark);
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+  min-height: 100dvh;
+  line-height: 1.4;
+}
+
+.emoji {
+  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+  font-style: normal;
+}
+
+/* ---------- App shell (phone frame on desktop) ---------- */
+.app {
+  position: relative;
+  width: 100%;
+  max-width: 430px;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--cream);
+  padding: 20px 20px 0;
+  overflow-x: hidden;
+  box-shadow: 0 0 40px -10px rgba(0, 0, 0, 0.18);
+}
+
+button {
+  font-family: inherit;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: inherit;
+  -webkit-tap-highlight-color: transparent;
+}
+
+img { display: block; max-width: 100%; }
+
+/* Shared paw-print overlay */
+.paw-bg { background-image: var(--paw); background-size: 72px 72px; }
+
+/* ===================================================================
+   Top bar
+=================================================================== */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 6px;
+}
+
+.user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.avatar {
+  flex: none;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--white);
+  background: linear-gradient(135deg, var(--orange) 0%, var(--orange-deep) 100%);
+  box-shadow: 0 6px 14px -6px rgba(249, 114, 42, 0.8);
+  letter-spacing: 0.5px;
+}
+
+.user-text { display: flex; flex-direction: column; min-width: 0; }
+
+.welcome {
+  font-size: 13px;
+  color: var(--text-gray);
+  font-weight: 500;
+}
+
+.username {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-dark);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.top-actions { display: flex; gap: 10px; flex: none; }
+
+.icon-btn {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--r-sm);
+  background: var(--white);
+  color: var(--text-dark);
+  display: grid;
+  place-items: center;
+  box-shadow: var(--shadow-soft);
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.icon-btn svg { width: 21px; height: 21px; }
+.icon-btn:active { transform: scale(0.94); }
+
+.icon-btn.has-dot::after {
+  content: "";
+  position: absolute;
+  top: 10px;
+  right: 11px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--red);
+  border: 2px solid var(--white);
+}
+
+/* ===================================================================
+   Hero banner
+=================================================================== */
+.hero { margin-top: 22px; }
+
+.hero-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--r-lg);
+  background: linear-gradient(135deg, #ff9b52 0%, var(--orange-deep) 100%);
+  padding: 22px 22px 24px;
+  min-height: 168px;
+  box-shadow: var(--shadow-card);
+}
+
+.hero-text { position: relative; z-index: 2; max-width: 62%; }
+
+.hero-title {
+  color: var(--white);
+  font-size: 21px;
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+
+.hero-sub {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.hero-img {
+  position: absolute;
+  right: 6px;
+  bottom: 0;
+  width: 46%;
+  max-width: 190px;
+  height: auto;
+  object-fit: contain;
+  z-index: 1;
+  filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.18));
+}
+
+.dots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 7px;
+  margin-top: 14px;
+}
+
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: #e2d6ca;
+  transition: width 0.2s ease, background 0.2s ease;
+}
+
+.dot.active { width: 22px; background: var(--text-mute); }
+
+/* ===================================================================
+   Sections
+=================================================================== */
+.section { margin-top: 26px; }
+
+.section-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 14px;
+}
+
+/* ---------- Kategori Klinik ---------- */
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.category {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.category-tile {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: var(--r-md);
+  border: 1.6px solid var(--ink);
+  background: linear-gradient(160deg, var(--orange-tint) 0%, var(--orange-soft) 100%);
+  display: grid;
+  place-items: center;
+  box-shadow: 0 6px 14px -10px rgba(0, 0, 0, 0.4);
+  transition: transform 0.12s ease;
+}
+
+.category-tile.tile-strong {
+  background: linear-gradient(160deg, #ffb069 0%, var(--orange) 100%);
+}
+
+.category:active .category-tile { transform: translateY(2px); }
+
+.category-tile .emoji { font-size: 28px; line-height: 1; }
+.category-tile svg { width: 26px; height: 26px; }
+
+.category-label {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--text-dark);
+}
+
+/* ---------- Kategori Grooming ---------- */
+.grooming-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.grooming-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--r-lg);
+  background: linear-gradient(150deg, #ff9b52 0%, var(--orange-deep) 100%);
+  padding: 18px 16px;
+  min-height: 178px;
+  box-shadow: var(--shadow-card);
+  display: flex;
+}
+
+.grooming-card .grooming-title {
+  position: relative;
+  z-index: 2;
+  color: var(--white);
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.25;
+  max-width: 80%;
+}
+
+.grooming-img {
+  position: absolute;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  margin: 0 auto;
+  width: 88%;
+  max-height: 118px;
+  object-fit: contain;
+  object-position: bottom center;
+  z-index: 1;
+  filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.2));
+}
+
+/* ===================================================================
+   Bottom navigation
+=================================================================== */
+.nav-spacer { height: 96px; }
+
+.bottom-nav {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 18px;
+  z-index: 50;
+  width: min(100% - 40px, 390px);
+  height: 64px;
+  background: var(--white);
+  border: 1.6px solid var(--ink);
+  border-radius: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 0 8px;
+  box-shadow: 0 16px 30px -14px rgba(0, 0, 0, 0.35);
+}
+
+.nav-item {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  color: var(--text-mute);
+  transition: transform 0.12s ease, color 0.12s ease, background 0.12s ease;
+}
+
+.nav-item svg { width: 24px; height: 24px; }
+.nav-item:active { transform: scale(0.9); }
+
+.nav-item.active {
+  color: var(--orange-deep);
+  background: var(--orange-tint);
+}
+
+/* ===================================================================
+   Responsive tweaks
+=================================================================== */
+@media (min-width: 431px) {
+  .app {
+    min-height: 100vh;
+    min-height: 100dvh;
+    border-radius: 0;
+  }
+}
+
+/* Larger phones / small tablets: scale up a touch for readability */
+@media (min-width: 380px) {
+  .hero-title { font-size: 22px; }
+  .grooming-card .grooming-title { font-size: 16px; }
+}
+
+/* Very small devices */
+@media (max-width: 340px) {
+  .app { padding-left: 14px; padding-right: 14px; }
+  .category-grid { gap: 9px; }
+  .hero-title { font-size: 19px; }
+  .username { font-size: 15px; }
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}
