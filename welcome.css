@@ -125,7 +125,7 @@ body {
   margin-top: auto;               /* push the block into the lower area */
   width: 100%;
   padding: 0 46px;
-  padding-bottom: clamp(80px, 17vh, 168px);   /* lifts the whole block up */
+  padding-bottom: clamp(104px, 21vh, 208px);  /* lifts the whole block up */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -218,7 +218,8 @@ body {
   .cta { height: 52px; }
   .content {
     gap: clamp(14px, 3vh, 28px);
-    padding-bottom: clamp(56px, 12vh, 110px);
+    padding-bottom: clamp(72px, 15vh, 140px);
+
   }
 
   :root { --pillar-shift: 72px; }   /* pull the pillars up further */
