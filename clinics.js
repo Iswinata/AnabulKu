@@ -66,6 +66,14 @@
     terdekat: "Klinik Terdekat"
   };
 
+  /* ---------- Klinik mitra terdaftar (dari localStorage, diisi oleh mitra/daftar.js) ---------- */
+  function getPartnerClinics() {
+    try {
+      var raw = localStorage.getItem("anabulku:partner:clinics");
+      return raw ? JSON.parse(raw) : [];
+    } catch (e) { return []; }
+  }
+
   /* ---------- Data contoh (dipakai bila API key kosong / gagal) ---------- */
   var MOCK_CLINICS = [
     {

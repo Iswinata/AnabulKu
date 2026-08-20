@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#FCECE3" />
+  <title>AnabulKu Mitra — Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="mitra.css" />
+</head>
+<body>
+  <div class="app">
+
+    <!-- ===== Top bar ===== -->
+    <header class="topbar">
+      <div class="user">
+        <span class="avatar" aria-hidden="true">M</span>
+        <span class="user-text">
+          <span class="welcome">Dashboard Mitra</span>
+          <span class="username" id="dashboardClinicName">AnabulKu</span>
+        </span>
+      </div>
+      <div class="actions">
+        <button class="act-btn" type="button" aria-label="Notifikasi">
+          <svg viewBox="0 0 20 20" fill="none" stroke="#4B5563" stroke-width="1.667" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M15 7.5a5 5 0 0 0-10 0c0 5.8-2.5 7.5-2.5 7.5h15S15 13.3 15 7.5" />
+            <path d="M11.25 17.5a1.25 1.25 0 0 1-2.5 0" />
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- ===== Status Banner ===== -->
+    <section class="status-banner" id="statusBanner">
+      <div class="status-icon">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <circle cx="12" cy="12" r="10" fill="#22C55E" />
+          <path d="M7 12.5l3.5 3.5 6.5-7" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="status-text">
+        <span class="status-title">Klinik Aktif</span>
+        <span class="status-sub">Profil klinik kamu sudah tampil di AnabulKu</span>
+      </div>
+    </section>
+
+    <!-- ===== Quick Stats ===== -->
+    <section class="stats-row" aria-label="Statistik klinik">
+      <div class="stat-card">
+        <span class="stat-val" id="statAppointments">0</span>
+        <span class="stat-lbl">Janji Temu</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-val" id="statRating">—</span>
+        <span class="stat-lbl">Rating</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-val" id="statViews">0</span>
+        <span class="stat-lbl">Dilihat</span>
+      </div>
+    </section>
+
+    <!-- ===== Clinic Preview Card ===== -->
+    <section class="section" aria-labelledby="profile-title">
+      <h2 class="section-title" id="profile-title">Profil Klinik</h2>
+      <div class="clinic-preview" id="clinicPreview">
+        <div class="preview-photo" id="previewPhoto"></div>
+        <div class="preview-body">
+          <span class="preview-name" id="previewName">—</span>
+          <span class="preview-type" id="previewType">—</span>
+          <span class="preview-wa" id="previewWa">—</span>
+        </div>
+        <a class="edit-btn" href="daftar.html">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M14.5 2.5a2.12 2.12 0 0 1 3 3L6 17H2v-4L14.5 2.5z"/>
+          </svg>
+          Edit
+        </a>
+      </div>
+    </section>
+
+    <!-- ===== Menu List ===== -->
+    <section class="section" aria-labelledby="menu-title">
+      <h2 class="section-title" id="menu-title">Kelola Klinik</h2>
+      <nav class="menu-list" aria-label="Menu kelola klinik">
+
+        <a class="menu-item" href="daftar.html">
+          <span class="menu-icon menu-icon--orange">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+              <path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+            </svg>
+          </span>
+          <span class="menu-label">
+            <span class="menu-name">Lengkapi Profil</span>
+            <span class="menu-desc">Isi atau perbarui informasi klinik</span>
+          </span>
+          <svg class="menu-arrow" viewBox="0 0 20 20" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+            <path d="M7 4l6 6-6 6"/>
+          </svg>
+        </a>
+
+        <a class="menu-item" href="#">
+          <span class="menu-icon menu-icon--green">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="3" y="4" width="18" height="18" rx="2"/>
+              <path d="M16 2v4M8 2v4M3 10h18"/>
+            </svg>
+          </span>
+          <span class="menu-label">
+            <span class="menu-name">Jadwal & Jam Buka</span>
+            <span class="menu-desc">Atur hari dan jam operasional</span>
+          </span>
+          <svg class="menu-arrow" viewBox="0 0 20 20" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+            <path d="M7 4l6 6-6 6"/>
+          </svg>
+        </a>
+
+        <a class="menu-item" href="#">
+          <span class="menu-icon menu-icon--blue">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+          </span>
+          <span class="menu-label">
+            <span class="menu-name">Layanan & Dokter</span>
+            <span class="menu-desc">Tambahkan layanan dan tim dokter</span>
+          </span>
+          <svg class="menu-arrow" viewBox="0 0 20 20" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+            <path d="M7 4l6 6-6 6"/>
+          </svg>
+        </a>
+
+        <a class="menu-item" href="#">
+          <span class="menu-icon menu-icon--purple">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+            </svg>
+          </span>
+          <span class="menu-label">
+            <span class="menu-name">Ulasan Pelanggan</span>
+            <span class="menu-desc">Lihat dan balas ulasan pengguna</span>
+          </span>
+          <svg class="menu-arrow" viewBox="0 0 20 20" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+            <path d="M7 4l6 6-6 6"/>
+          </svg>
+        </a>
+
+      </nav>
+    </section>
+
+    <!-- ===== CTA daftar kalau belum ada data ===== -->
+    <div class="cta-empty" id="ctaEmpty" hidden>
+      <p class="cta-empty-text">Klinikmu belum terdaftar. Yuk mulai daftar sebagai mitra AnabulKu!</p>
+      <a class="cta-btn" href="daftar.html">Daftar Sekarang</a>
+    </div>
+
+    <div class="nav-spacer" aria-hidden="true"></div>
+
+    <!-- ===== Bottom nav ===== -->
+    <nav class="bottomnav" aria-label="Navigasi mitra">
+      <button class="nav-btn active" type="button" aria-label="Dashboard" aria-current="page">
+        <svg viewBox="0 0 24 24" fill="#F97316" aria-hidden="true">
+          <path d="M12 3 2.4 11.1a1 1 0 0 0 .65 1.76H4.5V20a1 1 0 0 0 1 1H9.5v-5.5h5V21H18.5a1 1 0 0 0 1-1v-7.14h1.45a1 1 0 0 0 .65-1.76L12 3z" />
+        </svg>
+      </button>
+      <a class="nav-btn" href="daftar.html" aria-label="Daftar / Edit Klinik">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+          <path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+        </svg>
+      </a>
+      <button class="nav-btn" type="button" aria-label="Statistik">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
+        </svg>
+      </button>
+      <button class="nav-btn" type="button" aria-label="Profil">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="8" r="4" /><path d="M5 20a7 7 0 0 1 14 0" />
+        </svg>
+      </button>
+    </nav>
+
+  </div>
+
+  <script src="mitra.js"></script>
+</body>
+</html>
