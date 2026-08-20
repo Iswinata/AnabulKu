@@ -15,7 +15,8 @@
   "use strict";
 
   var CFG = window.ANABULKU_CONFIG || {};
-  var PLACES_ENDPOINT = "https://places.googleapis.com/v1/places:searchText";
+  var NEARBY_ENDPOINT = "https://places.googleapis.com/v1/places:searchNearby";
+  var TEXT_ENDPOINT   = "https://places.googleapis.com/v1/places:searchText";
 
   /* Field yang diminta ke Places API — mempengaruhi biaya, ambil seperlunya */
   var FIELD_MASK = [
@@ -41,7 +42,16 @@
   /* Kata kunci cadangan bila Places tidak mengirim types */
   var VET_WORDS = /(klinik hewan|rumah sakit hewan|dokter hewan|vet|veterin|animal (clinic|hospital)|pet clinic|drh)/i;
 
-  /* Query pencarian per kategori */
+  /* Kata kunci nama utk memprioritaskan klinik sesuai spesies.
+     Klinik yang melayani semua hewan tetap ditampilkan, hanya urutannya
+     yang dinaikkan bila namanya menyebut spesies terkait. */
+  var SPECIES_WORDS = {
+    kucing:  /(kucing|\bcat\b|cats|kitten|feline)/i,
+    anjing:  /(anjing|\bdog\b|dogs|canine|puppy|\bk9\b)/i,
+    reptile: /(reptil|reptile|eksotik|exotic|kura|turtle|ular|snake|iguana|gecko|tortoise)/i
+  };
+
+  /* Query pencarian per kategori (dipakai pada fallback Text Search) */
   var QUERIES = {
     kucing:   "klinik hewan kucing",
     anjing:   "klinik hewan anjing",
@@ -158,33 +168,72 @@
   }
 
   /* =================================================================
-     Ambil data dari Google Places API (New)
+     Cache sederhana (localStorage, 10 menit) — hemat kuota API dan
+     tetap menampilkan hasil walau kuota harian sempat sesekali habis.
   ================================================================= */
-  function fetchClinics(category, center, useTypeFilter) {
-    var key = CFG.GOOGLE_MAPS_API_KEY;
+  var CACHE_TTL_MS = 10 * 60 * 1000;
 
-    /* Tanpa key → data contoh */
-    if (!key) return Promise.resolve({ items: mockWithDistance(), mock: true });
+  function cacheKey(category, center) {
+    var la = center.lat.toFixed(2), ln = center.lng.toFixed(2);
+    return "anabulku:clinics:" + category + ":" + la + "," + ln;
+  }
+  function cacheGet(key) {
+    try {
+      var raw = localStorage.getItem(key);
+      if (!raw) return null;
+      var obj = JSON.parse(raw);
+      if (!obj || (Date.now() - obj.t) > CACHE_TTL_MS) return null;
+      return obj.items;
+    } catch (e) { return null; }
+  }
+  function cacheSet(key, items) {
+    try { localStorage.setItem(key, JSON.stringify({ t: Date.now(), items: items })); }
+    catch (e) { /* storage penuh / diblokir — abaikan */ }
+  }
 
-    var body = {
-      textQuery: QUERIES[category] || QUERIES.terdekat,
-      languageCode: CFG.LANGUAGE || "id",
-      regionCode: CFG.REGION || "id",
-      maxResultCount: CFG.MAX_RESULTS || 8,
-      /* Catatan: searchText hanya mendukung CIRCLE pada locationBias —
-         locationRestriction wajib rectangle, jadi jangan dipakai di sini. */
-      locationBias: {
-        circle: {
-          center: { latitude: center.lat, longitude: center.lng },
-          radius: CFG.SEARCH_RADIUS_M || 10000
-        }
-      }
+  /* Ubah satu objek "place" dari API menjadi bentuk kartu */
+  function toItem(p, center, key) {
+    var loc = p.location
+      ? { lat: p.location.latitude, lng: p.location.longitude }
+      : null;
+    return {
+      name: (p.displayName && p.displayName.text) || "Klinik Hewan",
+      address: p.shortFormattedAddress || p.formattedAddress || "",
+      rating: typeof p.rating === "number" ? p.rating : null,
+      ratingCount: p.userRatingCount || 0,
+      distanceKm: loc ? distanceKm(center, loc) : null,
+      photo: photoUrl(p, key),
+      mapsUri: p.googleMapsUri || ""
     };
+  }
 
-    /* Percobaan pertama dibatasi ke tempat bertipe klinik hewan */
-    if (useTypeFilter !== false) body.includedType = "veterinary_care";
+  /* Hanya sisakan tempat yang benar-benar klinik hewan */
+  function keepVet(p) {
+    if (p.primaryType && VET_TYPES[p.primaryType]) return true;
+    var t = p.types || [];
+    for (var i = 0; i < t.length; i++) if (VET_TYPES[t[i]]) return true;
+    if (t.length) return false;
+    var nm = (p.displayName && p.displayName.text) || "";
+    return VET_WORDS.test(nm);
+  }
 
-    return fetch(PLACES_ENDPOINT, {
+  /* Urutkan terdekat; utamakan yang namanya cocok spesies kategori */
+  function orderItems(items, category) {
+    var rx = SPECIES_WORDS[category];
+    items.sort(function (a, b) {
+      if (rx) {
+        var ma = rx.test(a.name) ? 0 : 1;
+        var mb = rx.test(b.name) ? 0 : 1;
+        if (ma !== mb) return ma - mb;   /* cocok spesies didahulukan */
+      }
+      return (a.distanceKm == null ? 1e9 : a.distanceKm) -
+             (b.distanceKm == null ? 1e9 : b.distanceKm);
+    });
+    return items;
+  }
+
+  function postJson(url, body, key) {
+    return fetch(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -192,62 +241,92 @@
         "X-Goog-FieldMask": FIELD_MASK
       },
       body: JSON.stringify(body)
-    })
-      .then(function (res) {
-        if (!res.ok) {
-          return res.text().then(function (t) {
-            throw new Error("Places API " + res.status + ": " + t);
-          });
+    }).then(function (res) {
+      if (!res.ok) {
+        return res.text().then(function (t) {
+          throw new Error("Places " + res.status + ": " + t.slice(0, 160));
+        });
+      }
+      return res.json();
+    });
+  }
+
+  /* --------- Metode utama: Nearby Search (rank DISTANCE) ---------
+     • locationRestriction CIRCLE didukung penuh di searchNearby
+     • rankPreference DISTANCE → hasil sudah urut terdekat
+     • includedTypes veterinary_care → dijamin hanya klinik hewan
+     • kuota terpisah dari SearchText */
+  function fetchNearby(center, key) {
+    var body = {
+      includedTypes: ["veterinary_care"],
+      maxResultCount: CFG.MAX_RESULTS || 8,
+      rankPreference: "DISTANCE",
+      languageCode: CFG.LANGUAGE || "id",
+      regionCode: CFG.REGION || "id",
+      locationRestriction: {
+        circle: {
+          center: { latitude: center.lat, longitude: center.lng },
+          radius: CFG.SEARCH_RADIUS_M || 10000
         }
-        return res.json();
+      }
+    };
+    return postJson(NEARBY_ENDPOINT, body, key).then(function (data) {
+      return (data.places || []).filter(keepVet);
+    });
+  }
+
+  /* --------- Cadangan: Text Search (kalau Nearby gagal) --------- */
+  function fetchText(category, center, key) {
+    var body = {
+      textQuery: QUERIES[category] || QUERIES.terdekat,
+      languageCode: CFG.LANGUAGE || "id",
+      regionCode: CFG.REGION || "id",
+      maxResultCount: CFG.MAX_RESULTS || 8,
+      includedType: "veterinary_care",
+      locationBias: {
+        circle: {
+          center: { latitude: center.lat, longitude: center.lng },
+          radius: CFG.SEARCH_RADIUS_M || 10000
+        }
+      }
+    };
+    return postJson(TEXT_ENDPOINT, body, key).then(function (data) {
+      return (data.places || []).filter(keepVet);
+    });
+  }
+
+  /* =================================================================
+     Ambil data klinik: cache → Nearby → Text → data contoh
+  ================================================================= */
+  function fetchClinics(category, center) {
+    var key = CFG.GOOGLE_MAPS_API_KEY;
+    if (!key) return Promise.resolve({ items: mockWithDistance(), mock: true, source: "mock" });
+
+    var ck = cacheKey(category, center);
+    var cached = cacheGet(ck);
+    if (cached) {
+      return Promise.resolve({ items: orderItems(cached, category), mock: false, source: "cache" });
+    }
+
+    function finalize(places, source) {
+      var items = orderItems(places.map(function (p) { return toItem(p, center, key); }), category);
+      if (items.length) cacheSet(ck, items);
+      return { items: items, mock: false, source: source };
+    }
+
+    return fetchNearby(center, key)
+      .then(function (places) {
+        if (places.length) return finalize(places, "nearby");
+        /* Nearby kosong → coba Text Search */
+        return fetchText(category, center, key).then(function (p2) {
+          return finalize(p2, "text");
+        });
       })
-      .then(function (data) {
-        var places = data.places || [];
-
-        /* Jaring pengaman: buang tempat yang jelas bukan klinik hewan.
-           Cek tipe dulu; kalau types kosong, cek nama tempat. */
-        places = places.filter(function (p) {
-          if (p.primaryType && VET_TYPES[p.primaryType]) return true;
-
-          var t = p.types || [];
-          for (var i = 0; i < t.length; i++) if (VET_TYPES[t[i]]) return true;
-
-          if (t.length) return false;   /* punya types tapi tak satu pun cocok */
-
-          var nm = (p.displayName && p.displayName.text) || "";
-          return VET_WORDS.test(nm);
-        });
-
-        var items = places.map(function (p) {
-          var loc = p.location
-            ? { lat: p.location.latitude, lng: p.location.longitude }
-            : null;
-          return {
-            name: (p.displayName && p.displayName.text) || "Klinik Hewan",
-            address: p.shortFormattedAddress || p.formattedAddress || "",
-            rating: typeof p.rating === "number" ? p.rating : null,
-            ratingCount: p.userRatingCount || 0,
-            distanceKm: loc ? distanceKm(center, loc) : null,
-            photo: photoUrl(p, key),
-            mapsUri: p.googleMapsUri || ""
-          };
-        });
-
-        /* Catatan: TIDAK memfilter berdasarkan jarak.
-           locationBias sudah mengutamakan tempat dekat pusat pencarian;
-           kalau difilter keras, hasil bisa kosong saat GPS pengguna jauh
-           dari area hasil. Cukup urutkan dari yang terdekat. */
-        items.sort(function (a, b) {
-          return (a.distanceKm == null ? 1e9 : a.distanceKm) -
-                 (b.distanceKm == null ? 1e9 : b.distanceKm);
-        });
-
-        /* Kalau filter tipe bikin hasil kosong, ulangi tanpa includedType */
-        if (!items.length && useTypeFilter !== false) {
-          return fetchClinics(category, center, false);
-        }
-
-        return { items: items, mock: false };
+      .catch(function (errNearby) {
+        console.warn("[AnabulKu] Nearby gagal:", errNearby.message);
+        /* Nearby error (mis. kuota) → jatuh ke Text Search */
+        return fetchText(category, center, key)
+          .then(function (places) { return finalize(places, "text"); });
       });
   }
 
@@ -352,9 +431,13 @@
             return;
           }
           listEl.innerHTML = res.items.map(cardHtml).join("");
-          noteEl.textContent = res.mock
-            ? "Data contoh — isi GOOGLE_MAPS_API_KEY di config.js untuk data Google Maps asli."
-            : "Sumber data: Google Maps";
+          if (res.mock) {
+            noteEl.textContent = "Data contoh — isi GOOGLE_MAPS_API_KEY di config.js untuk data Google Maps asli.";
+          } else if (res.source === "cache") {
+            noteEl.textContent = "Sumber data: Google Maps (tersimpan sementara)";
+          } else {
+            noteEl.textContent = "Sumber data: Google Maps — " + res.items.length + " klinik terdekat";
+          }
         })
         .catch(function (err) {
           console.error("[AnabulKu]", err);
