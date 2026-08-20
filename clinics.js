@@ -217,19 +217,44 @@
     return VET_WORDS.test(nm);
   }
 
-  /* Urutkan terdekat; utamakan yang namanya cocok spesies kategori */
-  function orderItems(items, category) {
-    var rx = SPECIES_WORDS[category];
-    items.sort(function (a, b) {
-      if (rx) {
-        var ma = rx.test(a.name) ? 0 : 1;
-        var mb = rx.test(b.name) ? 0 : 1;
-        if (ma !== mb) return ma - mb;   /* cocok spesies didahulukan */
-      }
+  /* Urutkan dari yang terdekat */
+  function byDistance(items) {
+    return items.slice().sort(function (a, b) {
       return (a.distanceKm == null ? 1e9 : a.distanceKm) -
              (b.distanceKm == null ? 1e9 : b.distanceKm);
     });
-    return items;
+  }
+
+  /* Apakah nama menyebut spesies LAIN (bukan kategori yang sedang dipilih)? */
+  function mentionsOtherSpecies(name, category) {
+    for (var k in SPECIES_WORDS) {
+      if (k === category) continue;
+      if (SPECIES_WORDS.hasOwnProperty(k) && SPECIES_WORDS[k].test(name)) return true;
+    }
+    return false;
+  }
+
+  /* Filter + urutkan sesuai kolom yang dipencet:
+     • "terdekat" → semua klinik hewan, urut terdekat.
+     • kucing / anjing / reptile:
+         - klinik yang namanya menyebut spesies itu      → grup utama
+         - klinik hewan UMUM (tak menyebut spesies apa pun,
+           jadi melayani semua termasuk spesies ini)      → grup pelengkap
+         - klinik KHUSUS spesies lain
+           (mis. "Cat Clinic" saat mencari anjing)         → DIBUANG
+       Urutan hasil: grup utama (terdekat) lalu pelengkap (terdekat). */
+  function filterBySpecies(items, category) {
+    var rx = SPECIES_WORDS[category];
+    if (!rx) return byDistance(items);      /* kategori "terdekat" */
+
+    var strong = [], general = [];
+    for (var i = 0; i < items.length; i++) {
+      var nm = items[i].name || "";
+      if (rx.test(nm)) strong.push(items[i]);
+      else if (!mentionsOtherSpecies(nm, category)) general.push(items[i]);
+      /* selain itu: klinik khusus spesies lain → dibuang */
+    }
+    return byDistance(strong).concat(byDistance(general));
   }
 
   function postJson(url, body, key) {
@@ -256,17 +281,17 @@
      • rankPreference DISTANCE → hasil sudah urut terdekat
      • includedTypes veterinary_care → dijamin hanya klinik hewan
      • kuota terpisah dari SearchText */
-  function fetchNearby(center, key) {
+  function fetchNearby(center, key, radius) {
     var body = {
       includedTypes: ["veterinary_care"],
-      maxResultCount: CFG.MAX_RESULTS || 8,
+      maxResultCount: 20,                 /* ambil kolam besar utk difilter spesies */
       rankPreference: "DISTANCE",
       languageCode: CFG.LANGUAGE || "id",
       regionCode: CFG.REGION || "id",
       locationRestriction: {
         circle: {
           center: { latitude: center.lat, longitude: center.lng },
-          radius: CFG.SEARCH_RADIUS_M || 10000
+          radius: radius
         }
       }
     };
@@ -295,39 +320,78 @@
     });
   }
 
+  /* Jangkauan bertahap: mulai dari radius awal (config), lalu diperlebar
+     3x sampai maksimal 50 km (batas Nearby Search). Dengan begini klinik
+     tetap ketemu di kota padat MAUPUN daerah yang jarang klinik —
+     "sesuai lokasi mana pun user membuka". */
+  function radiusSteps() {
+    var start = Math.max(1000, CFG.SEARCH_RADIUS_M || 8000);
+    var steps = [], r = start;
+    while (r < 50000) { steps.push(r); r *= 3; }
+    steps.push(50000);
+    return steps.filter(function (v, i, a) { return a.indexOf(v) === i; });
+  }
+
   /* =================================================================
-     Ambil data klinik: cache → Nearby → Text → data contoh
+     Ambil data klinik:
+       cache → Nearby (radius bertahap, filter spesies) → Text → contoh
   ================================================================= */
   function fetchClinics(category, center) {
     var key = CFG.GOOGLE_MAPS_API_KEY;
-    if (!key) return Promise.resolve({ items: mockWithDistance(), mock: true, source: "mock" });
+    var max = CFG.MAX_RESULTS || 8;
+
+    if (!key) {
+      return Promise.resolve({
+        items: filterBySpecies(MOCK_CLINICS.slice(), category).slice(0, max),
+        mock: true, source: "mock"
+      });
+    }
 
     var ck = cacheKey(category, center);
     var cached = cacheGet(ck);
-    if (cached) {
-      return Promise.resolve({ items: orderItems(cached, category), mock: false, source: "cache" });
+    if (cached) return Promise.resolve({ items: cached, mock: false, source: "cache" });
+
+    function toItems(places) {
+      return places.map(function (p) { return toItem(p, center, key); });
     }
 
-    function finalize(places, source) {
-      var items = orderItems(places.map(function (p) { return toItem(p, center, key); }), category);
+    function finalize(items, source, radius) {
+      items = items.slice(0, max);
       if (items.length) cacheSet(ck, items);
-      return { items: items, mock: false, source: source };
+      var rx = SPECIES_WORDS[category];
+      var specific = rx ? items.filter(function (c) { return rx.test(c.name); }).length : 0;
+      return {
+        items: items, mock: false, source: source,
+        radiusKm: Math.round(radius / 1000), specific: specific
+      };
     }
 
-    return fetchNearby(center, key)
-      .then(function (places) {
-        if (places.length) return finalize(places, "nearby");
-        /* Nearby kosong → coba Text Search */
-        return fetchText(category, center, key).then(function (p2) {
-          return finalize(p2, "text");
+    var steps = radiusSteps();
+
+    /* Coba tiap radius sampai dapat hasil (setelah difilter spesies) */
+    function tryStep(i) {
+      if (i >= steps.length) {
+        /* semua radius kosong → Text Search sebagai cadangan terakhir */
+        return fetchText(category, center, key).then(function (places) {
+          return finalize(filterBySpecies(toItems(places), category), "text",
+                          steps[steps.length - 1]);
         });
-      })
-      .catch(function (errNearby) {
-        console.warn("[AnabulKu] Nearby gagal:", errNearby.message);
-        /* Nearby error (mis. kuota) → jatuh ke Text Search */
-        return fetchText(category, center, key)
-          .then(function (places) { return finalize(places, "text"); });
+      }
+      return fetchNearby(center, key, steps[i]).then(function (places) {
+        var items = filterBySpecies(toItems(places), category);
+        if (items.length) return finalize(items, "nearby", steps[i]);
+        return tryStep(i + 1);        /* perluas jangkauan */
       });
+    }
+
+    return tryStep(0).catch(function (err) {
+      console.warn("[AnabulKu] Nearby gagal:", err.message);
+      /* error (mis. kuota harian Nearby) → fallback Text Search */
+      return fetchText(category, center, key).then(function (places) {
+        return finalize(filterBySpecies(toItems(places), category), "text",
+                        steps[steps.length - 1]);
+      });
+    });
   }
 
   function mockWithDistance() {
@@ -436,7 +500,11 @@
           } else if (res.source === "cache") {
             noteEl.textContent = "Sumber data: Google Maps (tersimpan sementara)";
           } else {
-            noteEl.textContent = "Sumber data: Google Maps — " + res.items.length + " klinik terdekat";
+            var t = "Google Maps — " + res.items.length + " klinik, radius " + res.radiusKm + " km";
+            if (category !== "terdekat" && !res.specific) {
+              t += " (klinik umum yang juga melayani " + category + ")";
+            }
+            noteEl.textContent = t;
           }
         })
         .catch(function (err) {
