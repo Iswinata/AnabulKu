@@ -63,25 +63,32 @@
     <section class="section" aria-labelledby="klinik-title">
       <h2 class="section-title" id="klinik-title">Kategori Klinik</h2>
       <div class="category-grid">
-        <button class="cat" type="button">
+        <button class="cat" type="button" data-category="kucing">
           <span class="cat-tile"><img class="cat-ico" src="cat%20icon.png" alt="" aria-hidden="true" /></span>
           <span class="cat-label">Kucing</span>
         </button>
-        <button class="cat" type="button">
+        <button class="cat" type="button" data-category="anjing">
           <span class="cat-tile"><img class="cat-ico" src="anjing.png" alt="" aria-hidden="true" /></span>
           <span class="cat-label">Anjing</span>
 
         </button>
-        <button class="cat" type="button">
+        <button class="cat" type="button" data-category="reptile">
           <span class="cat-tile"><img class="cat-ico cat-ico-turtle" src="turtle%20icon.png" alt="" aria-hidden="true" /></span>
           <span class="cat-label">Reptile</span>
 
         </button>
-        <button class="cat" type="button">
+        <button class="cat" type="button" data-category="terdekat">
           <span class="cat-tile"><img class="cat-ico" src="lokasi%20icon.png" alt="" aria-hidden="true" /></span>
           <span class="cat-label">Terdekat</span>
         </button>
       </div>
+    </section>
+
+    <!-- ===== Hasil pencarian klinik (Google Maps) ===== -->
+    <section class="section clinic-results" id="clinic-results" hidden aria-live="polite">
+      <h2 class="section-title" id="clinic-results-title">Klinik Terdekat</h2>
+      <div class="clinic-list" id="clinic-list"></div>
+      <p class="clinic-note" id="clinic-note"></p>
     </section>
 
     <!-- ===== Kategori Grooming ===== -->
@@ -129,5 +136,8 @@
     </nav>
 
   </div>
+
+  <script src="config.js"></script>
+  <script src="clinics.js"></script>
 </body>
 </html>
