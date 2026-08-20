@@ -1,133 +1,54 @@
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#FCECE3" />
-  <title>PetCare — Beranda</title>
+  <title>AnabulKu — Selamat Datang</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="welcome.css" />
 </head>
 <body>
-  <div class="app">
+  <main class="welcome">
 
-    <!-- ===== Top bar ===== -->
-    <header class="topbar">
-      <div class="user">
-        <span class="avatar" aria-hidden="true">RI</span>
-        <span class="user-text">
-          <span class="welcome">Welcome <span class="emoji">👋</span></span>
-          <span class="username">Ramadani Iswinata</span>
-        </span>
-      </div>
+    <!-- ===== Decorative pastel pillars + pet avatars ===== -->
+    <div class="pillars" aria-hidden="true">
+      <span class="pillar p1"></span>
+      <span class="pillar p2"></span>
+      <span class="pillar p3"></span>
+      <span class="pillar p4"></span>
+      <span class="pillar p5"></span>
 
-      <div class="actions">
-        <button class="act-btn" type="button" aria-label="Cari">
-          <svg viewBox="0 0 20 20" fill="none" stroke="#4B5563" stroke-width="1.667" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <circle cx="9" cy="9" r="6" />
-            <line x1="17.5" y1="17.5" x2="13.2" y2="13.2" />
-          </svg>
-        </button>
-        <button class="act-btn" type="button" aria-label="Notifikasi">
-          <svg viewBox="0 0 20 20" fill="none" stroke="#4B5563" stroke-width="1.667" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M15 7.5a5 5 0 0 0-10 0c0 5.8-2.5 7.5-2.5 7.5h15S15 13.3 15 7.5" />
-            <path d="M11.25 17.5a1.25 1.25 0 0 1-2.5 0" />
-          </svg>
-          <span class="badge" aria-hidden="true"></span>
-        </button>
-      </div>
-    </header>
-
-    <!-- ===== Hero banner ===== -->
-    <section class="hero" aria-label="Promosi">
-      <span class="hero-texture" aria-hidden="true"></span>
-      <span class="hero-glow hero-glow-1" aria-hidden="true"></span>
-      <span class="hero-glow hero-glow-2" aria-hidden="true"></span>
-      <div class="hero-text">
-        <h1 class="hero-title">Perawatan Ada di Dekatmu</h1>
-        <p class="hero-sub">Temukan klinik hewan terdekat dan dapatkan perawatan terbaik untuk si kecil.</p>
-      </div>
-      <img class="hero-pet" src="anjing%20Kucing.png" alt="Anjing dan kucing memakai topi dan kacamata" />
-    </section>
-
-
-    <div class="dots" role="tablist" aria-label="Slide">
-      <span class="dot active" role="tab" aria-selected="true" aria-label="Slide 1"></span>
-      <span class="dot" role="tab" aria-label="Slide 2"></span>
-      <span class="dot" role="tab" aria-label="Slide 3"></span>
+      <span class="pet pet-a"></span>
+      <span class="pet pet-b"></span>
+      <span class="pet pet-e"></span>
+      <span class="pet pet-c"></span>
+      <span class="pet pet-d"></span>
     </div>
 
-    <!-- ===== Kategori Klinik ===== -->
-    <section class="section" aria-labelledby="klinik-title">
-      <h2 class="section-title" id="klinik-title">Kategori Klinik</h2>
-      <div class="category-grid">
-        <button class="cat" type="button">
-          <span class="cat-tile"><img class="cat-ico" src="cat%20icon.png" alt="" aria-hidden="true" /></span>
-          <span class="cat-label">Kucing</span>
-        </button>
-        <button class="cat" type="button">
-          <span class="cat-tile"><img class="cat-ico" src="anjing.png" alt="" aria-hidden="true" /></span>
-          <span class="cat-label">Anjing</span>
-
-        </button>
-        <button class="cat" type="button">
-          <span class="cat-tile"><img class="cat-ico cat-ico-turtle" src="turtle%20icon.png" alt="" aria-hidden="true" /></span>
-          <span class="cat-label">Reptile</span>
-
-        </button>
-        <button class="cat" type="button">
-          <span class="cat-tile"><img class="cat-ico" src="lokasi%20icon.png" alt="" aria-hidden="true" /></span>
-          <span class="cat-label">Terdekat</span>
-        </button>
+    <!-- ===== Heading + subtext + pagination dots ===== -->
+    <section class="intro">
+      <h1 class="intro-title">Perawatan Terbaik untuk Sahabat Berbulu</h1>
+      <div class="intro-sub-wrap">
+        <p class="intro-sub">Rawat kesehatan hewan kesayangan dengan mudah bersama layanan klinik yang terpercaya.</p>
+      </div>
+      <div class="intro-dots" role="tablist" aria-label="Slide">
+        <span class="d active" role="tab" aria-selected="true" aria-label="Slide 1"></span>
+        <span class="d" role="tab" aria-label="Slide 2"></span>
+        <span class="d" role="tab" aria-label="Slide 3"></span>
       </div>
     </section>
 
-    <!-- ===== Kategori Grooming ===== -->
-    <section class="section" aria-labelledby="grooming-title">
-      <h2 class="section-title" id="grooming-title">Kategori Grooming</h2>
-      <div class="grooming-grid">
-        <article class="g-card">
-          <h3 class="g-title">Grooming Kucing</h3>
-          <img class="g-img g-img-cat" src="kucing.png" alt="Kucing memakai kacamata" />
-        </article>
-        <article class="g-card">
-          <h3 class="g-title">Grooming Anjing</h3>
-          <img class="g-img g-img-dog" src="anjingroom.png" alt="Anjing memakai kacamata" />
+    <!-- ===== Primary CTA ===== -->
+    <a class="cta" href="home.html">Buat Akun</a>
 
-        </article>
+    <!-- ===== Login link ===== -->
+    <div class="login">
+      <p>Sudah punya akun ? <a href="home.html">Log in</a></p>
+    </div>
 
-      </div>
-    </section>
-
-    <div class="nav-spacer" aria-hidden="true"></div>
-
-    <!-- ===== Bottom navigation ===== -->
-    <nav class="bottomnav" aria-label="Navigasi utama">
-      <button class="nav-btn active" type="button" aria-label="Beranda" aria-current="page">
-        <svg viewBox="0 0 24 24" fill="#F97316" aria-hidden="true">
-          <path d="M12 3 2.4 11.1a1 1 0 0 0 .65 1.76H4.5V20a1 1 0 0 0 1 1H9.5v-5.5h5V21H18.5a1 1 0 0 0 1-1v-7.14h1.45a1 1 0 0 0 .65-1.76L12 3z" />
-        </svg>
-      </button>
-      <button class="nav-btn" type="button" aria-label="Pesan">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-3.8-.9L3 21l1.9-5.7a8.5 8.5 0 0 1-.9-3.8A8.38 8.38 0 0 1 12.5 3 8.5 8.5 0 0 1 21 11.5z" />
-        </svg>
-      </button>
-      <button class="nav-btn" type="button" aria-label="Favorit">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z" />
-        </svg>
-      </button>
-      <button class="nav-btn" type="button" aria-label="Profil">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <circle cx="12" cy="8" r="4" />
-          <path d="M5 20a7 7 0 0 1 14 0" />
-        </svg>
-      </button>
-    </nav>
-
-  </div>
+  </main>
 </body>
 </html>
