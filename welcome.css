@@ -39,15 +39,17 @@ body {
 .welcome {
   position: relative;
   width: 100%;
-  max-width: 393px;
-  min-height: 100vh;
-  min-height: 100dvh;
+  max-width: 393px;              /* same width as home (.app) */
+  min-height: 852px;             /* Figma frame height (fallback) */
+  min-height: max(100vh, 852px); /* fill viewport but never below design */
+  min-height: max(100dvh, 852px);
   background: var(--frame-bg);
   border-radius: 23px;
   overflow: hidden;
   isolation: isolate;
   box-shadow: 0 0 40px -10px rgba(0, 0, 0, 0.18);
 }
+
 
 /* ===================================================================
    Decorative pillars + pet avatars
