@@ -167,6 +167,22 @@
     const getChecked = name =>
       [...document.querySelectorAll(`input[name="${name}"]:checked`)].map(el => el.value);
 
+    /* Collect dokter entries from the dynamic list */
+    const dokters = [];
+    if (dokterList) {
+      dokterList.querySelectorAll('.dokter-entry').forEach((entry, idx) => {
+        const namaEl  = entry.querySelector(`[id^="dokterNama"]`);
+        const specEl  = entry.querySelector(`[id^="dokterSpesialis"]`);
+        if (namaEl || specEl) {
+          dokters.push({
+            nama:        (namaEl?.value  || '').trim(),
+            spesialisasi:(specEl?.value  || '').trim(),
+            hari:        getChecked('hari').join(', '), /* inherit clinic schedule */
+          });
+        }
+      });
+    }
+
     return {
       namaKlinik:    get('namaKlinik'),
       waKlinik:      get('waKlinik'),
@@ -186,6 +202,9 @@
       hargaMulai:    get('hargaMulai'),
       emailAkun:     get('emailAkun'),
       namaOwner:     get('namaOwner'),
+      dokters:       dokters,
+      logoDataUrl:   uploadData.logo || '',
+      fotoDataUrl:   uploadData.foto || '',
     };
   }
 
@@ -280,8 +299,11 @@
     });
   }
 
+  /* ── File upload state (holds base64 for submission) ── */
+  const uploadData = {};
+
   /* ── File upload preview ── */
-  function setupUpload(inputId, previewId, placeholderId, thumbId) {
+  function setupUpload(inputId, previewId, placeholderId, thumbId, dataKey) {
     const input       = document.getElementById(inputId);
     const preview     = document.getElementById(previewId);
     const placeholder = document.getElementById(placeholderId);
@@ -298,6 +320,7 @@
       }
       const reader = new FileReader();
       reader.onload = e => {
+        if (dataKey) uploadData[dataKey] = e.target.result; /* store for submit */
         if (thumb)       { thumb.src = e.target.result; }
         if (preview)     { preview.hidden = false; }
         if (placeholder) { placeholder.hidden = true; }
@@ -337,8 +360,8 @@
   /* ── Init ── */
   buildDots();
   showStep(1);
-  setupUpload('logoUpload', 'logoPreview', 'logoPlaceholder', 'logoThumb');
-  setupUpload('fotoUpload', 'fotoPreview', 'fotoPlaceholder', 'fotoThumb');
+  setupUpload('logoUpload', 'logoPreview', 'logoPlaceholder', 'logoThumb', 'logo');
+  setupUpload('fotoUpload', 'fotoPreview', 'fotoPlaceholder', 'fotoThumb', 'foto');
   setupPwdToggle();
 
 })();

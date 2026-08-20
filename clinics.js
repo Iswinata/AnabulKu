@@ -67,28 +67,31 @@
      Render
   ================================================================= */
 
-  function cardHtml(c) {
-    /* Buat link WhatsApp kalau ada nomor WA */
-    var waNum = (c.waKlinik || "").replace(/\D/g, "");
-    var href  = waNum ? "https://wa.me/62" + waNum.replace(/^0/, "") : "#";
+  function cardHtml(c, idx) {
+    /* Link to clinic detail page */
+    var href = "clinic-detail.html?id=" + idx;
 
-    /* Layanan dalam badge-badge kecil (maks 3) */
-    var layananArr = (c.layanan || "").split(",").map(function (s) { return s.trim(); }).filter(Boolean);
-    var badgeHtml  = layananArr.slice(0, 3).map(function (l) {
-      return '<span class="clinic-badge">' + esc(l) + '</span>';
-    }).join("");
+    /* Foto thumbnail — use uploaded photo or logo if available */
+    var photoStyle = "";
+    if (c.fotoDataUrl) {
+      photoStyle = ' style="background-image:url(' + esc(c.fotoDataUrl) + ');"';
+    } else if (c.logoDataUrl) {
+      photoStyle = ' style="background-image:url(' + esc(c.logoDataUrl) + ');"';
+    }
 
     /* Jam operasional */
     var jam = c.jamBuka && c.jamTutup ? esc(c.jamBuka) + "–" + esc(c.jamTutup) : "";
 
+    /* WhatsApp chip */
+    var waNum = (c.waKlinik || "").replace(/\D/g, "");
+
     return '' +
-      '<a class="clinic-card" href="' + esc(href) + '" target="_blank" rel="noopener">' +
+      '<a class="clinic-card" href="' + esc(href) + '">' +
         '<span class="clinic-texture" aria-hidden="true"></span>' +
-        '<span class="clinic-photo" aria-hidden="true"></span>' +
+        '<span class="clinic-photo"' + photoStyle + ' aria-hidden="true"></span>' +
         '<span class="clinic-body">' +
           '<span class="clinic-name">' + esc(c.namaKlinik || "Klinik Hewan") + '</span>' +
           '<span class="clinic-addr">' + esc([c.kota, c.provinsi].filter(Boolean).join(", ") || c.alamat || "") + '</span>' +
-          (badgeHtml ? '<span class="clinic-badges">' + badgeHtml + '</span>' : '') +
           '<span class="clinic-meta">' +
             (jam ? '<span class="clinic-chip">' +
               '<svg class="clinic-ico" viewBox="0 0 24 24" aria-hidden="true">' +
@@ -166,7 +169,11 @@
         return;
       }
 
-      listEl.innerHTML = filtered.map(cardHtml).join("");
+      /* Pass original index so clinic-detail.html?id= matches localStorage array position */
+      listEl.innerHTML = filtered.map(function(c) {
+        var originalIdx = all.indexOf(c);
+        return cardHtml(c, originalIdx);
+      }).join("");
       noteEl.textContent = filtered.length + " klinik mitra terdaftar";
     }
 

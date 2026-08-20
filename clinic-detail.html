@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#FCECE3" />
+  <title>Detail Klinik — AnabulKu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="clinic-detail.css" />
+</head>
+<body>
+  <div class="app cd-app">
+
+    <!-- ===== Top bar ===== -->
+    <header class="topbar">
+      <div class="user">
+        <span class="avatar" aria-hidden="true">RI</span>
+        <span class="user-text">
+          <span class="welcome">Welcome <span class="emoji">👋</span></span>
+          <span class="username">Ramadani Iswinata</span>
+        </span>
+      </div>
+      <div class="actions">
+        <button class="act-btn" type="button" aria-label="Cari">
+          <svg viewBox="0 0 20 20" fill="none" stroke="#4B5563" stroke-width="1.667" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="9" cy="9" r="6"/><line x1="17.5" y1="17.5" x2="13.2" y2="13.2"/>
+          </svg>
+        </button>
+        <button class="act-btn" type="button" aria-label="Notifikasi">
+          <svg viewBox="0 0 20 20" fill="none" stroke="#4B5563" stroke-width="1.667" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M15 7.5a5 5 0 0 0-10 0c0 5.8-2.5 7.5-2.5 7.5h15S15 13.3 15 7.5"/>
+            <path d="M11.25 17.5a1.25 1.25 0 0 1-2.5 0"/>
+          </svg>
+          <span class="badge" aria-hidden="true"></span>
+        </button>
+      </div>
+    </header>
+
+    <!-- ===== Main Clinic Card ===== -->
+    <section class="cd-main-card" id="cdMainCard" aria-label="Informasi klinik">
+      <span class="clinic-texture" aria-hidden="true"></span>
+      <!-- Clinic photo -->
+      <span class="cd-main-photo" id="cdPhoto" aria-hidden="true"></span>
+      <!-- Text -->
+      <div class="cd-main-body">
+        <p class="cd-main-name" id="cdName">—</p>
+        <p class="cd-main-addr" id="cdAddr">—</p>
+        <div class="cd-main-meta">
+          <span class="cd-meta-chip">
+            <!-- location pin icon -->
+            <svg class="cd-meta-ico" viewBox="0 0 24 24" aria-hidden="true">
+              <path fill="#FFDEAE" d="M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/>
+            </svg>
+            <span class="cd-meta-val" id="cdDist">—</span>
+          </span>
+          <span class="cd-meta-chip">
+            <!-- star icon -->
+            <svg class="cd-meta-ico" viewBox="0 0 24 24" aria-hidden="true">
+              <path fill="#FFDEAE" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+            </svg>
+            <span class="cd-meta-val" id="cdRating">4.8</span>
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Date Picker Strip ===== -->
+    <section class="cd-date-section" aria-label="Pilih tanggal">
+      <h2 class="section-title">Dokter Aktif Hari Ini</h2>
+      <div class="cd-date-strip" id="cdDateStrip" role="group" aria-label="Pilih hari"></div>
+    </section>
+
+    <!-- ===== Doctor Cards ===== -->
+    <section class="cd-doctors" id="cdDoctors" aria-label="Daftar dokter">
+      <!-- injected by JS -->
+    </section>
+
+    <div class="nav-spacer" aria-hidden="true"></div>
+
+    <!-- ===== Bottom navigation ===== -->
+    <nav class="bottomnav" aria-label="Navigasi utama">
+      <button class="nav-btn" type="button" aria-label="Kembali" onclick="history.back()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M19 12H5M12 5l-7 7 7 7"/>
+        </svg>
+      </button>
+      <button class="nav-btn" type="button" aria-label="Beranda" onclick="location.href='home.html'">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 3 2.4 11.1a1 1 0 0 0 .65 1.76H4.5V20a1 1 0 0 0 1 1H9.5v-5.5h5V21H18.5a1 1 0 0 0 1-1v-7.14h1.45a1 1 0 0 0 .65-1.76L12 3z"/>
+        </svg>
+      </button>
+      <button class="nav-btn" type="button" aria-label="Favorit">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/>
+        </svg>
+      </button>
+      <button class="nav-btn" type="button" aria-label="Profil">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="8" r="4"/>
+          <path d="M5 20a7 7 0 0 1 14 0"/>
+        </svg>
+      </button>
+    </nav>
+
+  </div>
+
+  <script src="clinic-detail.js"></script>
+</body>
+</html>
