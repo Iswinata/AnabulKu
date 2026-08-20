@@ -32,8 +32,14 @@
     "places.primaryType"
   ].join(",");
 
-  /* Hanya tipe tempat ini yang dianggap "klinik hewan" */
-  var VET_TYPES = { veterinary_care: true };
+  /* Tipe tempat yang dianggap "klinik hewan" */
+  var VET_TYPES = {
+    veterinary_care: true,
+    animal_hospital: true
+  };
+
+  /* Kata kunci cadangan bila Places tidak mengirim types */
+  var VET_WORDS = /(klinik hewan|rumah sakit hewan|dokter hewan|vet|veterin|animal (clinic|hospital)|pet clinic|drh)/i;
 
   /* Query pencarian per kategori */
   var QUERIES = {
@@ -154,7 +160,7 @@
   /* =================================================================
      Ambil data dari Google Places API (New)
   ================================================================= */
-  function fetchClinics(category, center) {
+  function fetchClinics(category, center, useTypeFilter) {
     var key = CFG.GOOGLE_MAPS_API_KEY;
 
     /* Tanpa key → data contoh */
@@ -165,16 +171,18 @@
       languageCode: CFG.LANGUAGE || "id",
       regionCode: CFG.REGION || "id",
       maxResultCount: CFG.MAX_RESULTS || 8,
-      /* Batasi hasil hanya ke tempat bertipe "veterinary_care" */
-      includedType: "veterinary_care",
-      strictTypeFiltering: true,
-      locationRestriction: {
+      /* Catatan: searchText hanya mendukung CIRCLE pada locationBias —
+         locationRestriction wajib rectangle, jadi jangan dipakai di sini. */
+      locationBias: {
         circle: {
           center: { latitude: center.lat, longitude: center.lng },
           radius: CFG.SEARCH_RADIUS_M || 10000
         }
       }
     };
+
+    /* Percobaan pertama dibatasi ke tempat bertipe klinik hewan */
+    if (useTypeFilter !== false) body.includedType = "veterinary_care";
 
     return fetch(PLACES_ENDPOINT, {
       method: "POST",
@@ -186,19 +194,28 @@
       body: JSON.stringify(body)
     })
       .then(function (res) {
-        if (!res.ok) throw new Error("Places API " + res.status);
+        if (!res.ok) {
+          return res.text().then(function (t) {
+            throw new Error("Places API " + res.status + ": " + t);
+          });
+        }
         return res.json();
       })
       .then(function (data) {
         var places = data.places || [];
 
-        /* Jaring pengaman: buang tempat yang bukan klinik hewan
-           (mis. petshop/toko) meski API sudah difilter. */
+        /* Jaring pengaman: buang tempat yang jelas bukan klinik hewan.
+           Cek tipe dulu; kalau types kosong, cek nama tempat. */
         places = places.filter(function (p) {
           if (p.primaryType && VET_TYPES[p.primaryType]) return true;
+
           var t = p.types || [];
           for (var i = 0; i < t.length; i++) if (VET_TYPES[t[i]]) return true;
-          return false;
+
+          if (t.length) return false;   /* punya types tapi tak satu pun cocok */
+
+          var nm = (p.displayName && p.displayName.text) || "";
+          return VET_WORDS.test(nm);
         });
 
         var items = places.map(function (p) {
@@ -216,10 +233,19 @@
           };
         });
 
+        /* Catatan: TIDAK memfilter berdasarkan jarak.
+           locationBias sudah mengutamakan tempat dekat pusat pencarian;
+           kalau difilter keras, hasil bisa kosong saat GPS pengguna jauh
+           dari area hasil. Cukup urutkan dari yang terdekat. */
         items.sort(function (a, b) {
           return (a.distanceKm == null ? 1e9 : a.distanceKm) -
                  (b.distanceKm == null ? 1e9 : b.distanceKm);
         });
+
+        /* Kalau filter tipe bikin hasil kosong, ulangi tanpa includedType */
+        if (!items.length && useTypeFilter !== false) {
+          return fetchClinics(category, center, false);
+        }
 
         return { items: items, mock: false };
       });
@@ -331,9 +357,11 @@
             : "Sumber data: Google Maps";
         })
         .catch(function (err) {
-          console.error(err);
+          console.error("[AnabulKu]", err);
           listEl.innerHTML = mockWithDistance().map(cardHtml).join("");
-          noteEl.textContent = "Gagal memuat data Google Maps — menampilkan data contoh.";
+          noteEl.textContent = "Gagal memuat data Google Maps (" +
+            String(err.message || err).slice(0, 120) +
+            ") — menampilkan data contoh.";
         });
     }
 
