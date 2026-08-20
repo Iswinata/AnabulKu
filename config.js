@@ -11,7 +11,7 @@
 =================================================================== */
 
 window.ANABULKU_CONFIG = {
-  GOOGLE_MAPS_API_KEY: "",
+  GOOGLE_MAPS_API_KEY: "AIzaSyCFjXB2cpcm9HGwl_KlK0IuvCoul3mRV1c",
 
   /* Radius pencarian dari posisi pengguna (meter) */
   SEARCH_RADIUS_M: 10000,
