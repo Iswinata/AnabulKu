@@ -73,11 +73,11 @@ body {
 
 /* left → right, each a different height (as % of frame width) & pastel tone.
    Negative tops keep only the rounded bottom caps visible near the top. */
-.p1 { left: 0%;     top: -93.1%;  height: 161.4%; background: #ffc5ba; }
-.p2 { left: 20.1%;  top: -115.3%; height: 161.4%; background: #fb923c; }
-.p3 { left: 39.9%;  top: -125.2%; height: 212.3%; background: #ffb74d; }
-.p4 { left: 60.1%;  top: -144.0%; height: 212.3%; background: #b4f5fd; }
-.p5 { left: 79.9%;  top: -164.1%; height: 212.3%; background: #e2c5ff; }
+.p1 { left: 0%;     top: -136.0%; height: 161.4%; background: #ffc5ba; }
+.p2 { left: 20.1%;  top: -146.0%; height: 161.4%; background: #fb923c; }
+.p3 { left: 39.9%;  top: -178.2%; height: 212.3%; background: #ffb74d; }
+.p4 { left: 60.1%;  top: -187.1%; height: 212.3%; background: #b4f5fd; }
+.p5 { left: 79.9%;  top: -196.0%; height: 212.3%; background: #e2c5ff; }
 
 /* Circular pet avatars seated in each pillar's rounded bottom cap */
 .pet {
@@ -94,11 +94,11 @@ body {
   filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.18));
 }
 
-.pet-a { left: 2.44%;  top: 23.42%; background-image: url("circle1.png"); }
-.pet-b { left: 22.28%; top: 13.38%; background-image: url("circle2.png"); }
-.pet-c { left: 42.44%; top: 32.16%; background-image: url("circle3.png"); }
-.pet-d { left: 62.23%; top: 23.24%; background-image: url("circle4.png"); }
-.pet-e { left: 82.33%; top: 14.32%; background-image: url("circle5.png"); }
+.pet-a { left: 2.44%;  top: 16.42%; background-image: url("circle1.png"); }
+.pet-b { left: 22.28%; top: 6.38%;  background-image: url("circle2.png"); }
+.pet-c { left: 42.44%; top: 25.16%; background-image: url("circle3.png"); }
+.pet-d { left: 62.23%; top: 16.24%; background-image: url("circle4.png"); }
+.pet-e { left: 82.33%; top: 7.32%;  background-image: url("circle5.png"); }
 
 /* ===================================================================
    Foreground content — fills the lower area, anchored to the bottom.
