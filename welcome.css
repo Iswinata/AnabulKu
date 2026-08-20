@@ -1,0 +1,205 @@
+/* ===================================================================
+   AnabulKu — Welcome / Onboarding
+   Faithful to the Figma spec (iPhone 14 & 15 Pro, 393 x 852 frame).
+   Decorative pastel "pillars" span the top; each carries a circular
+   pet avatar seated in its rounded bottom cap.
+=================================================================== */
+
+:root {
+  --frame-bg: #fcece3;
+  --ink-title: #2c3e50;
+  --sub: #7f8c8d;
+  --dot-off: #d1d5db;
+  --dot-on: #000000;
+  --cta-a: #ff9800;
+  --cta-b: #ffc46d;
+  --black: #000000;
+  --white: #ffffff;
+
+  --shadow-hard: 2px 2px 0px var(--black);
+  --shadow-pillar: 0px 5px 0px var(--black);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  background: #e7dbd0;
+  color: var(--ink-title);
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+  min-height: 100dvh;
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.4;
+}
+
+/* ---------- Phone frame ---------- */
+.welcome {
+  position: relative;
+  width: 100%;
+  max-width: 393px;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--frame-bg);
+  border-radius: 23px;
+  overflow: hidden;
+  isolation: isolate;
+  box-shadow: 0 0 40px -10px rgba(0, 0, 0, 0.18);
+}
+
+/* ===================================================================
+   Decorative pillars + pet avatars
+   Coordinates are relative to the 393-wide frame top-left.
+=================================================================== */
+.pillars {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.pillar {
+  position: absolute;
+  width: 79px;
+  border-radius: 9999px;         /* pill: rounded top & bottom caps */
+  box-shadow: var(--shadow-pillar);
+}
+
+/* left → right across the frame, each a different height & pastel tone */
+.p1 { left: 0px;   top: -366px; width: 79px; height: 634.38px; background: #ffc5ba; }
+.p2 { left: 79px;  top: -453px; width: 78px; height: 634.38px; background: #fb923c; }
+.p3 { left: 157px; top: -492px; width: 79px; height: 834.46px; background: #ffb74d; }
+.p4 { left: 236px; top: -566px; width: 78px; height: 834.46px; background: #b4f5fd; }
+.p5 { left: 314px; top: -645px; width: 79px; height: 834.46px; background: #e2c5ff; }
+
+/* Circular pet avatars seated in each pillar's rounded bottom cap */
+.pet {
+  position: absolute;
+  box-sizing: border-box;
+  width: 59.42px;
+  height: 59.42px;
+  border: 1.857px solid var(--black);
+  border-radius: 9999px;
+  background-color: var(--white);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.18));
+}
+
+.pet-a { left: 9.58px;   top: 199.54px; background-image: url("circle1.png"); }
+.pet-b { left: 87.58px;  top: 114px;    background-image: url("circle2.png"); }
+.pet-c { left: 166.79px; top: 274px;    background-image: url("circle3.png"); }
+.pet-d { left: 244.58px; top: 198px;    background-image: url("circle4.png"); }
+.pet-e { left: 323.58px; top: 122px;    background-image: url("circle5.png"); }
+
+/* ===================================================================
+   Intro block — 302 wide, left 46 / right 45, top 390, gap 9
+=================================================================== */
+.intro {
+  position: absolute;
+  left: 46px;
+  right: 45px;
+  top: 390px;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.intro-title {
+  font-weight: 700;
+  font-size: 22.5373px;
+  line-height: 28px;
+  text-align: center;
+  color: var(--ink-title);
+}
+
+.intro-sub-wrap { padding: 0 8px; }
+
+.intro-sub {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  text-align: center;
+  color: var(--sub);
+}
+
+/* Pagination dots */
+.intro-dots {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 8px;
+  padding-top: 8px;
+}
+.d { width: 8px; height: 8px; border-radius: 9999px; background: var(--dot-off); }
+.d.active { background: var(--dot-on); }
+
+/* ===================================================================
+   Primary CTA — left 46 / right 45, top 566, height 60
+=================================================================== */
+.cta {
+  position: absolute;
+  left: 46px;
+  right: 45px;
+  top: 566px;
+  height: 60px;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(90deg, var(--cta-a) 0%, var(--cta-b) 100%);
+  box-shadow: var(--shadow-hard);
+  border-radius: 10px;
+  color: var(--white);
+  font-weight: 600;
+  font-size: 19.0062px;
+  line-height: 30px;
+  text-align: center;
+  text-decoration: none;
+  transition: transform 0.1s ease;
+}
+.cta:active { transform: translate(1px, 1px); }
+
+/* ===================================================================
+   Login link — left 46 / right 45, top 642, height 20
+=================================================================== */
+.login {
+  position: absolute;
+  left: 46px;
+  right: 45px;
+  top: 642px;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.login p {
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  text-align: center;
+  color: var(--ink-title);
+}
+
+.login a {
+  color: var(--cta-a);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.login a:hover { opacity: 0.85; }
+
+/* ===================================================================
+   Responsive niceties
+=================================================================== */
+@media (min-width: 394px) {
+  .welcome { border-radius: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}
