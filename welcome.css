@@ -57,27 +57,32 @@ body {
    Decorative pillars + pet avatars — pinned to the top region.
    Sized relative to the frame width so they scale on any phone.
 =================================================================== */
+/* Design frame for this block: 393 x 342 (Figma). Aspect-ratio keeps every
+   percentage below in sync on any phone width. */
 .pillars {
   position: absolute;
-  inset: 0;
+  top: 0;
+  left: 0;
+  width: 100%;
+  aspect-ratio: 393 / 342;
   z-index: 0;
   pointer-events: none;
 }
 
 .pillar {
   position: absolute;
-  width: 20.1%;                   /* 79 / 393 */
-  border-radius: 9999px;
+  top: 0;
+  border-radius: 0 0 9999px 9999px;   /* flat top, semicircular bottom cap */
   box-shadow: var(--shadow-pillar);
 }
 
-/* left → right, each a different height (as % of frame width) & pastel tone.
-   Negative tops keep only the rounded bottom caps visible near the top. */
-.p1 { left: 0%;     top: -136.0%; height: 161.4%; background: #ffc5ba; }
-.p2 { left: 20.1%;  top: -146.0%; height: 161.4%; background: #fb923c; }
-.p3 { left: 39.9%;  top: -178.2%; height: 212.3%; background: #ffb74d; }
-.p4 { left: 60.1%;  top: -187.1%; height: 212.3%; background: #b4f5fd; }
-.p5 { left: 79.9%;  top: -196.0%; height: 212.3%; background: #e2c5ff; }
+/* left → right: width & left are % of 393, height is % of 342 */
+.p1 { left: 0%;      width: 20.10%; height: 78.36%; background: #ffc5ba; }  /* 79 x 268 */
+.p2 { left: 20.10%;  width: 19.85%; height: 52.92%; background: #fb923c; }  /* 78 x 181 */
+.p3 { left: 39.95%;  width: 20.10%; height: 100%;   background: #ffb74d; }  /* 79 x 342 */
+.p4 { left: 60.05%;  width: 19.85%; height: 78.36%; background: #b4f5fd; }  /* 78 x 268 */
+.p5 { left: 79.90%;  width: 20.10%; height: 55.26%; background: #e2c5ff; }  /* 79 x 189 */
+
 
 /* Circular pet avatars seated in each pillar's rounded bottom cap */
 .pet {
@@ -94,11 +99,13 @@ body {
   filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.18));
 }
 
-.pet-a { left: 2.44%;  top: 16.42%; background-image: url("circle1.png"); }
-.pet-b { left: 22.28%; top: 6.38%;  background-image: url("circle2.png"); }
-.pet-c { left: 42.44%; top: 25.16%; background-image: url("circle3.png"); }
-.pet-d { left: 62.23%; top: 16.24%; background-image: url("circle4.png"); }
-.pet-e { left: 82.33%; top: 7.32%;  background-image: url("circle5.png"); }
+/* left = % of 393, top = % of 342 — each avatar centered in its pillar cap */
+.pet-a { left: 2.44%;  top: 58.35%; background-image: url("circle1.png"); }  /*   9.58 / 199.54 */
+.pet-b { left: 22.28%; top: 33.33%; background-image: url("circle2.png"); }  /*  87.58 / 114    */
+.pet-c { left: 42.44%; top: 80.12%; background-image: url("circle3.png"); }  /* 166.79 / 274    */
+.pet-d { left: 62.23%; top: 57.89%; background-image: url("circle4.png"); }  /* 244.58 / 198    */
+.pet-e { left: 82.34%; top: 35.67%; background-image: url("circle5.png"); }  /* 323.58 / 122    */
+
 
 /* ===================================================================
    Foreground content — fills the lower area, anchored to the bottom.
