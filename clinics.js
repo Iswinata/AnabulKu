@@ -107,19 +107,35 @@
     return r.toFixed(1).replace(".", ",");
   }
 
-  /* Posisi pengguna; selalu resolve (fallback kalau ditolak/timeout) */
+  /* Posisi pengguna; SELALU resolve.
+     Ada watchdog karena di sebagian browser (mis. dibuka via file://)
+     getCurrentPosition bisa tidak memanggil callback sama sekali. */
   function getUserLocation() {
-    return new Promise(function (resolve) {
-      var fallback = CFG.FALLBACK_CENTER || { lat: -7.9666, lng: 112.6326 };
-      if (!navigator.geolocation) return resolve(fallback);
+    var fallback = CFG.FALLBACK_CENTER || { lat: -7.9666, lng: 112.6326 };
 
-      navigator.geolocation.getCurrentPosition(
-        function (pos) {
-          resolve({ lat: pos.coords.latitude, lng: pos.coords.longitude });
-        },
-        function () { resolve(fallback); },
-        { enableHighAccuracy: true, timeout: 8000, maximumAge: 300000 }
-      );
+    return new Promise(function (resolve) {
+      var done = false;
+      function finish(coords) {
+        if (done) return;
+        done = true;
+        resolve(coords);
+      }
+
+      setTimeout(function () { finish(fallback); }, 9000);   /* watchdog */
+
+      if (!navigator.geolocation) return finish(fallback);
+
+      try {
+        navigator.geolocation.getCurrentPosition(
+          function (pos) {
+            finish({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+          },
+          function () { finish(fallback); },
+          { enableHighAccuracy: true, timeout: 8000, maximumAge: 300000 }
+        );
+      } catch (e) {
+        finish(fallback);
+      }
     });
   }
 
@@ -245,9 +261,12 @@
   /* =================================================================
      Controller
   ================================================================= */
-  document.addEventListener("DOMContentLoaded", function () {
+  function init() {
     var section = $("#clinic-results");
-    if (!section) return;
+    if (!section) {
+      console.warn("[AnabulKu] #clinic-results tidak ditemukan di halaman.");
+      return;
+    }
 
     var titleEl = $("#clinic-results-title", section);
     var listEl  = $("#clinic-list", section);
@@ -300,12 +319,26 @@
         });
     }
 
+    if (!cats.length) {
+      console.warn("[AnabulKu] Tidak ada tombol .cat[data-category] — cek home.html.");
+    }
+
     for (var i = 0; i < cats.length; i++) {
       (function (btn) {
-        btn.addEventListener("click", function () {
+        btn.addEventListener("click", function (ev) {
+          ev.preventDefault();
           show(btn.getAttribute("data-category"), btn);
         });
       })(cats[i]);
     }
-  });
+  }
+
+  /* Script dimuat di akhir <body>, jadi DOM bisa saja sudah siap */
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
 })();
+
+

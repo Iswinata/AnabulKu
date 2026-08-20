@@ -304,6 +304,9 @@ img { display: block; max-width: 100%; }
 =================================================================== */
 .clinic-results { margin-top: 18px; }
 
+/* Pastikan atribut [hidden] tetap menang atas aturan display apa pun */
+[hidden] { display: none !important; }
+
 .clinic-list {
   display: flex;
   flex-direction: column;
