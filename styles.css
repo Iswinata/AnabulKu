@@ -434,10 +434,11 @@ img { display: block; max-width: 100%; }
   50%      { opacity: 1; }
 }
 
-/* Kategori yang sedang dipilih */
+/* Kategori yang sedang dipilih — spec Figma:
+   gradient 180deg #FF9800 0% → #FFD21F 100%, shadow 2px 2px 0 #000, radius 9 */
 .cat.is-active .cat-tile {
-  outline: 2px solid var(--black);
-  outline-offset: 2px;
+  background: linear-gradient(180deg, #ff9800 0%, #ffd21f 100%);
+  box-shadow: var(--shadow-hard);
 }
 
 

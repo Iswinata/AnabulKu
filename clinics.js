@@ -27,8 +27,13 @@
     "places.userRatingCount",
     "places.location",
     "places.photos",
-    "places.googleMapsUri"
+    "places.googleMapsUri",
+    "places.types",
+    "places.primaryType"
   ].join(",");
+
+  /* Hanya tipe tempat ini yang dianggap "klinik hewan" */
+  var VET_TYPES = { veterinary_care: true };
 
   /* Query pencarian per kategori */
   var QUERIES = {
@@ -160,7 +165,10 @@
       languageCode: CFG.LANGUAGE || "id",
       regionCode: CFG.REGION || "id",
       maxResultCount: CFG.MAX_RESULTS || 8,
-      locationBias: {
+      /* Batasi hasil hanya ke tempat bertipe "veterinary_care" */
+      includedType: "veterinary_care",
+      strictTypeFiltering: true,
+      locationRestriction: {
         circle: {
           center: { latitude: center.lat, longitude: center.lng },
           radius: CFG.SEARCH_RADIUS_M || 10000
@@ -183,6 +191,16 @@
       })
       .then(function (data) {
         var places = data.places || [];
+
+        /* Jaring pengaman: buang tempat yang bukan klinik hewan
+           (mis. petshop/toko) meski API sudah difilter. */
+        places = places.filter(function (p) {
+          if (p.primaryType && VET_TYPES[p.primaryType]) return true;
+          var t = p.types || [];
+          for (var i = 0; i < t.length; i++) if (VET_TYPES[t[i]]) return true;
+          return false;
+        });
+
         var items = places.map(function (p) {
           var loc = p.location
             ? { lat: p.location.latitude, lng: p.location.longitude }
