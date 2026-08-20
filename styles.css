@@ -139,6 +139,7 @@ img { display: block; max-width: 100%; }
 =================================================================== */
 .hero {
   position: relative;
+  container-type: inline-size;   /* text below scales with the hero, not the window */
   margin-top: 22px;
   aspect-ratio: 349 / 142;
   border-radius: 13px;
@@ -184,16 +185,19 @@ img { display: block; max-width: 100%; }
 .hero-title {
   color: var(--white);
   font-weight: 600;
-  font-size: clamp(15px, 5.35vw, 18.7px);  /* spec 18.68px */
+  font-size: 5.35cqw;             /* spec 18.68px @ 349 hero width */
   line-height: 1.07;
+  text-align: left;               /* consistent across desktop & mobile */
+  text-wrap: balance;
 }
 
 .hero-sub {
   margin-top: 6px;                /* raised */
   color: #a36233;                 /* spec brown */
   font-weight: 400;
-  font-size: clamp(7px, 2.45vw, 8.6px);    /* spec 8.56px */
+  font-size: 2.45cqw;             /* spec 8.56px @ 349 hero width */
   line-height: 1.28;
+  text-align: left;               /* consistent across desktop & mobile */
 }
 
 /* Pet art — 199x134 at left 172 (rel 150); raised above spec top */
@@ -304,6 +308,7 @@ img { display: block; max-width: 100%; }
 
 .g-card {
   position: relative;
+  container-type: inline-size;   /* title scales with the card, not the window */
   border-radius: 13px;
   background: linear-gradient(180deg, #ff9800 0%, #ffdca8 100%);  /* spec */
   box-shadow: var(--shadow-hard);
@@ -333,8 +338,9 @@ img { display: block; max-width: 100%; }
   z-index: 2;
   color: #ffe5bf;        /* spec */
   font-weight: 700;
-  font-size: clamp(15px, 5.5vw, 19.11px);   /* spec 19.1104px */
+  font-size: 11.58cqw;    /* spec 19.1104px @ 165 card width */
   line-height: 1.25;
+  text-align: left;
 }
 
 .g-img {
