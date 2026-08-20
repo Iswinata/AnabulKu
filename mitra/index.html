@@ -4,190 +4,284 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#FCECE3" />
-  <title>AnabulKu Mitra — Dashboard</title>
+  <title>AnabulKu Mitra — Daftarkan Klinik Anda</title>
+  <meta name="description" content="Bergabung sebagai mitra klinik hewan AnabulKu dan jangkau lebih banyak pemilik hewan peliharaan." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="mitra.css" />
 </head>
-<body>
-  <div class="app">
+<body class="landing-body">
 
-    <!-- ===== Top bar ===== -->
-    <header class="topbar">
-      <div class="user">
-        <span class="avatar" aria-hidden="true">M</span>
-        <span class="user-text">
-          <span class="welcome">Dashboard Mitra</span>
-          <span class="username" id="dashboardClinicName">AnabulKu</span>
-        </span>
-      </div>
-      <div class="actions">
-        <button class="act-btn" type="button" aria-label="Notifikasi">
-          <svg viewBox="0 0 20 20" fill="none" stroke="#4B5563" stroke-width="1.667" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M15 7.5a5 5 0 0 0-10 0c0 5.8-2.5 7.5-2.5 7.5h15S15 13.3 15 7.5" />
-            <path d="M11.25 17.5a1.25 1.25 0 0 1-2.5 0" />
-          </svg>
-        </button>
-      </div>
-    </header>
-
-    <!-- ===== Status Banner ===== -->
-    <section class="status-banner" id="statusBanner">
-      <div class="status-icon">
-        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <circle cx="12" cy="12" r="10" fill="#22C55E" />
-          <path d="M7 12.5l3.5 3.5 6.5-7" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </div>
-      <div class="status-text">
-        <span class="status-title">Klinik Aktif</span>
-        <span class="status-sub">Profil klinik kamu sudah tampil di AnabulKu</span>
-      </div>
-    </section>
-
-    <!-- ===== Quick Stats ===== -->
-    <section class="stats-row" aria-label="Statistik klinik">
-      <div class="stat-card">
-        <span class="stat-val" id="statAppointments">0</span>
-        <span class="stat-lbl">Janji Temu</span>
-      </div>
-      <div class="stat-card">
-        <span class="stat-val" id="statRating">—</span>
-        <span class="stat-lbl">Rating</span>
-      </div>
-      <div class="stat-card">
-        <span class="stat-val" id="statViews">0</span>
-        <span class="stat-lbl">Dilihat</span>
-      </div>
-    </section>
-
-    <!-- ===== Clinic Preview Card ===== -->
-    <section class="section" aria-labelledby="profile-title">
-      <h2 class="section-title" id="profile-title">Profil Klinik</h2>
-      <div class="clinic-preview" id="clinicPreview">
-        <div class="preview-photo" id="previewPhoto"></div>
-        <div class="preview-body">
-          <span class="preview-name" id="previewName">—</span>
-          <span class="preview-type" id="previewType">—</span>
-          <span class="preview-wa" id="previewWa">—</span>
-        </div>
-        <a class="edit-btn" href="daftar.html">
-          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M14.5 2.5a2.12 2.12 0 0 1 3 3L6 17H2v-4L14.5 2.5z"/>
-          </svg>
-          Edit
-        </a>
-      </div>
-    </section>
-
-    <!-- ===== Menu List ===== -->
-    <section class="section" aria-labelledby="menu-title">
-      <h2 class="section-title" id="menu-title">Kelola Klinik</h2>
-      <nav class="menu-list" aria-label="Menu kelola klinik">
-
-        <a class="menu-item" href="daftar.html">
-          <span class="menu-icon menu-icon--orange">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-              <path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-            </svg>
-          </span>
-          <span class="menu-label">
-            <span class="menu-name">Lengkapi Profil</span>
-            <span class="menu-desc">Isi atau perbarui informasi klinik</span>
-          </span>
-          <svg class="menu-arrow" viewBox="0 0 20 20" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" aria-hidden="true">
-            <path d="M7 4l6 6-6 6"/>
-          </svg>
-        </a>
-
-        <a class="menu-item" href="#">
-          <span class="menu-icon menu-icon--green">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <rect x="3" y="4" width="18" height="18" rx="2"/>
-              <path d="M16 2v4M8 2v4M3 10h18"/>
-            </svg>
-          </span>
-          <span class="menu-label">
-            <span class="menu-name">Jadwal & Jam Buka</span>
-            <span class="menu-desc">Atur hari dan jam operasional</span>
-          </span>
-          <svg class="menu-arrow" viewBox="0 0 20 20" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" aria-hidden="true">
-            <path d="M7 4l6 6-6 6"/>
-          </svg>
-        </a>
-
-        <a class="menu-item" href="#">
-          <span class="menu-icon menu-icon--blue">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-              <circle cx="9" cy="7" r="4"/>
-              <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
-            </svg>
-          </span>
-          <span class="menu-label">
-            <span class="menu-name">Layanan & Dokter</span>
-            <span class="menu-desc">Tambahkan layanan dan tim dokter</span>
-          </span>
-          <svg class="menu-arrow" viewBox="0 0 20 20" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" aria-hidden="true">
-            <path d="M7 4l6 6-6 6"/>
-          </svg>
-        </a>
-
-        <a class="menu-item" href="#">
-          <span class="menu-icon menu-icon--purple">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-            </svg>
-          </span>
-          <span class="menu-label">
-            <span class="menu-name">Ulasan Pelanggan</span>
-            <span class="menu-desc">Lihat dan balas ulasan pengguna</span>
-          </span>
-          <svg class="menu-arrow" viewBox="0 0 20 20" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" aria-hidden="true">
-            <path d="M7 4l6 6-6 6"/>
-          </svg>
-        </a>
-
-      </nav>
-    </section>
-
-    <!-- ===== CTA daftar kalau belum ada data ===== -->
-    <div class="cta-empty" id="ctaEmpty" hidden>
-      <p class="cta-empty-text">Klinikmu belum terdaftar. Yuk mulai daftar sebagai mitra AnabulKu!</p>
-      <a class="cta-btn" href="daftar.html">Daftar Sekarang</a>
-    </div>
-
-    <div class="nav-spacer" aria-hidden="true"></div>
-
-    <!-- ===== Bottom nav ===== -->
-    <nav class="bottomnav" aria-label="Navigasi mitra">
-      <button class="nav-btn active" type="button" aria-label="Dashboard" aria-current="page">
-        <svg viewBox="0 0 24 24" fill="#F97316" aria-hidden="true">
-          <path d="M12 3 2.4 11.1a1 1 0 0 0 .65 1.76H4.5V20a1 1 0 0 0 1 1H9.5v-5.5h5V21H18.5a1 1 0 0 0 1-1v-7.14h1.45a1 1 0 0 0 .65-1.76L12 3z" />
-        </svg>
-      </button>
-      <a class="nav-btn" href="daftar.html" aria-label="Daftar / Edit Klinik">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-          <path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-        </svg>
+  <!-- ===== Navbar ===== -->
+  <nav class="lnav">
+    <div class="lnav-inner">
+      <a class="lnav-brand" href="index.html" aria-label="AnabulKu Mitra home">
+        <span class="brand-dot"></span>
+        <span class="brand-name">AnabulKu <span class="brand-tag">Mitra</span></span>
       </a>
-      <button class="nav-btn" type="button" aria-label="Statistik">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
-        </svg>
-      </button>
-      <button class="nav-btn" type="button" aria-label="Profil">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <circle cx="12" cy="8" r="4" /><path d="M5 20a7 7 0 0 1 14 0" />
-        </svg>
-      </button>
-    </nav>
+      <a class="lnav-login" href="login.html">Masuk</a>
+    </div>
+  </nav>
 
-  </div>
+  <!-- ===== Hero ===== -->
+  <section class="l-hero" aria-labelledby="heroTitle">
+    <div class="l-hero-inner">
+      <div class="l-hero-text">
+        <p class="l-hero-eyebrow">Platform Klinik Hewan #1</p>
+        <h1 class="l-hero-title" id="heroTitle">
+          Kembangkan Klinik Anda<br/>Bersama AnabulKu
+        </h1>
+        <p class="l-hero-sub">
+          Daftarkan klinik hewan Anda dan jangkau ribuan pemilik anabul yang aktif mencari layanan terpercaya setiap harinya.
+        </p>
+        <div class="l-hero-cta">
+          <a class="btn-primary" href="daftar.html">Daftar Sekarang — Gratis</a>
+          <a class="btn-ghost" href="#cara-kerja">Pelajari Lebih Lanjut</a>
+        </div>
+      </div>
+      <div class="l-hero-visual" aria-hidden="true">
+        <div class="hero-phone">
+          <div class="hp-bar"></div>
+          <div class="hp-content">
+            <div class="hp-card">
+              <div class="hp-card-logo"></div>
+              <div class="hp-card-info">
+                <div class="hp-card-name"></div>
+                <div class="hp-card-addr"></div>
+                <div class="hp-card-rating">
+                  <span class="hp-star">★</span>
+                  <span class="hp-star">★</span>
+                  <span class="hp-star">★</span>
+                  <span class="hp-star">★</span>
+                  <span class="hp-star hp-star--half">★</span>
+                </div>
+              </div>
+            </div>
+            <div class="hp-stat-row">
+              <div class="hp-stat">
+                <span class="hp-stat-val">128</span>
+                <span class="hp-stat-lbl">Booking bulan ini</span>
+              </div>
+              <div class="hp-stat">
+                <span class="hp-stat-val">4.8</span>
+                <span class="hp-stat-lbl">Rating rata-rata</span>
+              </div>
+            </div>
+            <div class="hp-notif">
+              <svg viewBox="0 0 16 16" fill="#22C55E" width="14" height="14"><circle cx="8" cy="8" r="8"/><path d="M5 8l2 2 4-4" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+              <span>Reservasi baru dari Rina S.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-  <script src="mitra.js"></script>
+  <!-- ===== Stats strip ===== -->
+  <section class="l-stats" aria-label="Statistik platform">
+    <div class="l-stats-inner">
+      <div class="l-stat">
+        <span class="l-stat-val">2.400+</span>
+        <span class="l-stat-lbl">Pengguna aktif</span>
+      </div>
+      <div class="l-stat-divider" aria-hidden="true"></div>
+      <div class="l-stat">
+        <span class="l-stat-val">150+</span>
+        <span class="l-stat-lbl">Klinik mitra</span>
+      </div>
+      <div class="l-stat-divider" aria-hidden="true"></div>
+      <div class="l-stat">
+        <span class="l-stat-val">12 Kota</span>
+        <span class="l-stat-lbl">Jangkauan wilayah</span>
+      </div>
+      <div class="l-stat-divider" aria-hidden="true"></div>
+      <div class="l-stat">
+        <span class="l-stat-val">4.9 ★</span>
+        <span class="l-stat-lbl">Rating di Play Store</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Keuntungan ===== -->
+  <section class="l-benefits" aria-labelledby="benefitsTitle">
+    <div class="l-section-inner">
+      <h2 class="l-section-title" id="benefitsTitle">Kenapa Bergabung dengan AnabulKu?</h2>
+      <p class="l-section-sub">Solusi lengkap untuk klinik hewan modern.</p>
+      <div class="benefits-grid">
+        <article class="benefit-card">
+          <div class="benefit-ico benefit-ico--orange" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+          </div>
+          <h3 class="benefit-title">Jangkau Lebih Banyak Pelanggan</h3>
+          <p class="benefit-desc">Klinik Anda tampil di hasil pencarian ribuan pengguna yang aktif mencari layanan hewan peliharaan.</p>
+        </article>
+        <article class="benefit-card">
+          <div class="benefit-ico benefit-ico--green" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/>
+              <line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+          </div>
+          <h3 class="benefit-title">Manajemen Reservasi Mudah</h3>
+          <p class="benefit-desc">Terima, kelola, dan konfirmasi reservasi langsung dari dashboard mitra — tanpa ribet.</p>
+        </article>
+        <article class="benefit-card">
+          <div class="benefit-ico benefit-ico--blue" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+            </svg>
+          </div>
+          <h3 class="benefit-title">Pantau Performa Klinik</h3>
+          <p class="benefit-desc">Lihat statistik kunjungan, rating, dan ulasan pelanggan secara real-time dari satu dashboard.</p>
+        </article>
+        <article class="benefit-card">
+          <div class="benefit-ico benefit-ico--purple" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.63 3.46 2 2 0 0 1 3.59 1.27h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.93a16 16 0 0 0 6 6l.92-.93a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.73 16.92z"/>
+            </svg>
+          </div>
+          <h3 class="benefit-title">Notifikasi WhatsApp Otomatis</h3>
+          <p class="benefit-desc">Pengingat reservasi dikirim otomatis ke pelanggan via WhatsApp, mengurangi no-show hingga 60%.</p>
+        </article>
+        <article class="benefit-card">
+          <div class="benefit-ico benefit-ico--orange" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
+            </svg>
+          </div>
+          <h3 class="benefit-title">Daftar & Aktif dalam 24 Jam</h3>
+          <p class="benefit-desc">Proses verifikasi cepat — isi formulir, unggah dokumen, dan klinik Anda aktif dalam satu hari kerja.</p>
+        </article>
+        <article class="benefit-card">
+          <div class="benefit-ico benefit-ico--green" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+            </svg>
+          </div>
+          <h3 class="benefit-title">Gratis untuk Bergabung</h3>
+          <p class="benefit-desc">Tidak ada biaya pendaftaran. Mulai gratis, upgrade kapan saja sesuai kebutuhan klinik Anda.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Cara Kerja ===== -->
+  <section class="l-how" id="cara-kerja" aria-labelledby="howTitle">
+    <div class="l-section-inner">
+      <h2 class="l-section-title" id="howTitle">Cara Mendaftarkan Klinik</h2>
+      <p class="l-section-sub">Prosesnya mudah — selesai dalam 10 menit.</p>
+      <ol class="how-list" aria-label="Langkah pendaftaran">
+        <li class="how-item">
+          <div class="how-num" aria-hidden="true">1</div>
+          <div class="how-text">
+            <h3 class="how-title">Isi Informasi Klinik</h3>
+            <p class="how-desc">Nama klinik, nomor WhatsApp, tipe, dan foto klinik Anda.</p>
+          </div>
+        </li>
+        <li class="how-item">
+          <div class="how-num" aria-hidden="true">2</div>
+          <div class="how-text">
+            <h3 class="how-title">Tambahkan Lokasi & Jadwal</h3>
+            <p class="how-desc">Alamat lengkap, jam operasional, dan link Google Maps.</p>
+          </div>
+        </li>
+        <li class="how-item">
+          <div class="how-num" aria-hidden="true">3</div>
+          <div class="how-text">
+            <h3 class="how-title">Pilih Layanan & Tim Dokter</h3>
+            <p class="how-desc">Daftar layanan yang tersedia dan profil dokter di klinik Anda.</p>
+          </div>
+        </li>
+        <li class="how-item">
+          <div class="how-num" aria-hidden="true">4</div>
+          <div class="how-text">
+            <h3 class="how-title">Submit & Verifikasi</h3>
+            <p class="how-desc">Tim AnabulKu akan meninjau data dalam 1×24 jam kerja.</p>
+          </div>
+        </li>
+        <li class="how-item">
+          <div class="how-num" aria-hidden="true">5</div>
+          <div class="how-text">
+            <h3 class="how-title">Klinik Anda Aktif!</h3>
+            <p class="how-desc">Klinik Anda langsung muncul di aplikasi AnabulKu dan siap menerima pasien baru.</p>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ===== Testimoni ===== -->
+  <section class="l-testimonials" aria-labelledby="testiTitle">
+    <div class="l-section-inner">
+      <h2 class="l-section-title" id="testiTitle">Kata Mereka yang Sudah Bergabung</h2>
+      <div class="testi-grid">
+        <blockquote class="testi-card">
+          <div class="testi-stars" aria-label="5 bintang">★★★★★</div>
+          <p class="testi-quote">"Sejak bergabung AnabulKu, kunjungan baru naik 40% dalam dua bulan. Dashboard-nya simpel dan notifikasi WhatsApp-nya sangat membantu."</p>
+          <footer class="testi-author">
+            <div class="testi-avatar testi-avatar--a" aria-hidden="true">DW</div>
+            <div>
+              <strong class="testi-name">drh. Dewi Wulandari</strong>
+              <span class="testi-clinic">Klinik Hewan Sahabat, Malang</span>
+            </div>
+          </footer>
+        </blockquote>
+        <blockquote class="testi-card">
+          <div class="testi-stars" aria-label="5 bintang">★★★★★</div>
+          <p class="testi-quote">"Proses pendaftarannya cepat, tidak sampai 15 menit. Tim support-nya responsif dan membantu setup awal dengan baik."</p>
+          <footer class="testi-author">
+            <div class="testi-avatar testi-avatar--b" aria-hidden="true">AP</div>
+            <div>
+              <strong class="testi-name">drh. Andi Pratama</strong>
+              <span class="testi-clinic">PetCare Clinic, Surabaya</span>
+            </div>
+          </footer>
+        </blockquote>
+        <blockquote class="testi-card">
+          <div class="testi-stars" aria-label="5 bintang">★★★★★</div>
+          <p class="testi-quote">"Fitur manajemen reservasinya luar biasa. No-show turun drastis sejak pakai notifikasi otomatis AnabulKu."</p>
+          <footer class="testi-author">
+            <div class="testi-avatar testi-avatar--c" aria-hidden="true">RL</div>
+            <div>
+              <strong class="testi-name">drh. Rina Lestari</strong>
+              <span class="testi-clinic">Furry Friends Clinic, Jakarta</span>
+            </div>
+          </footer>
+        </blockquote>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CTA Bottom ===== -->
+  <section class="l-cta-bottom" aria-labelledby="ctaBottomTitle">
+    <div class="l-section-inner">
+      <h2 class="l-cta-title" id="ctaBottomTitle">Siap Bergabung?</h2>
+      <p class="l-cta-sub">Daftarkan klinik Anda sekarang dan mulai jangkau lebih banyak pemilik anabul.</p>
+      <a class="btn-primary btn-primary--lg" href="daftar.html">Daftar Mitra Sekarang</a>
+      <p class="l-cta-note">Gratis • Tanpa kartu kredit • Aktif dalam 24 jam</p>
+    </div>
+  </section>
+
+  <!-- ===== Footer ===== -->
+  <footer class="l-footer">
+    <div class="l-footer-inner">
+      <div class="l-footer-brand">
+        <span class="brand-dot brand-dot--sm"></span>
+        <span class="brand-name brand-name--sm">AnabulKu <span class="brand-tag">Mitra</span></span>
+      </div>
+      <nav class="l-footer-links" aria-label="Footer navigation">
+        <a href="#">Syarat & Ketentuan</a>
+        <a href="#">Kebijakan Privasi</a>
+        <a href="#">Bantuan</a>
+        <a href="mailto:mitra@anabulku.id">Hubungi Kami</a>
+      </nav>
+      <p class="l-footer-copy">© 2026 AnabulKu. Seluruh hak cipta dilindungi.</p>
+    </div>
+  </footer>
+
 </body>
 </html>
