@@ -1,8 +1,8 @@
 /* ===================================================================
    AnabulKu — Welcome / Onboarding
-   Faithful to the Figma spec (iPhone 14 & 15 Pro, 393 x 852 frame).
-   Decorative pastel "pillars" span the top; each carries a circular
-   pet avatar seated in its rounded bottom cap.
+   Fixed to the viewport (no scroll). The design reflows to fit any
+   phone height: decorative pastel "pillars" sit at the top, the
+   intro / CTA / login block fills the lower area.
 =================================================================== */
 
 :root {
@@ -21,7 +21,12 @@
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; }
+
+html, body {
+  height: 100%;
+  overflow: hidden;               /* lock the page — no scrolling */
+  -webkit-text-size-adjust: 100%;
+}
 
 body {
   font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
@@ -29,31 +34,28 @@ body {
   color: var(--ink-title);
   display: flex;
   justify-content: center;
-  min-height: 100vh;
-  min-height: 100dvh;
   -webkit-font-smoothing: antialiased;
   line-height: 1.4;
 }
 
-/* ---------- Phone frame ---------- */
+/* ---------- Phone frame: fixed to the viewport ---------- */
 .welcome {
   position: relative;
   width: 100%;
-  max-width: 393px;              /* same width as home (.app) */
-  min-height: 852px;             /* Figma frame height (fallback) */
-  min-height: max(100vh, 852px); /* fill viewport but never below design */
-  min-height: max(100dvh, 852px);
+  max-width: 393px;               /* same width as home (.app) */
+  height: 100vh;
+  height: 100dvh;                 /* exact viewport height, no overflow */
   background: var(--frame-bg);
-  border-radius: 23px;
   overflow: hidden;
   isolation: isolate;
+  display: flex;
+  flex-direction: column;
   box-shadow: 0 0 40px -10px rgba(0, 0, 0, 0.18);
 }
 
-
 /* ===================================================================
-   Decorative pillars + pet avatars
-   Coordinates are relative to the 393-wide frame top-left.
+   Decorative pillars + pet avatars — pinned to the top region.
+   Sized relative to the frame width so they scale on any phone.
 =================================================================== */
 .pillars {
   position: absolute;
@@ -64,24 +66,25 @@ body {
 
 .pillar {
   position: absolute;
-  width: 79px;
-  border-radius: 9999px;         /* pill: rounded top & bottom caps */
+  width: 20.1%;                   /* 79 / 393 */
+  border-radius: 9999px;
   box-shadow: var(--shadow-pillar);
 }
 
-/* left → right across the frame, each a different height & pastel tone */
-.p1 { left: 0px;   top: -366px; width: 79px; height: 634.38px; background: #ffc5ba; }
-.p2 { left: 79px;  top: -453px; width: 78px; height: 634.38px; background: #fb923c; }
-.p3 { left: 157px; top: -492px; width: 79px; height: 834.46px; background: #ffb74d; }
-.p4 { left: 236px; top: -566px; width: 78px; height: 834.46px; background: #b4f5fd; }
-.p5 { left: 314px; top: -645px; width: 79px; height: 834.46px; background: #e2c5ff; }
+/* left → right, each a different height (as % of frame width) & pastel tone.
+   Negative tops keep only the rounded bottom caps visible near the top. */
+.p1 { left: 0%;     top: -93.1%;  height: 161.4%; background: #ffc5ba; }
+.p2 { left: 20.1%;  top: -115.3%; height: 161.4%; background: #fb923c; }
+.p3 { left: 39.9%;  top: -125.2%; height: 212.3%; background: #ffb74d; }
+.p4 { left: 60.1%;  top: -144.0%; height: 212.3%; background: #b4f5fd; }
+.p5 { left: 79.9%;  top: -164.1%; height: 212.3%; background: #e2c5ff; }
 
 /* Circular pet avatars seated in each pillar's rounded bottom cap */
 .pet {
   position: absolute;
   box-sizing: border-box;
-  width: 59.42px;
-  height: 59.42px;
+  width: 15.12%;                  /* 59.42 / 393 */
+  aspect-ratio: 1 / 1;
   border: 1.857px solid var(--black);
   border-radius: 9999px;
   background-color: var(--white);
@@ -91,21 +94,31 @@ body {
   filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.18));
 }
 
-.pet-a { left: 9.58px;   top: 199.54px; background-image: url("circle1.png"); }
-.pet-b { left: 87.58px;  top: 114px;    background-image: url("circle2.png"); }
-.pet-c { left: 166.79px; top: 274px;    background-image: url("circle3.png"); }
-.pet-d { left: 244.58px; top: 198px;    background-image: url("circle4.png"); }
-.pet-e { left: 323.58px; top: 122px;    background-image: url("circle5.png"); }
+.pet-a { left: 2.44%;  top: 23.42%; background-image: url("circle1.png"); }
+.pet-b { left: 22.28%; top: 13.38%; background-image: url("circle2.png"); }
+.pet-c { left: 42.44%; top: 32.16%; background-image: url("circle3.png"); }
+.pet-d { left: 62.23%; top: 23.24%; background-image: url("circle4.png"); }
+.pet-e { left: 82.33%; top: 14.32%; background-image: url("circle5.png"); }
 
 /* ===================================================================
-   Intro block — 302 wide, left 46 / right 45, top 390, gap 9
+   Foreground content — fills the lower area, anchored to the bottom.
 =================================================================== */
-.intro {
-  position: absolute;
-  left: 46px;
-  right: 45px;
-  top: 390px;
+.content {
+  position: relative;
   z-index: 2;
+  margin-top: auto;               /* push the block into the lower area */
+  width: 100%;
+  padding: 0 46px;
+  padding-bottom: clamp(28px, 7vh, 72px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(18px, 4.5vh, 40px);
+}
+
+/* Heading + subtext + dots */
+.intro {
+  width: 100%;
   display: flex;
   flex-direction: column;
   gap: 9px;
@@ -113,8 +126,8 @@ body {
 
 .intro-title {
   font-weight: 700;
-  font-size: 22.5373px;
-  line-height: 28px;
+  font-size: clamp(19px, 5.7vw, 22.5373px);
+  line-height: 1.24;
   text-align: center;
   color: var(--ink-title);
 }
@@ -123,13 +136,12 @@ body {
 
 .intro-sub {
   font-weight: 400;
-  font-size: 14px;
-  line-height: 20px;
+  font-size: clamp(12.5px, 3.6vw, 14px);
+  line-height: 1.43;
   text-align: center;
   color: var(--sub);
 }
 
-/* Pagination dots */
 .intro-dots {
   display: flex;
   justify-content: center;
@@ -140,16 +152,11 @@ body {
 .d { width: 8px; height: 8px; border-radius: 9999px; background: var(--dot-off); }
 .d.active { background: var(--dot-on); }
 
-/* ===================================================================
-   Primary CTA — left 46 / right 45, top 566, height 60
-=================================================================== */
+/* Primary CTA */
 .cta {
-  position: absolute;
-  left: 46px;
-  right: 45px;
-  top: 566px;
+  width: 100%;
   height: 60px;
-  z-index: 2;
+  flex: none;
   display: grid;
   place-items: center;
   background: linear-gradient(90deg, var(--cta-a) 0%, var(--cta-b) 100%);
@@ -165,15 +172,8 @@ body {
 }
 .cta:active { transform: translate(1px, 1px); }
 
-/* ===================================================================
-   Login link — left 46 / right 45, top 642, height 20
-=================================================================== */
+/* Login link */
 .login {
-  position: absolute;
-  left: 46px;
-  right: 45px;
-  top: 642px;
-  z-index: 2;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -196,10 +196,11 @@ body {
 .login a:hover { opacity: 0.85; }
 
 /* ===================================================================
-   Responsive niceties
+   Short screens — tighten spacing so nothing needs to scroll
 =================================================================== */
-@media (min-width: 394px) {
-  .welcome { border-radius: 0; }
+@media (max-height: 700px) {
+  .cta { height: 52px; }
+  .content { gap: clamp(14px, 3vh, 28px); }
 }
 
 @media (prefers-reduced-motion: reduce) {
