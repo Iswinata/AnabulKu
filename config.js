@@ -13,11 +13,13 @@
 window.ANABULKU_CONFIG = {
   GOOGLE_MAPS_API_KEY: "AIzaSyCFjXB2cpcm9HGwl_KlK0IuvCoul3mRV1c",
 
-  /* Radius AWAL pencarian dari posisi pengguna (meter).
-     Kalau belum ada klinik yang cocok, aplikasi otomatis memperlebar
-     jangkauan bertahap (×3) hingga maksimal 50 km — jadi tetap dapat
-     hasil di lokasi mana pun user membuka, kota padat maupun daerah. */
+  /* Radius AWAL pencarian dari posisi pengguna (meter). */
   SEARCH_RADIUS_M: 8000,
+
+  /* Radius MAKS bila radius awal belum menemukan klinik.
+     Dibatasi agar hasil tetap di cakupan Kota Malang & sekitarnya
+     (bukan lintas kota). */
+  MAX_RADIUS_M: 15000,
 
   /* Jumlah maksimum klinik yang ditampilkan */
   MAX_RESULTS: 8,
