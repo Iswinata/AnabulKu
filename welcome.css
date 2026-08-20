@@ -18,6 +18,10 @@
 
   --shadow-hard: 2px 2px 0px var(--black);
   --shadow-pillar: 0px 5px 0px var(--black);
+
+  /* How far the whole pillar block (pillars + pet avatars) is pulled up.
+     Increase to raise it further, decrease to lower it. */
+  --pillar-shift: 48px;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -61,7 +65,7 @@ body {
    percentage below in sync on any phone width. */
 .pillars {
   position: absolute;
-  top: 0;
+  top: calc(-1 * var(--pillar-shift));   /* raise the whole group */
   left: 0;
   width: 100%;
   aspect-ratio: 393 / 342;
@@ -208,7 +212,9 @@ body {
 @media (max-height: 700px) {
   .cta { height: 52px; }
   .content { gap: clamp(14px, 3vh, 28px); }
+  :root { --pillar-shift: 72px; }   /* pull the pillars up further */
 }
+
 
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; }
