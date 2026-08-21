@@ -200,9 +200,11 @@
             <label class="field-label">Titik Lokasi di Peta <span class="req" aria-hidden="true">*</span></label>
             <p class="field-hint">Klik tombol untuk menentukan titik lokasi klinik Anda secara akurat.</p>
 
-            <!-- Hidden inputs menyimpan koordinat -->
+            <!-- Hidden inputs menyimpan koordinat & geocode data -->
             <input type="hidden" id="klinikLat" name="klinikLat" />
             <input type="hidden" id="klinikLng" name="klinikLng" />
+            <input type="hidden" id="formattedAddress" name="formattedAddress" />
+            <input type="hidden" id="googleRating" name="googleRating" />
 
             <!-- Tombol buka picker -->
             <button class="map-pick-btn" type="button" id="btnPickMap">
@@ -442,7 +444,7 @@
       var key = (window.ANABULKU_CONFIG && window.ANABULKU_CONFIG.GOOGLE_MAPS_API_KEY) || '';
       if (!key) return;
       var s = document.createElement('script');
-      s.src = 'https://maps.googleapis.com/maps/api/js?key=' + key + '&callback=initMapPicker&loading=async';
+      s.src = 'https://maps.googleapis.com/maps/api/js?key=' + key + '&libraries=places&callback=initMapPicker&loading=async';
       s.async = true; s.defer = true;
       document.head.appendChild(s);
     })();

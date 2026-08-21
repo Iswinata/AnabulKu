@@ -86,11 +86,13 @@
       photoStyle = ' style="background-image:url(' + esc(c.logoDataUrl) + ');"';
     }
 
-    /* Alamat — use full street address from registration, fall back to kota/provinsi */
-    var alamat = esc(c.alamat || [c.kota, c.provinsi].filter(Boolean).join(", ") || "");
+    /* Alamat — prefer Google-geocoded formatted address, then manual entry, then kota/provinsi */
+    var alamat = esc(c.formattedAddress || c.alamat || [c.kota, c.provinsi].filter(Boolean).join(", ") || "");
 
-    /* Rating — use stored value or default to 5.0 until a real rating system exists */
-    var rating = c.rating != null ? parseFloat(c.rating).toFixed(1) : "5.0";
+    /* Rating — prefer Google Places rating, then stored value, then default 5.0 */
+    var rawRating = c.googleRating != null && c.googleRating !== "" ? c.googleRating
+                  : c.rating != null ? c.rating : null;
+    var rating = rawRating != null ? parseFloat(rawRating).toFixed(1) : "5.0";
     var ratingChip =
       '<span class="clinic-chip clinic-chip--rating" aria-label="Rating ' + esc(rating) + '">' +
         '<svg class="clinic-ico" viewBox="0 0 24 24" fill="#FF9800" aria-hidden="true">' +

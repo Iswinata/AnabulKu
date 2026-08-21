@@ -232,8 +232,10 @@
       kota:          get('kota'),
       provinsi:      get('provinsi'),
       kodePos:       get('kodePos'),
-      lat:           get('klinikLat'),
-      lng:           get('klinikLng'),
+      lat:              get('klinikLat'),
+      lng:              get('klinikLng'),
+      formattedAddress: get('formattedAddress'),
+      googleRating:     get('googleRating'),
       harisBuka:     getChecked('hari').join(', '),
       jamBuka:       get('jamBuka'),
       jamTutup:      get('jamTutup'),
@@ -409,14 +411,98 @@
     let marker = null;
     let mapReady = false;
 
+    const geocoder = new google.maps.Geocoder();
+
+    function autofillFromGeocode(lat, lng) {
+      geocoder.geocode({ location: { lat, lng } }, (results, status) => {
+        if (status !== 'OK' || !results || !results.length) return;
+
+        /* Use the first (most precise) result */
+        const result = results[0];
+        const comps  = result.address_components || [];
+
+        /* Helpers */
+        const get = (types) => {
+          const c = comps.find(c => types.some(t => c.types.includes(t)));
+          return c ? c.long_name : '';
+        };
+        const getShort = (types) => {
+          const c = comps.find(c => types.some(t => c.types.includes(t)));
+          return c ? c.short_name : '';
+        };
+
+        /* Build street address: route + street_number */
+        const route  = get(['route']);
+        const number = get(['street_number']);
+        const sublocality = get(['sublocality_level_1', 'sublocality', 'neighborhood']);
+        const streetAddr  = [route, number].filter(Boolean).join(' ')
+          || sublocality
+          || result.formatted_address.split(',')[0];
+
+        const kota     = get(['locality', 'administrative_area_level_2', 'regency']);
+        const provinsi = get(['administrative_area_level_1']);
+        const kodePos  = get(['postal_code']);
+
+        /* Autofill form fields — only if they are empty or user hasn't manually edited */
+        const alamatEl   = document.getElementById('alamat');
+        const kotaEl     = document.getElementById('kota');
+        const provinsiEl = document.getElementById('provinsi');
+        const kodePosEl  = document.getElementById('kodePos');
+
+        if (alamatEl)   alamatEl.value   = streetAddr  || result.formatted_address;
+        if (kotaEl)     kotaEl.value     = kota;
+        if (kodePosEl)  kodePosEl.value  = kodePos;
+
+        /* Provinsi is a <select> — try to match by text */
+        if (provinsiEl && provinsi) {
+          const opts = Array.from(provinsiEl.options);
+          const match = opts.find(o =>
+            o.value.toLowerCase().includes(provinsi.toLowerCase()) ||
+            provinsi.toLowerCase().includes(o.value.toLowerCase())
+          );
+          if (match) provinsiEl.value = match.value;
+        }
+
+        /* Store formatted_address for user app display */
+        const hiddenAddr = document.getElementById('formattedAddress');
+        if (hiddenAddr) hiddenAddr.value = result.formatted_address;
+
+        /* Update status */
+        statusEl.textContent = `📍 ${streetAddr || result.formatted_address}`;
+        statusEl.className = 'map-coords-status map-coords-set';
+      });
+    }
+
+    /* Places Nearby Search — get Google rating for the clinic location */
+    function fetchGoogleRating(lat, lng) {
+      if (!google.maps.places || !google.maps.places.PlacesService) return;
+      const svc = new google.maps.places.PlacesService(map);
+      svc.nearbySearch(
+        { location: { lat, lng }, radius: 50, type: 'veterinary_care' },
+        (results, status) => {
+          if (status === google.maps.places.PlacesServiceStatus.OK && results && results[0]) {
+            const r = results[0].rating;
+            if (r != null) {
+              const hiddenRating = document.getElementById('googleRating');
+              if (hiddenRating) hiddenRating.value = r;
+            }
+          }
+        }
+      );
+    }
+
     function setCoords(lat, lng) {
       latInput.value = lat.toFixed(7);
       lngInput.value = lng.toFixed(7);
-      statusEl.textContent = `📍 Koordinat tersimpan: ${lat.toFixed(5)}, ${lng.toFixed(5)}`;
-      statusEl.className = 'map-coords-status map-coords-set';
       /* clear any error */
       const err = document.querySelector('.map-coord-error');
       if (err) err.classList.remove('is-visible');
+
+      /* Reverse geocode → autofill address fields + status */
+      autofillFromGeocode(lat, lng);
+
+      /* Try to fetch Places rating */
+      if (map) fetchGoogleRating(lat, lng);
     }
 
     function initMap(center) {
