@@ -117,7 +117,6 @@
         '<polyline points="9 22 9 12 15 12 15 22"/>' +
       '</svg>' +
       '<p>Belum ada klinik terdaftar untuk kategori ini.</p>' +
-      '<a href="mitra/index.html" class="clinic-empty-cta">Daftarkan Klinik →</a>' +
     '</div>';
   }
 
