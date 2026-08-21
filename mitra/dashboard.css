@@ -875,8 +875,75 @@ button { font-family: inherit; border: none; background: none; cursor: pointer; 
 .toast--error   { background: #DC2626; }
 
 /* ===================================================================
-   RESPONSIVE
+   MULTI-SESI (modal dokter)
 =================================================================== */
+.jadwal-sesi-wrap {
+  padding: 6px 0 8px 70px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.jadwal-sesi-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sesi-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 6px;
+  background: #F9FAFB;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+}
+
+.btn-hapus-sesi {
+  width: 22px;
+  height: 22px;
+  min-width: 22px;
+  border-radius: 50%;
+  background: #FEE2E2;
+  color: #DC2626;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.15s;
+  border: none;
+  padding: 0;
+  margin-left: auto;
+}
+.btn-hapus-sesi:hover { background: #FECACA; }
+
+.btn-tambah-sesi {
+  align-self: flex-start;
+  margin-top: 4px;
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #FF9800;
+  background: #FFF3E0;
+  border: 1px dashed #FFC46D;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+.btn-tambah-sesi:hover {
+  background: #FFE0B2;
+  border-color: #FF9800;
+}
+
+/* Sesi chips di kartu dokter */
+.dokter-jadwal-sesi {
+  font-size: 11px;
+  color: #374151;
+}
+
 @media (max-width: 768px) {
   .sidebar {
     transform: translateX(-100%);

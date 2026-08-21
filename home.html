@@ -16,10 +16,10 @@
     <!-- ===== Top bar ===== -->
     <header class="topbar">
       <div class="user">
-        <span class="avatar" aria-hidden="true">RI</span>
+        <span class="avatar" aria-hidden="true" id="userAvatar"></span>
         <span class="user-text">
-          <span class="welcome">Welcome <span class="emoji">👋</span></span>
-          <span class="username">Ramadani Iswinata</span>
+          <span class="welcome">Halo <span class="emoji">👋</span></span>
+          <span class="username" id="userGreeting"></span>
         </span>
       </div>
 
@@ -157,14 +157,14 @@
       window.location.replace('login.html');
     }
 
-    /* Tampilkan nama user dari session */
-    const nama = session.nama || 'Pengguna';
-    const inisial = nama.split(' ').slice(0,2).map(w => w[0]).join('').toUpperCase();
+    /* Tampilkan username dari session */
+    const username = session.username || session.nama || 'Pengguna';
+    const inisial  = username.slice(0, 2).toUpperCase();
 
-    const avatarEl   = document.querySelector('.avatar');
-    const usernameEl = document.querySelector('.username');
-    if (avatarEl)   avatarEl.textContent  = inisial;
-    if (usernameEl) usernameEl.textContent = nama;
+    const avatarEl   = document.getElementById('userAvatar');
+    const greetingEl = document.getElementById('userGreeting');
+    if (avatarEl)   avatarEl.textContent   = inisial;
+    if (greetingEl) greetingEl.textContent = username;
 
     /* Logout */
     document.getElementById('btnLogout').addEventListener('click', () => {

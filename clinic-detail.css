@@ -238,6 +238,18 @@
   line-height: 1.2;
 }
 
+/* Jam kerja dokter hari ini — misal "🕐 08:00–12:00 & 14:00–17:00" */
+.cd-doc-hours {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 2px;
+  font-size: 3.01cqw;   /* ≈10.5px */
+  font-weight: 600;
+  color: #fff3e0;
+  line-height: 1.2;
+}
+
 .cd-doc-sched-label {
   color: #ffefd8;
   font-weight: 400;
@@ -280,67 +292,135 @@
   margin: 8px 0;
 }
 
-/* Time slots row */
+/* Wrapper area slot — flex column agar sesi-block stack ke bawah */
 .cd-time-row {
   position: relative;
   z-index: 1;
   display: flex;
-  gap: 7px;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Satu blok sesi */
+.cd-sesi-block {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* Header sesi: label "Sesi 1" + rentang jam */
+.cd-sesi-header {
+  display: flex;
   align-items: center;
+  gap: 6px;
+}
+
+.cd-sesi-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 16px;
+  padding: 0 7px;
+  background: rgba(255,255,255,0.25);
+  border-radius: 20px;
+  font-size: 9px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.cd-sesi-range {
+  font-size: 10px;
+  font-weight: 600;
+  color: #fff3e0;
+  letter-spacing: 0.01em;
+}
+
+/* Header untuk sesi tunggal — range saja, tanpa "Sesi 1" */
+.cd-sesi-header--single .cd-sesi-range {
+  font-size: 9px;
+  color: rgba(255,255,255,0.7);
+}
+
+/* Grid slot dalam satu sesi */
+.cd-sesi-slots {
+  display: flex;
   flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+/* Tombol Pilih Layanan di baris terakhir setelah semua sesi */
+.cd-sesi-slots:last-child {
+  align-items: center;
 }
 
 .cd-time-slot {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 44px;
-  height: 20px;
-  padding: 0 6px;
+  min-width: 52px;
+  height: 28px;
+  padding: 0 10px;
   border-radius: 8px;
   box-shadow: 1px 1px 0 #000;
   font-family: 'Poppins', sans-serif;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
   cursor: pointer;
   border: none;
-  transition: transform 0.1s;
+  transition: transform 0.1s, box-shadow 0.1s;
 }
-.cd-time-slot:active { transform: translate(1px,1px); }
+.cd-time-slot:active { transform: translate(1px,1px); box-shadow: none; }
 
-/* Available slot — light bg, orange text */
+/* Available slot */
 .cd-time-slot.available {
   background: #ffeed5;
-  color: #ff9800;
+  color: #d97706;
+}
+.cd-time-slot.available:hover {
+  background: #ffe0b2;
 }
 
-/* Selected / active slot — orange gradient, white text */
+/* Selected slot */
 .cd-time-slot.selected {
   background: linear-gradient(180deg, #ff9800 0%, #ffbc59 100%);
-  color: #ffdeae;
+  color: #fff;
+  box-shadow: 1px 1px 0 rgba(0,0,0,0.5);
 }
 
-/* "Pilih Layanan" CTA — pushed to right side */
+/* Row tombol Pilih Layanan — di bawah semua sesi */
+.cd-time-action-row {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+/* "Pilih Layanan" CTA */
 .cd-pilih-btn {
-  margin-left: auto;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 93px;
-  height: 20px;
-  padding: 0 10px;
+  min-width: 110px;
+  height: 30px;
+  padding: 0 14px;
   background: linear-gradient(180deg, #ff9800 0%, #ffbc59 100%);
   border: none;
   border-radius: 8px;
-  box-shadow: 1px 1px 0 #000;
+  box-shadow: 2px 2px 0 #000;
   font-family: 'Poppins', sans-serif;
-  font-size: 11px;
-  font-weight: 600;
+  font-size: 12px;
+  font-weight: 700;
   color: #fff;
   cursor: pointer;
-  transition: transform 0.1s;
+  transition: transform 0.1s, box-shadow 0.1s;
 }
-.cd-pilih-btn:active { transform: translate(1px,1px); }
+.cd-pilih-btn:hover { background: linear-gradient(180deg, #fb8c00 0%, #ffa726 100%); }
+.cd-pilih-btn:active { transform: translate(1px,1px); box-shadow: 1px 1px 0 #000; }
 
 /* Empty / no-data state inside doctor section */
 .cd-no-doctors {

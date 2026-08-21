@@ -68,17 +68,19 @@
 
           <!-- Tipe Layanan -->
           <div class="field">
-            <label class="field-label" for="tipeKlinik">Tipe Layanan</label>
-            <div class="select-wrap">
-              <select class="field-select" id="tipeKlinik" name="tipeKlinik">
-                <option value="" disabled selected>Pilih tipe layanan</option>
-                <option value="klinik_hewan">Klinik Hewan</option>
-                <option value="grooming_hewan">Grooming Hewan</option>
-              </select>
-              <svg class="select-arrow" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2" stroke-linecap="round" aria-hidden="true">
-                <path d="M6 9l6 6 6-6"/>
-              </svg>
+            <label class="field-label">Tipe Layanan <span class="req" aria-hidden="true">*</span></label>
+            <p class="field-hint">Pilih satu atau lebih tipe layanan yang tersedia.</p>
+            <div class="hewan-grid">
+              <label class="hewan-chip">
+                <input type="checkbox" name="tipeLayanan" value="klinik_hewan" />
+                <span>Klinik Hewan</span>
+              </label>
+              <label class="hewan-chip">
+                <input type="checkbox" name="tipeLayanan" value="grooming_hewan" />
+                <span>Grooming Hewan</span>
+              </label>
             </div>
+            <p class="field-error tipe-error" role="alert"></p>
           </div>
 
           <!-- Klinik untuk Hewan (multi-select checkboxes) -->
@@ -496,9 +498,9 @@
           </svg>
         </div>
         <h2 class="success-title">Pendaftaran Terkirim!</h2>
-        <p class="success-sub">Klinik <strong id="successClinicName"></strong> berhasil didaftarkan. Tim AnabulKu akan meninjau dan menyetujui pendaftaran dalam 1×24 jam. Setelah disetujui, Anda dapat masuk melalui halaman login mitra.</p>
+        <p class="success-sub">Klinik <strong id="successClinicName"></strong> sedang diverifikasi oleh Tim AnabulKu. Proses verifikasi membutuhkan waktu 1×24 jam. Setelah disetujui, Anda dapat masuk melalui halaman login mitra.</p>
         <a class="cta-btn" href="login.html">Masuk ke Dashboard</a>
-        <a class="cta-btn cta-btn--outline" href="../home.html">Buka Aplikasi User</a>
+        <a class="cta-btn cta-btn--outline" href="../login.html">Buka Aplikasi User</a>
       </div>
     </div>
 

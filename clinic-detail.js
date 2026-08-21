@@ -125,29 +125,67 @@
     });
   }
 
-  /* ── Generate time slots from doctor schedule ── */
-  function generateSlots(jamMulai, jamSelesai) {
-    /* Default slots if no schedule */
-    if (!jamMulai || !jamSelesai) return ["09:00", "10:00", "13:00", "15:00", "16:00"];
+  /* ── Generate time slots from a single time range ── */
+  function generateSlotsFromRange(jamMulai, jamSelesai) {
+    if (!jamMulai || !jamSelesai) return [];
 
     var slots = [];
     var start = parseInt(jamMulai.replace(":", ""), 10);
     var end   = parseInt(jamSelesai.replace(":", ""), 10);
 
-    /* Generate every 60 min slot, skip 12:00-13:00 (lunch) */
     for (var t = start; t < end; t += 100) {
-      /* Normalise: if minutes reach 60, roll over */
       var h = Math.floor(t / 100);
       var m = t % 100;
       if (m >= 60) { h++; m -= 60; t = h * 100 + m; }
       if (h >= 24) break;
-      if (h === 12) continue; /* skip lunch */
 
       var hStr = String(h).padStart(2, "0");
       var mStr = String(m).padStart(2, "0");
       slots.push(hStr + ":" + mStr);
     }
-    return slots.length ? slots : ["09:00", "10:00", "13:00", "15:00", "16:00"];
+    return slots;
+  }
+
+  /* ── Get time slots per-sesi untuk satu hari ──
+     Return array of sessions, tiap sesi = {label, slots:[]}
+     Mendukung format baru (doc.jadwal) dan format lama (doc.hari + jamMulai/jamSelesai) */
+  function getDoctorSessionSlots(doc, dayName, clinicJamBuka, clinicJamTutup) {
+    /* Format baru: jadwal = [{hari, mulai, selesai, sessions:[{mulai,selesai}]}] */
+    if (Array.isArray(doc.jadwal) && doc.jadwal.length) {
+      var dayEntry = null;
+      for (var i = 0; i < doc.jadwal.length; i++) {
+        if (doc.jadwal[i].hari === dayName) { dayEntry = doc.jadwal[i]; break; }
+      }
+      if (dayEntry) {
+        var sessions = Array.isArray(dayEntry.sessions) && dayEntry.sessions.length
+          ? dayEntry.sessions
+          : [{ mulai: dayEntry.mulai || "08:00", selesai: dayEntry.selesai || "17:00" }];
+
+        return sessions.map(function(s) {
+          return {
+            label: s.mulai + "–" + s.selesai,
+            slots: generateSlotsFromRange(s.mulai, s.selesai),
+          };
+        }).filter(function(s) { return s.slots.length > 0; });
+      }
+    }
+
+    /* Format lama: satu sesi dari jamMulai/jamSelesai */
+    var jamMulai   = doc.jamMulai   || clinicJamBuka;
+    var jamSelesai = doc.jamSelesai || clinicJamTutup;
+    var slots = generateSlotsFromRange(jamMulai, jamSelesai);
+    if (!slots.length) slots = ["09:00", "10:00", "13:00", "15:00", "16:00"];
+    var label = (jamMulai && jamSelesai) ? jamMulai + "–" + jamSelesai : "Sesi";
+    return [{ label: label, slots: slots }];
+  }
+
+  /* Flatten semua slot dari semua sesi (untuk getBookedSlots check) */
+  function flattenSessionSlots(sessionSlots) {
+    var all = [];
+    sessionSlots.forEach(function(s) {
+      s.slots.forEach(function(t) { if (all.indexOf(t) < 0) all.push(t); });
+    });
+    return all;
   }
 
   /* ── Booking form modal ── */
@@ -341,30 +379,69 @@
     }
 
     section.innerHTML = dokters.map(function(doc) {
-      /* Schedule tags */
-      var hariArr = typeof doc.hari === "string"
-        ? doc.hari.split(/[,\s]+/).filter(Boolean)
-        : (Array.isArray(doc.hari) ? doc.hari : []);
+      /* ── Day tags: ambil dari jadwal[] (format baru) atau hari[] (format lama) ── */
+      var jadwalHari = [];
+      if (Array.isArray(doc.jadwal) && doc.jadwal.length) {
+        jadwalHari = doc.jadwal.map(function(j) { return j.hari; });
+      } else {
+        jadwalHari = typeof doc.hari === "string"
+          ? doc.hari.split(/[,\s]+/).filter(Boolean)
+          : (Array.isArray(doc.hari) ? doc.hari : []);
+      }
 
-      var dayTags = hariArr.map(function(h) {
-        var isToday = h === selectedDayName;
-        return '<span class="cd-day-tag' + (isToday ? ' is-today' : '') + '">' + esc(h) + '</span>';
+      var dayTags = jadwalHari.map(function(h) {
+        var isActive = h === selectedDayName;
+        return '<span class="cd-day-tag' + (isActive ? ' is-today' : '') + '">' + esc(h) + '</span>';
       }).join("");
 
-      /* Generate time slots */
-      var allSlots   = generateSlots(doc.jamMulai || clinic.jamBuka, doc.jamSelesai || clinic.jamTutup);
-      var bookedSlots = getBookedSlots(doc.nama, targetDate);
+      /* ── Jam kerja dokter hari ini ── */
+      var jamKerjaHtml = "";
+      if (Array.isArray(doc.jadwal) && doc.jadwal.length) {
+        var dayEntry = null;
+        for (var di = 0; di < doc.jadwal.length; di++) {
+          if (doc.jadwal[di].hari === selectedDayName) { dayEntry = doc.jadwal[di]; break; }
+        }
+        if (dayEntry) {
+          var sessions = Array.isArray(dayEntry.sessions) && dayEntry.sessions.length
+            ? dayEntry.sessions
+            : [{ mulai: dayEntry.mulai || "08:00", selesai: dayEntry.selesai || "17:00" }];
+          var jamStr = sessions.map(function(s) {
+            return esc(s.mulai) + "–" + esc(s.selesai);
+          }).join(" &amp; ");
+          jamKerjaHtml = '<p class="cd-doc-hours">🕐 ' + jamStr + '</p>';
+        }
+      } else if (doc.jamMulai || doc.jamSelesai) {
+        jamKerjaHtml = '<p class="cd-doc-hours">🕐 ' +
+          esc(doc.jamMulai || "08:00") + "–" + esc(doc.jamSelesai || "17:00") + '</p>';
+      }
 
-      var slotsHtml = allSlots.map(function(t) {
-        var isBooked = bookedSlots.indexOf(t) >= 0;
-        var cls = isBooked ? "booked" : "available";
-        var disabled = isBooked ? ' disabled aria-disabled="true"' : "";
-        var label = isBooked ? t + " (penuh)" : t;
-        return '<button class="cd-time-slot ' + cls + '" type="button"' + disabled +
-               ' aria-label="' + esc(label) + '">' + esc(t) + '</button>';
+      /* ── Time slots: per-sesi dari getDoctorSessionSlots ── */
+      var sessionSlots = getDoctorSessionSlots(doc, selectedDayName, clinic.jamBuka, clinic.jamTutup);
+      var bookedSlots  = getBookedSlots(doc.nama, targetDate);
+      var multiSesi    = sessionSlots.length > 1;
+
+      /* Render tiap sesi sebagai blok tersendiri dengan header rentang jam */
+      var slotsHtml = sessionSlots.map(function(sesi, si) {
+        var headerHtml = multiSesi
+          ? '<div class="cd-sesi-header"><span class="cd-sesi-num">Sesi ' + (si + 1) + '</span>' +
+            '<span class="cd-sesi-range">' + esc(sesi.label) + '</span></div>'
+          : '<div class="cd-sesi-header cd-sesi-header--single">' +
+            '<span class="cd-sesi-range">' + esc(sesi.label) + '</span></div>';
+
+        var btnHtml = sesi.slots.map(function(t) {
+          var isBooked = bookedSlots.indexOf(t) >= 0;
+          var cls      = isBooked ? "booked" : "available";
+          var disabled = isBooked ? ' disabled aria-disabled="true"' : "";
+          var ariaLabel = isBooked ? t + " (penuh)" : t;
+          return '<button class="cd-time-slot ' + cls + '" type="button"' + disabled +
+                 ' aria-label="' + esc(ariaLabel) + '">' + esc(t) + '</button>';
+        }).join("");
+
+        return '<div class="cd-sesi-block">' + headerHtml +
+               '<div class="cd-sesi-slots">' + btnHtml + '</div></div>';
       }).join("");
 
-      /* Photo */
+      /* ── Photo ── */
       var photoStyle = doc.fotoDataUrl
         ? ' style="background-image:url(' + esc(doc.fotoDataUrl) + ');"'
         : "";
@@ -375,14 +452,17 @@
             '<div class="cd-doc-photo"' + photoStyle + ' aria-hidden="true"></div>' +
             '<div class="cd-doc-info">' +
               '<p class="cd-doc-name">' + esc(doc.nama || "Dokter Hewan") + '</p>' +
-              '<p class="cd-doc-spec">' + esc(doc.spesialisasi || clinic.tipeKlinik || "Dokter Hewan") + '</p>' +
-              '<p class="cd-doc-sched-label">Jadwal dokter :</p>' +
-              '<div class="cd-doc-days">' + dayTags + '</div>' +
+              '<p class="cd-doc-spec">' + esc(doc.spesialisasi || doc.spesialis || clinic.tipeKlinik || "Dokter Hewan") + '</p>' +
+              jamKerjaHtml +
+              '<p class="cd-doc-sched-label">Jadwal praktek :</p>' +
+              '<div class="cd-doc-days">' + (dayTags || '<span class="cd-day-tag">Setiap hari</span>') + '</div>' +
             '</div>' +
           '</div>' +
           '<div class="cd-doc-divider" aria-hidden="true"></div>' +
           '<div class="cd-time-row">' +
             slotsHtml +
+          '</div>' +
+          '<div class="cd-time-action-row">' +
             '<button class="cd-pilih-btn" type="button">Pilih Layanan</button>' +
           '</div>' +
         '</div>';

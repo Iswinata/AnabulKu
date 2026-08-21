@@ -135,6 +135,18 @@
       }
     }
 
+    // Step 1: at least one tipe layanan checked
+    if (n === 1) {
+      const tipes = step.querySelectorAll('input[name="tipeLayanan"]:checked');
+      const tipeErr = step.querySelector('.tipe-error');
+      if (tipes.length === 0) {
+        if (tipeErr) { tipeErr.textContent = 'Pilih minimal satu tipe layanan.'; tipeErr.classList.add('is-visible'); }
+        valid = false;
+      } else {
+        if (tipeErr) tipeErr.classList.remove('is-visible');
+      }
+    }
+
     // Step 1: at least one hewan checked
     if (n === 1) {
       const hewans = step.querySelectorAll('input[name="hewanDilayani"]:checked');
@@ -217,7 +229,7 @@
     return {
       namaKlinik:      get('namaKlinik'),
       waKlinik:        get('waKlinik'),
-      tipeKlinik:      get('tipeKlinik'),
+      tipeKlinik:      getChecked('tipeLayanan'),
       hewanDilayani:   getChecked('hewanDilayani'),
       alamat:          get('alamat'),
       kota:            get('kota'),
@@ -253,7 +265,7 @@
     const rows = [
       { lbl: 'Nama Klinik',        val: d.namaKlinik    || '—' },
       { lbl: 'WhatsApp',           val: d.waKlinik       || '—' },
-      { lbl: 'Tipe Layanan',       val: d.tipeKlinik === 'klinik_hewan' ? 'Klinik Hewan' : d.tipeKlinik === 'grooming_hewan' ? 'Grooming Hewan' : d.tipeKlinik || '—' },
+      { lbl: 'Tipe Layanan',       val: Array.isArray(d.tipeKlinik) && d.tipeKlinik.length ? d.tipeKlinik.map(t => t === 'klinik_hewan' ? 'Klinik Hewan' : t === 'grooming_hewan' ? 'Grooming Hewan' : t).join(', ') : '—' },
       { lbl: 'Hewan Dilayani',     val: Array.isArray(d.hewanDilayani) && d.hewanDilayani.length ? d.hewanDilayani.map(h => h.charAt(0).toUpperCase() + h.slice(1)).join(', ') : '—' },
       { lbl: 'Alamat',             val: `${d.alamat}, ${d.kota}, ${d.provinsi} ${d.kodePos}`.replace(/^, |, $/g,'') || '—' },
       { lbl: 'Jadwal Operasional', val: jadwalText },

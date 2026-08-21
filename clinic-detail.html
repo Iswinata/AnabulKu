@@ -17,10 +17,10 @@
     <!-- ===== Top bar ===== -->
     <header class="topbar">
       <div class="user">
-        <span class="avatar" aria-hidden="true">RI</span>
+        <span class="avatar" aria-hidden="true" id="userAvatar"></span>
         <span class="user-text">
-          <span class="welcome">Welcome <span class="emoji">👋</span></span>
-          <span class="username">Ramadani Iswinata</span>
+          <span class="welcome">Halo <span class="emoji">👋</span></span>
+          <span class="username" id="userGreeting"></span>
         </span>
       </div>
       <div class="actions">
@@ -107,6 +107,20 @@
 
   </div>
 
+  <script>
+  (function () {
+    try {
+      var session = JSON.parse(localStorage.getItem('anabulku_user_session')) || {};
+      if (!session.loggedIn) { window.location.replace('login.html'); return; }
+      var username = session.username || session.nama || 'Pengguna';
+      var inisial  = username.slice(0, 2).toUpperCase();
+      var avatarEl   = document.getElementById('userAvatar');
+      var greetingEl = document.getElementById('userGreeting');
+      if (avatarEl)   avatarEl.textContent   = inisial;
+      if (greetingEl) greetingEl.textContent = username;
+    } catch (e) { window.location.replace('login.html'); }
+  })();
+  </script>
   <script src="clinic-detail.js"></script>
 </body>
 </html>

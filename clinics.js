@@ -60,18 +60,21 @@
     if (!rx) return clinics;
 
     return clinics.filter(function (c) {
-      var tipe = (c.tipeKlinik || "").toLowerCase();
-
       /* hewanDilayani bisa berupa array (format baru) atau string (format lama) */
-      if (Array.isArray(c.hewanDilayani)) {
-        /* format baru: array of strings, e.g. ['kucing', 'anjing'] */
+      if (Array.isArray(c.hewanDilayani) && c.hewanDilayani.length > 0) {
         return c.hewanDilayani.some(function (h) { return rx.test(h); });
       }
 
       /* format lama: string tunggal */
       var hewan = (c.hewanDilayani || "").toLowerCase();
       if (hewan === "semua") return true;
-      return rx.test(hewan) || rx.test(tipe) || rx.test(c.namaKlinik || "");
+
+      /* fallback ke tipeKlinik (bisa array atau string) dan nama klinik */
+      var tipeStr = Array.isArray(c.tipeKlinik)
+        ? c.tipeKlinik.join(" ").toLowerCase()
+        : (c.tipeKlinik || "").toLowerCase();
+
+      return rx.test(hewan) || rx.test(tipeStr) || rx.test(c.namaKlinik || "");
     });
   }
 
@@ -234,14 +237,22 @@
       var rx = FILTER[category];
       var filteredWithIdx = category === 'terdekat' ? approvedWithIdx : approvedWithIdx.filter(function(entry) {
         var c = entry.clinic;
-        var tipe = (c.tipeKlinik || '').toLowerCase();
         if (!rx) return true;
-        if (Array.isArray(c.hewanDilayani)) {
+
+        /* hewanDilayani array (format baru dari daftar.js) */
+        if (Array.isArray(c.hewanDilayani) && c.hewanDilayani.length > 0) {
           return c.hewanDilayani.some(function(h) { return rx.test(h); });
         }
+
+        /* format lama: string */
         var hewan = (c.hewanDilayani || '').toLowerCase();
         if (hewan === 'semua') return true;
-        return rx.test(hewan) || rx.test(tipe) || rx.test(c.namaKlinik || '');
+
+        var tipeStr = Array.isArray(c.tipeKlinik)
+          ? c.tipeKlinik.join(' ').toLowerCase()
+          : (c.tipeKlinik || '').toLowerCase();
+
+        return rx.test(hewan) || rx.test(tipeStr) || rx.test(c.namaKlinik || '');
       });
 
       if (!filteredWithIdx.length) {

@@ -650,6 +650,7 @@
           </div>
           <div class="field">
             <label class="field-label">Jadwal Tugas <span class="req">*</span></label>
+            <p class="field-hint" style="margin-bottom:8px;color:#6B7280;font-size:12px;">Aktifkan hari lalu tambahkan sesi jam tugas.</p>
             <div class="jadwal-list" id="dokterJadwalList">
               <!-- Senin -->
               <div class="jadwal-row" data-day="Senin">
@@ -658,10 +659,9 @@
                   <button type="button" class="jadwal-toggle" aria-pressed="false" aria-label="Toggle Senin"></button>
                   <span class="jadwal-tutup-label">Libur</span>
                 </div>
-                <div class="jadwal-jam" hidden>
-                  <div class="jadwal-jam-pill"><span>Mulai</span><input class="jadwal-input" type="time" name="dokterMulaiSenin" value="08:00" /></div>
-                  <span class="jadwal-sep">–</span>
-                  <div class="jadwal-jam-pill"><span>Selesai</span><input class="jadwal-input" type="time" name="dokterSelesaiSenin" value="17:00" /></div>
+                <div class="jadwal-sesi-wrap" hidden>
+                  <div class="jadwal-sesi-list"></div>
+                  <button type="button" class="btn-tambah-sesi">+ Sesi</button>
                 </div>
               </div>
               <!-- Selasa -->
@@ -671,10 +671,9 @@
                   <button type="button" class="jadwal-toggle" aria-pressed="false" aria-label="Toggle Selasa"></button>
                   <span class="jadwal-tutup-label">Libur</span>
                 </div>
-                <div class="jadwal-jam" hidden>
-                  <div class="jadwal-jam-pill"><span>Mulai</span><input class="jadwal-input" type="time" name="dokterMulaiSelasa" value="08:00" /></div>
-                  <span class="jadwal-sep">–</span>
-                  <div class="jadwal-jam-pill"><span>Selesai</span><input class="jadwal-input" type="time" name="dokterSelesaiSelasa" value="17:00" /></div>
+                <div class="jadwal-sesi-wrap" hidden>
+                  <div class="jadwal-sesi-list"></div>
+                  <button type="button" class="btn-tambah-sesi">+ Sesi</button>
                 </div>
               </div>
               <!-- Rabu -->
@@ -684,10 +683,9 @@
                   <button type="button" class="jadwal-toggle" aria-pressed="false" aria-label="Toggle Rabu"></button>
                   <span class="jadwal-tutup-label">Libur</span>
                 </div>
-                <div class="jadwal-jam" hidden>
-                  <div class="jadwal-jam-pill"><span>Mulai</span><input class="jadwal-input" type="time" name="dokterMulaiRabu" value="08:00" /></div>
-                  <span class="jadwal-sep">–</span>
-                  <div class="jadwal-jam-pill"><span>Selesai</span><input class="jadwal-input" type="time" name="dokterSelesaiRabu" value="17:00" /></div>
+                <div class="jadwal-sesi-wrap" hidden>
+                  <div class="jadwal-sesi-list"></div>
+                  <button type="button" class="btn-tambah-sesi">+ Sesi</button>
                 </div>
               </div>
               <!-- Kamis -->
@@ -697,10 +695,9 @@
                   <button type="button" class="jadwal-toggle" aria-pressed="false" aria-label="Toggle Kamis"></button>
                   <span class="jadwal-tutup-label">Libur</span>
                 </div>
-                <div class="jadwal-jam" hidden>
-                  <div class="jadwal-jam-pill"><span>Mulai</span><input class="jadwal-input" type="time" name="dokterMulaiKamis" value="08:00" /></div>
-                  <span class="jadwal-sep">–</span>
-                  <div class="jadwal-jam-pill"><span>Selesai</span><input class="jadwal-input" type="time" name="dokterSelesaiKamis" value="17:00" /></div>
+                <div class="jadwal-sesi-wrap" hidden>
+                  <div class="jadwal-sesi-list"></div>
+                  <button type="button" class="btn-tambah-sesi">+ Sesi</button>
                 </div>
               </div>
               <!-- Jumat -->
@@ -710,10 +707,9 @@
                   <button type="button" class="jadwal-toggle" aria-pressed="false" aria-label="Toggle Jumat"></button>
                   <span class="jadwal-tutup-label">Libur</span>
                 </div>
-                <div class="jadwal-jam" hidden>
-                  <div class="jadwal-jam-pill"><span>Mulai</span><input class="jadwal-input" type="time" name="dokterMulaiJumat" value="08:00" /></div>
-                  <span class="jadwal-sep">–</span>
-                  <div class="jadwal-jam-pill"><span>Selesai</span><input class="jadwal-input" type="time" name="dokterSelesaiJumat" value="17:00" /></div>
+                <div class="jadwal-sesi-wrap" hidden>
+                  <div class="jadwal-sesi-list"></div>
+                  <button type="button" class="btn-tambah-sesi">+ Sesi</button>
                 </div>
               </div>
               <!-- Sabtu -->
@@ -723,10 +719,9 @@
                   <button type="button" class="jadwal-toggle" aria-pressed="false" aria-label="Toggle Sabtu"></button>
                   <span class="jadwal-tutup-label">Libur</span>
                 </div>
-                <div class="jadwal-jam" hidden>
-                  <div class="jadwal-jam-pill"><span>Mulai</span><input class="jadwal-input" type="time" name="dokterMulaiSabtu" value="08:00" /></div>
-                  <span class="jadwal-sep">–</span>
-                  <div class="jadwal-jam-pill"><span>Selesai</span><input class="jadwal-input" type="time" name="dokterSelesaiSabtu" value="17:00" /></div>
+                <div class="jadwal-sesi-wrap" hidden>
+                  <div class="jadwal-sesi-list"></div>
+                  <button type="button" class="btn-tambah-sesi">+ Sesi</button>
                 </div>
               </div>
               <!-- Minggu -->
@@ -736,10 +731,9 @@
                   <button type="button" class="jadwal-toggle" aria-pressed="false" aria-label="Toggle Minggu"></button>
                   <span class="jadwal-tutup-label">Libur</span>
                 </div>
-                <div class="jadwal-jam" hidden>
-                  <div class="jadwal-jam-pill"><span>Mulai</span><input class="jadwal-input" type="time" name="dokterMulaiMinggu" value="08:00" /></div>
-                  <span class="jadwal-sep">–</span>
-                  <div class="jadwal-jam-pill"><span>Selesai</span><input class="jadwal-input" type="time" name="dokterSelesaiMinggu" value="17:00" /></div>
+                <div class="jadwal-sesi-wrap" hidden>
+                  <div class="jadwal-sesi-list"></div>
+                  <button type="button" class="btn-tambah-sesi">+ Sesi</button>
                 </div>
               </div>
             </div>

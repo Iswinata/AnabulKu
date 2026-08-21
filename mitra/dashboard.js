@@ -49,16 +49,20 @@
       );
       if (idx < 0) idx = list.length - 1; /* fallback: klinik terakhir */
 
-      /* Update field profil */
+      /* Update field profil — JANGAN timpa adminStatus yang sudah di-set admin */
       list[idx] = Object.assign({}, list[idx], {
-        namaKlinik: klinik.namaKlinik || list[idx].namaKlinik,
-        waKlinik:   klinik.waKlinik   || list[idx].waKlinik,
-        alamat:     klinik.alamat     || list[idx].alamat,
-        kota:       klinik.kota       || list[idx].kota,
-        jamBuka:    klinik.jamBuka    || list[idx].jamBuka,
-        jamTutup:   klinik.jamTutup   || list[idx].jamTutup,
-        harisBuka:  klinik.harisBuka  || list[idx].harisBuka,
-        namaOwner:  klinik.namaOwner  || list[idx].namaOwner,
+        namaKlinik:    klinik.namaKlinik    || list[idx].namaKlinik,
+        waKlinik:      klinik.waKlinik      || list[idx].waKlinik,
+        alamat:        klinik.alamat        || list[idx].alamat,
+        kota:          klinik.kota          || list[idx].kota,
+        jamBuka:       klinik.jamBuka       || list[idx].jamBuka,
+        jamTutup:      klinik.jamTutup      || list[idx].jamTutup,
+        harisBuka:     klinik.harisBuka     || list[idx].harisBuka,
+        namaOwner:     klinik.namaOwner     || list[idx].namaOwner,
+        /* Pertahankan adminStatus dari admin — JANGAN timpa */
+        adminStatus:   list[idx].adminStatus || klinik.adminStatus || 'pending',
+        hewanDilayani: list[idx].hewanDilayani || klinik.hewanDilayani || [],
+        tipeKlinik:    list[idx].tipeKlinik    || klinik.tipeKlinik    || [],
         /* Sync dokter agar clinic-detail.js bisa membacanya */
         dokters: dokters.map(d => ({
           id:           d.id,
@@ -618,14 +622,21 @@
       /* Normalisasi jadwal ke format baru */
       const jadwal = Array.isArray(d.jadwal) && d.jadwal.length
         ? d.jadwal
-        : (Array.isArray(d.hari) ? d.hari.map(h => ({ hari: h, mulai: d.jamMulai || '08:00', selesai: d.jamSelesai || '17:00' })) : []);
+        : (Array.isArray(d.hari) ? d.hari.map(h => ({ hari: h, mulai: d.jamMulai || '08:00', selesai: d.jamSelesai || '17:00', sessions: [{ mulai: d.jamMulai || '08:00', selesai: d.jamSelesai || '17:00' }] })) : []);
 
-      const jadwalRows = jadwal.map(j =>
-        `<div class="dokter-jadwal-row">
+      const jadwalRows = jadwal.map(j => {
+        /* Tampilkan semua sesi per hari */
+        const sessions = Array.isArray(j.sessions) && j.sessions.length
+          ? j.sessions
+          : [{ mulai: j.mulai || '08:00', selesai: j.selesai || '17:00' }];
+        const sesiHtml = sessions.map((s, si) =>
+          `<span class="dokter-jadwal-sesi">${si > 0 ? ' · ' : ''}${esc(s.mulai)}–${esc(s.selesai)}</span>`
+        ).join('');
+        return `<div class="dokter-jadwal-row">
           <span class="dokter-jadwal-hari">${esc(SHORT[j.hari] || j.hari)}</span>
-          <span class="dokter-jadwal-jam">${esc(j.mulai)} – ${esc(j.selesai)}</span>
-        </div>`
-      ).join('');
+          <span class="dokter-jadwal-jam">${sesiHtml}</span>
+        </div>`;
+      }).join('');
 
       return `
       <div class="dokter-card">
@@ -666,78 +677,123 @@
     showToast('Dokter dihapus.', 'error');
   };
 
-  /* ── Jadwal toggle di modal dokter ── */
-  const HARI_LIST = ['Senin','Selasa','Rabu','Kamis','Jumat','Sabtu','Minggu'];
+  /* ── Jadwal dokter: multi-sesi per hari ── */
 
+  /* Buat satu baris sesi (input mulai-selesai + tombol hapus) */
+  function buatBarisSesi(mulai, selesai) {
+    const wrap = document.createElement('div');
+    wrap.className = 'sesi-row';
+    wrap.innerHTML =
+      '<div class="jadwal-jam-pill"><span>Mulai</span><input class="jadwal-input" type="time" value="' + (mulai || '08:00') + '" /></div>' +
+      '<span class="jadwal-sep">–</span>' +
+      '<div class="jadwal-jam-pill"><span>Selesai</span><input class="jadwal-input" type="time" value="' + (selesai || '17:00') + '" /></div>' +
+      '<button type="button" class="btn-hapus-sesi" aria-label="Hapus sesi">✕</button>';
+    wrap.querySelector('.btn-hapus-sesi').addEventListener('click', () => wrap.remove());
+    return wrap;
+  }
+
+  /* Init toggle + "+ Sesi" listener di #dokterJadwalList */
   function initDokterJadwalToggles() {
+    /* Clone untuk buang listener lama */
     document.querySelectorAll('#dokterJadwalList .jadwal-toggle').forEach(btn => {
-      /* Hindari duplikat listener saat modal dibuka ulang */
       btn.replaceWith(btn.cloneNode(true));
     });
+    document.querySelectorAll('#dokterJadwalList .btn-tambah-sesi').forEach(btn => {
+      btn.replaceWith(btn.cloneNode(true));
+    });
+
     document.querySelectorAll('#dokterJadwalList .jadwal-toggle').forEach(btn => {
       btn.addEventListener('click', () => {
-        const row     = btn.closest('.jadwal-row');
-        const jamEl   = row.querySelector('.jadwal-jam');
-        const lblEl   = row.querySelector('.jadwal-tutup-label');
-        const namaEl  = row.querySelector('.jadwal-nama');
-        const isOn    = btn.getAttribute('aria-pressed') === 'true';
+        const row      = btn.closest('.jadwal-row');
+        const sesiWrap = row.querySelector('.jadwal-sesi-wrap');
+        const sesiList = row.querySelector('.jadwal-sesi-list');
+        const lblEl    = row.querySelector('.jadwal-tutup-label');
+        const namaEl   = row.querySelector('.jadwal-nama');
+        const isOn     = btn.getAttribute('aria-pressed') === 'true';
 
         btn.setAttribute('aria-pressed', String(!isOn));
         btn.classList.toggle('is-on', !isOn);
-        jamEl.hidden  = isOn;
-        lblEl.hidden  = !isOn;
+        sesiWrap.hidden = isOn;
+        lblEl.hidden    = !isOn;
         namaEl.classList.toggle('jadwal-nama--off', isOn);
+
+        /* Auto-tambah 1 sesi default saat hari baru diaktifkan */
+        if (!isOn && sesiList.children.length === 0) {
+          sesiList.appendChild(buatBarisSesi('08:00', '17:00'));
+        }
+      });
+    });
+
+    document.querySelectorAll('#dokterJadwalList .btn-tambah-sesi').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const sesiList = btn.closest('.jadwal-sesi-wrap').querySelector('.jadwal-sesi-list');
+        sesiList.appendChild(buatBarisSesi('08:00', '17:00'));
       });
     });
   }
 
-  /* Reset semua hari ke "libur", lalu terapkan data jadwal dokter */
+  /* Reset semua hari ke "libur", lalu terapkan data jadwal dokter
+     jadwal: [{hari, mulai, selesai, sessions:[{mulai,selesai}]}] atau format lama */
   function resetDokterJadwal(jadwal) {
-    /* jadwal: array of {hari, mulai, selesai} atau legacy {hari:[], jamMulai, jamSelesai} */
-    /* Normalisasi ke map: { "Senin": {mulai, selesai}, ... } */
+    /* Normalisasi ke map: { "Senin": [{mulai, selesai},...], ... } */
     const map = {};
 
     if (Array.isArray(jadwal) && jadwal.length && typeof jadwal[0] === 'object' && jadwal[0].hari) {
-      /* Format baru: [{hari, mulai, selesai}] */
-      jadwal.forEach(j => { map[j.hari] = { mulai: j.mulai || '08:00', selesai: j.selesai || '17:00' }; });
+      jadwal.forEach(j => {
+        const sessions = Array.isArray(j.sessions) && j.sessions.length
+          ? j.sessions
+          : [{ mulai: j.mulai || '08:00', selesai: j.selesai || '17:00' }];
+        map[j.hari] = sessions;
+      });
     } else if (Array.isArray(jadwal)) {
-      /* Format lama: ['Senin', 'Selasa', ...] (dari field .hari lama) — abaikan jam */
-      jadwal.forEach(h => { if (typeof h === 'string') map[h] = { mulai: '08:00', selesai: '17:00' }; });
+      jadwal.forEach(h => {
+        if (typeof h === 'string') map[h] = [{ mulai: '08:00', selesai: '17:00' }];
+      });
     }
 
     document.querySelectorAll('#dokterJadwalList .jadwal-row').forEach(row => {
-      const day    = row.dataset.day;
-      const btn    = row.querySelector('.jadwal-toggle');
-      const jamEl  = row.querySelector('.jadwal-jam');
-      const lblEl  = row.querySelector('.jadwal-tutup-label');
-      const namaEl = row.querySelector('.jadwal-nama');
+      const day      = row.dataset.day;
+      const btn      = row.querySelector('.jadwal-toggle');
+      const sesiWrap = row.querySelector('.jadwal-sesi-wrap');
+      const sesiList = row.querySelector('.jadwal-sesi-list');
+      const lblEl    = row.querySelector('.jadwal-tutup-label');
+      const namaEl   = row.querySelector('.jadwal-nama');
 
       const aktif = !!map[day];
       btn.setAttribute('aria-pressed', String(aktif));
       btn.classList.toggle('is-on', aktif);
-      jamEl.hidden  = !aktif;
-      lblEl.hidden  = aktif;
+      sesiWrap.hidden = !aktif;
+      lblEl.hidden    = aktif;
       namaEl.classList.toggle('jadwal-nama--off', !aktif);
 
+      /* Reset sesi list */
+      sesiList.innerHTML = '';
       if (aktif) {
-        const inputMulai   = row.querySelector(`input[name="dokterMulai${day}"]`);
-        const inputSelesai = row.querySelector(`input[name="dokterSelesai${day}"]`);
-        if (inputMulai)   inputMulai.value   = map[day].mulai;
-        if (inputSelesai) inputSelesai.value = map[day].selesai;
+        map[day].forEach(s => sesiList.appendChild(buatBarisSesi(s.mulai, s.selesai)));
       }
     });
   }
 
-  /* Baca jadwal dari form modal → array [{hari, mulai, selesai}] */
+  /* Baca jadwal dari form modal → array [{hari, mulai, selesai, sessions:[]}] */
   function readDokterJadwal() {
     const result = [];
     document.querySelectorAll('#dokterJadwalList .jadwal-row').forEach(row => {
       const btn = row.querySelector('.jadwal-toggle');
       if (btn.getAttribute('aria-pressed') !== 'true') return;
       const day = row.dataset.day;
-      const mulai   = (row.querySelector(`input[name="dokterMulai${day}"]`)?.value)   || '08:00';
-      const selesai = (row.querySelector(`input[name="dokterSelesai${day}"]`)?.value) || '17:00';
-      result.push({ hari: day, mulai, selesai });
+      const sesiRows = row.querySelectorAll('.sesi-row');
+      const sessions = [];
+      sesiRows.forEach(sr => {
+        const inputs = sr.querySelectorAll('input[type="time"]');
+        sessions.push({ mulai: inputs[0]?.value || '08:00', selesai: inputs[1]?.value || '17:00' });
+      });
+      if (!sessions.length) sessions.push({ mulai: '08:00', selesai: '17:00' });
+      result.push({
+        hari:     day,
+        mulai:    sessions[0].mulai,
+        selesai:  sessions[sessions.length - 1].selesai,
+        sessions,
+      });
     });
     return result;
   }
