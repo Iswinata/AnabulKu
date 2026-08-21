@@ -525,7 +525,10 @@
         title: 'Seret untuk atur lokasi',
       });
 
-      setCoords(center.lat, center.lng);
+      /* Wait for map to finish first render before geocoding/places calls */
+      google.maps.event.addListenerOnce(map, 'idle', function () {
+        setCoords(center.lat, center.lng);
+      });
 
       /* Drag end → update coords */
       marker.addListener('dragend', () => {
