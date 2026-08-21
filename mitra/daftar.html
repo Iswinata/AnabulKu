@@ -279,24 +279,15 @@
         </div>
         <div class="field-group">
           <div class="field">
-            <label class="field-label">Layanan Tersedia <span class="req" aria-hidden="true">*</span></label>
-            <div class="service-grid">
-              <label class="service-chip"><input type="checkbox" name="layanan" value="konsultasi" /><span>Konsultasi Umum</span></label>
-              <label class="service-chip"><input type="checkbox" name="layanan" value="vaksinasi" /><span>Vaksinasi</span></label>
-              <label class="service-chip"><input type="checkbox" name="layanan" value="grooming" /><span>Grooming</span></label>
-              <label class="service-chip"><input type="checkbox" name="layanan" value="operasi" /><span>Operasi / Bedah</span></label>
-              <label class="service-chip"><input type="checkbox" name="layanan" value="rontgen" /><span>Rontgen / USG</span></label>
-              <label class="service-chip"><input type="checkbox" name="layanan" value="labkes" /><span>Lab Kesehatan</span></label>
-              <label class="service-chip"><input type="checkbox" name="layanan" value="rawatInap" /><span>Rawat Inap</span></label>
-              <label class="service-chip"><input type="checkbox" name="layanan" value="sterilisasi" /><span>Sterilisasi</span></label>
-              <label class="service-chip"><input type="checkbox" name="layanan" value="penitipan" /><span>Penitipan</span></label>
-              <label class="service-chip"><input type="checkbox" name="layanan" value="dental" /><span>Dental Care</span></label>
+            <label class="field-label">Layanan Tersedia</label>
+            <p class="field-hint">Klinik Anda menyediakan layanan booking konsultasi umum.</p>
+            <input type="hidden" name="layanan" value="konsultasi" />
+            <div class="service-info-chip">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18" aria-hidden="true">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.63 3.4 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.89a16 16 0 0 0 5.55 5.55l.97-.97a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.07 16c.001.31.001.62-.001.92z"/>
+              </svg>
+              <span>Konsultasi Umum</span>
             </div>
-          </div>
-          <div class="field">
-            <label class="field-label" for="layananLain">Layanan Lainnya</label>
-            <input class="field-input" type="text" id="layananLain" name="layananLain"
-              placeholder="Tulis layanan tambahan (pisahkan dengan koma)" />
           </div>
           <div class="field">
             <label class="field-label" for="hargaMulai">Harga Konsultasi Mulai Dari</label>
@@ -311,44 +302,9 @@
       <!-- /step4 -->
 
       <!-- ==============================
-           STEP 5 — Tim Dokter
+           STEP 5 — Informasi Akun
       ============================== -->
       <div class="form-step" id="step5" data-step="5" hidden>
-        <div class="step-heading">
-          <h2 class="step-title">Tim Dokter</h2>
-          <p class="step-sub">Tambahkan dokter yang bertugas di klinik Anda.</p>
-        </div>
-        <div class="field-group" id="dokterList">
-          <!-- Dokter pertama (default) -->
-          <div class="dokter-entry" id="dokterEntry0">
-            <div class="dokter-header">
-              <span class="dokter-num">Dokter 1</span>
-            </div>
-            <div class="field">
-              <label class="field-label" for="dokterNama0">Nama Dokter <span class="req" aria-hidden="true">*</span></label>
-              <input class="field-input" type="text" id="dokterNama0" name="dokterNama0"
-                placeholder="drh. Nama Dokter" />
-            </div>
-            <div class="field">
-              <label class="field-label" for="dokterSpesialis0">Spesialisasi</label>
-              <input class="field-input" type="text" id="dokterSpesialis0" name="dokterSpesialis0"
-                placeholder="Mis: Kucing & Anjing, Bedah Hewan" />
-            </div>
-          </div>
-        </div>
-        <button class="add-btn" type="button" id="btnTambahDokter">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
-            <circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/>
-          </svg>
-          Tambah Dokter
-        </button>
-      </div>
-      <!-- /step5 -->
-
-      <!-- ==============================
-           STEP 6 — Informasi Akun
-      ============================== -->
-      <div class="form-step" id="step6" data-step="6" hidden>
         <div class="step-heading">
           <h2 class="step-title">Informasi Akun</h2>
           <p class="step-sub">Buat akun untuk mengelola klinik Anda di dashboard mitra.</p>
@@ -386,9 +342,9 @@
       <!-- /step6 -->
 
       <!-- ==============================
-           STEP 7 — Konfirmasi & Kirim
+           STEP 6 — Konfirmasi & Kirim
       ============================== -->
-      <div class="form-step" id="step7" data-step="7" hidden>
+      <div class="form-step" id="step6" data-step="6" hidden>
         <div class="step-heading">
           <h2 class="step-title">Konfirmasi Data</h2>
           <p class="step-sub">Periksa kembali data klinik sebelum mendaftar.</p>
@@ -430,7 +386,7 @@
         </div>
         <h2 class="success-title">Pendaftaran Berhasil!</h2>
         <p class="success-sub">Klinik <strong id="successClinicName"></strong> sudah terdaftar sebagai mitra AnabulKu. Tim kami akan meninjau data dalam 1×24 jam.</p>
-        <a class="cta-btn" href="index.html">Ke Dashboard</a>
+        <a class="cta-btn" href="dashboard.html">Buka Dashboard Klinik</a>
         <a class="cta-btn cta-btn--outline" href="../home.html">Buka Aplikasi User</a>
       </div>
     </div>

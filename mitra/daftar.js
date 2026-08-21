@@ -7,21 +7,19 @@
   'use strict';
 
   /* ── Config ── */
-  const TOTAL_STEPS = 7;
+  const TOTAL_STEPS = 6;
   const STEP_TITLES = [
     'Informasi Klinik',
     'Lokasi Klinik',
     'Jadwal Operasional',
     'Layanan Klinik',
-    'Tim Dokter',
     'Informasi Akun',
     'Konfirmasi Data',
   ];
-  const BTN_LABELS = ['Lanjut', 'Lanjut', 'Lanjut', 'Lanjut', 'Lanjut', 'Lanjut', 'Kirim Pendaftaran'];
+  const BTN_LABELS = ['Lanjut', 'Lanjut', 'Lanjut', 'Lanjut', 'Lanjut', 'Kirim Pendaftaran'];
 
   /* ── State ── */
   let currentStep = 1;
-  let dokterCount = 1;
   let mapAutoOpen = false; /* set to true when step 2 is shown before Maps API is ready */
 
   /* ── DOM refs ── */
@@ -31,8 +29,6 @@
   const btnBack    = document.getElementById('btnBack');
   const btnNext    = document.getElementById('btnNext');
   const formBody   = document.getElementById('formBody');
-  const dokterList = document.getElementById('dokterList');
-  const btnTambah  = document.getElementById('btnTambahDokter');
   const confirmCard = document.getElementById('confirmCard');
   const successOverlay = document.getElementById('successOverlay');
   const successClinicName = document.getElementById('successClinicName');
@@ -82,8 +78,8 @@
     formBody.scrollTop = 0;
     window.scrollTo(0, 0);
 
-    // Build confirm card on step 7
-    if (n === 7) buildConfirmCard();
+    // Build confirm card on step 6
+    if (n === 6) buildConfirmCard();
 
     // Auto-open map when arriving at step 2
     if (n === 2) {
@@ -151,17 +147,7 @@
       }
     }
 
-    // Step 4: at least one service checked
-    if (n === 4) {
-      const services = step.querySelectorAll('input[name="layanan"]:checked');
-      const srvErr = step.querySelector('.service-error');
-      if (services.length === 0) {
-        if (srvErr) { srvErr.textContent = 'Pilih minimal satu layanan.'; srvErr.classList.add('is-visible'); }
-        valid = false;
-      } else {
-        if (srvErr) srvErr.classList.remove('is-visible');
-      }
-    }
+    // Step 4: layanan sudah fixed (konsultasi umum), tidak perlu validasi checkbox
 
     // Step 2: coordinates must be set
     if (n === 2) {
@@ -176,8 +162,8 @@
       }
     }
 
-    // Step 6: password match
-    if (n === 6) {
+    // Step 5: password match
+    if (n === 5) {
       const pwd  = document.getElementById('password');
       const conf = document.getElementById('konfPassword');
       if (pwd && conf && pwd.value !== conf.value) {
@@ -188,11 +174,10 @@
       }
     }
 
-    // Step 7: TOS must be checked
-    if (n === 7) {
+    // Step 6: TOS must be checked
+    if (n === 6) {
       const tos = document.getElementById('tosCheck');
       if (tos && !tos.checked) {
-        const err = tos.closest('.tos-wrap')?.nextElementSibling;
         alert('Anda harus menyetujui Syarat & Ketentuan untuk melanjutkan.');
         valid = false;
       }
@@ -207,47 +192,29 @@
     const getChecked = name =>
       [...document.querySelectorAll(`input[name="${name}"]:checked`)].map(el => el.value);
 
-    /* Collect dokter entries from the dynamic list */
-    const dokters = [];
-    if (dokterList) {
-      dokterList.querySelectorAll('.dokter-entry').forEach((entry, idx) => {
-        const namaEl  = entry.querySelector(`[id^="dokterNama"]`);
-        const specEl  = entry.querySelector(`[id^="dokterSpesialis"]`);
-        if (namaEl || specEl) {
-          dokters.push({
-            nama:        (namaEl?.value  || '').trim(),
-            spesialisasi:(specEl?.value  || '').trim(),
-            hari:        getChecked('hari').join(', '), /* inherit clinic schedule */
-          });
-        }
-      });
-    }
-
     return {
-      namaKlinik:    get('namaKlinik'),
-      waKlinik:      get('waKlinik'),
-      tipeKlinik:    get('tipeKlinik'),
-      hewanDilayani: getChecked('hewanDilayani'), /* array: ['kucing','anjing','reptil'] */
-      alamat:        get('alamat'),
-      kota:          get('kota'),
-      provinsi:      get('provinsi'),
-      kodePos:       get('kodePos'),
-      lat:              get('klinikLat'),
-      lng:              get('klinikLng'),
-      formattedAddress: get('formattedAddress'),
-      googleRating:     get('googleRating'),
-      harisBuka:     getChecked('hari').join(', '),
-      jamBuka:       get('jamBuka'),
-      jamTutup:      get('jamTutup'),
-      catatanJadwal: get('catatanJadwal'),
-      layanan:       getChecked('layanan').join(', '),
-      layananLain:   get('layananLain'),
-      hargaMulai:    get('hargaMulai'),
-      emailAkun:     get('emailAkun'),
-      namaOwner:     get('namaOwner'),
-      dokters:       dokters,
-      logoDataUrl:   uploadData.logo || '',
-      fotoDataUrl:   uploadData.foto || '',
+      namaKlinik:      get('namaKlinik'),
+      waKlinik:        get('waKlinik'),
+      tipeKlinik:      get('tipeKlinik'),
+      hewanDilayani:   getChecked('hewanDilayani'),
+      alamat:          get('alamat'),
+      kota:            get('kota'),
+      provinsi:        get('provinsi'),
+      kodePos:         get('kodePos'),
+      lat:             get('klinikLat'),
+      lng:             get('klinikLng'),
+      formattedAddress:get('formattedAddress'),
+      googleRating:    get('googleRating'),
+      harisBuka:       getChecked('hari').join(', '),
+      jamBuka:         get('jamBuka'),
+      jamTutup:        get('jamTutup'),
+      catatanJadwal:   get('catatanJadwal'),
+      layanan:         'Konsultasi Umum',
+      hargaMulai:      get('hargaMulai'),
+      emailAkun:       get('emailAkun'),
+      namaOwner:       get('namaOwner'),
+      logoDataUrl:     uploadData.logo || '',
+      fotoDataUrl:     uploadData.foto || '',
     };
   }
 
@@ -297,49 +264,6 @@
     // Show success
     if (successClinicName) successClinicName.textContent = data.namaKlinik;
     if (successOverlay) successOverlay.hidden = false;
-  }
-
-  /* ── Add dokter entry ── */
-  function addDokter() {
-    const entry = document.createElement('div');
-    entry.className = 'dokter-entry';
-    entry.id = `dokterEntry${dokterCount}`;
-    entry.innerHTML = `
-      <div class="dokter-header">
-        <span class="dokter-num">Dokter ${dokterCount + 1}</span>
-        <button class="dokter-del" type="button" aria-label="Hapus dokter">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
-            <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
-            <path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/>
-          </svg>
-        </button>
-      </div>
-      <div class="field">
-        <label class="field-label" for="dokterNama${dokterCount}">Nama Dokter</label>
-        <input class="field-input" type="text" id="dokterNama${dokterCount}"
-          name="dokterNama${dokterCount}" placeholder="drh. Nama Dokter" />
-      </div>
-      <div class="field">
-        <label class="field-label" for="dokterSpesialis${dokterCount}">Spesialisasi</label>
-        <input class="field-input" type="text" id="dokterSpesialis${dokterCount}"
-          name="dokterSpesialis${dokterCount}" placeholder="Mis: Kucing & Anjing, Bedah Hewan" />
-      </div>`;
-
-    // Delete handler
-    entry.querySelector('.dokter-del').addEventListener('click', () => {
-      entry.remove();
-      renumberDokter();
-    });
-
-    dokterList.appendChild(entry);
-    dokterCount++;
-  }
-
-  function renumberDokter() {
-    dokterList.querySelectorAll('.dokter-entry').forEach((el, i) => {
-      const num = el.querySelector('.dokter-num');
-      if (num) num.textContent = `Dokter ${i + 1}`;
-    });
   }
 
   /* ── File upload state (holds base64 for submission) ── */
@@ -603,9 +527,6 @@
       goTo(currentStep + 1);
     }
   });
-
-  /* ── Add dokter button ── */
-  if (btnTambah) btnTambah.addEventListener('click', addDokter);
 
   /* ── Init ── */
   buildDots();

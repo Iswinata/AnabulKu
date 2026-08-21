@@ -963,20 +963,6 @@ button { font-family: inherit; border: none; background: none; cursor: pointer; 
   box-shadow: 1px 1px 0 #00000033;
 }
 
-/* ---------- Input with Rp prefix ---------- */
-.input-prefix-wrap { position: relative; }
-.input-prefix {
-  position: absolute;
-  left: 13.6px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 15px;
-  color: #6B7280;
-  font-weight: 500;
-  pointer-events: none;
-  z-index: 1;
-}
-.field-input--prefixed { padding-left: 40px; }
 
 /* ---------- Dokter entries ---------- */
 .dokter-entry {
@@ -1142,6 +1128,51 @@ button { font-family: inherit; border: none; background: none; cursor: pointer; 
   border: 1.5px solid #D1D5DB;
   color: #374151;
   box-shadow: none;
+}
+
+/* ---------- Input with prefix (Rp) ---------- */
+.input-prefix-wrap {
+  display: flex;
+  align-items: center;
+  border: 1.5px solid #D1D5DB;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: border-color .15s;
+}
+
+.input-prefix-wrap:focus-within { border-color: #FF9800; }
+
+.input-prefix {
+  padding: 12px 14px;
+  background: #F9FAFB;
+  font-size: 14px;
+  font-weight: 600;
+  color: #6B7280;
+  border-right: 1.5px solid #D1D5DB;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.field-input--prefixed {
+  border: none !important;
+  border-radius: 0 !important;
+  flex: 1;
+  outline: none;
+}
+
+/* ---------- Service info chip (fixed layanan) ---------- */
+.service-info-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 18px;
+  background: #FFF7ED;
+  border: 1.5px solid #FFC46D;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #FF9800;
+  margin-top: 6px;
 }
 
 /* ===================================================================

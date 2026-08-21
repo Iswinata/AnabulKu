@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#fcece3" />
+  <title>AnabulKu — Masuk</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --frame-bg:  #fcece3;
+      --orange:    #ff9800;
+      --orange-d:  #f57c00;
+      --orange-l:  #ffbd5d;
+      --ink:       #2c3e50;
+      --ink-2:     #4b5563;
+      --ink-3:     #6b7280;
+      --gray-e5:   #e5e7eb;
+      --gray-d1:   #d1d5db;
+      --red:       #ef4444;
+      --black:     #000;
+      --white:     #fff;
+      --shadow:    2px 2px 0px #000;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-text-size-adjust: 100%; }
+
+    body {
+      font-family: "Poppins", system-ui, sans-serif;
+      background: #e7dbd0;
+      display: flex;
+      justify-content: center;
+      min-height: 100vh; min-height: 100dvh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    button { font-family: inherit; border: none; background: none; cursor: pointer; color: inherit; -webkit-tap-highlight-color: transparent; }
+    a { -webkit-tap-highlight-color: transparent; }
+
+    /* ── shell ── */
+    .app {
+      width: 100%; max-width: 393px;
+      min-height: 100vh; min-height: 100dvh;
+      background: var(--frame-bg);
+      padding: 0 22px 40px;
+      display: flex; flex-direction: column;
+      overflow-x: hidden;
+      box-shadow: 0 0 40px -10px rgba(0,0,0,.18);
+    }
+
+    /* ── Page header ── */
+    .page-header {
+      padding: 44px 0 28px;
+      flex-shrink: 0;
+    }
+
+    .brand-row {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 28px;
+    }
+    .brand-icon {
+      width: 40px; height: 40px;
+      background: linear-gradient(180deg, #ff9800 0%, #ffbd5d 100%);
+      border: 1.5px solid var(--black);
+      border-radius: 12px;
+      box-shadow: 1px 1px 0 #000;
+      display: grid; place-items: center;
+      font-size: 18px; flex-shrink: 0;
+    }
+    .brand-name {
+      font-size: 18px; font-weight: 800;
+      color: var(--ink); letter-spacing: -.3px;
+    }
+
+    .page-title {
+      font-size: 26px; font-weight: 800;
+      color: var(--ink); line-height: 1.2;
+      letter-spacing: -.5px;
+      margin-bottom: 6px;
+    }
+    .page-title span { color: var(--orange-d); }
+
+    .page-sub {
+      font-size: 13px; color: var(--ink-3);
+      line-height: 1.5;
+    }
+
+    /* ── Section header ── */
+    .section-title {
+      font-size: 11px; font-weight: 700;
+      color: #ac6600;
+      text-transform: uppercase; letter-spacing: .07em;
+      margin-bottom: 10px;
+    }
+
+    /* ── Form card ── */
+    .form-card {
+      background: var(--white);
+      border: 1.5px solid var(--gray-e5);
+      border-radius: 13px;
+      box-shadow: var(--shadow);
+      padding: 20px 18px;
+      margin-bottom: 12px;
+    }
+
+    .field { margin-bottom: 16px; }
+    .field:last-of-type { margin-bottom: 0; }
+
+    .field-label {
+      display: block;
+      font-size: 11px; font-weight: 700;
+      color: var(--ink-2);
+      text-transform: uppercase; letter-spacing: .06em;
+      margin-bottom: 7px;
+    }
+
+    .input-wrap { position: relative; }
+
+    .input-icon {
+      position: absolute;
+      left: 13px; top: 50%;
+      transform: translateY(-50%);
+      width: 16px; height: 16px;
+      color: var(--gray-d1); pointer-events: none;
+    }
+
+    .field-input {
+      width: 100%; height: 48px;
+      border: 1.5px solid var(--gray-e5);
+      border-radius: 10px;
+      background: #fafafa;
+      padding: 0 44px 0 42px;
+      font-size: 14px; font-family: inherit;
+      color: var(--ink); outline: none;
+      transition: border-color .15s, box-shadow .15s, background .15s;
+      -webkit-appearance: none;
+    }
+    .field-input.no-right-pad { padding-right: 14px; }
+    .field-input:focus {
+      border-color: var(--orange);
+      background: var(--white);
+      box-shadow: 0 0 0 3px rgba(255,152,0,.13);
+    }
+    .field-input.is-error {
+      border-color: var(--red);
+      box-shadow: 0 0 0 3px rgba(239,68,68,.1);
+    }
+    .field-input::placeholder { color: #c0c8d2; font-size: 13px; }
+
+    .toggle-pass {
+      position: absolute; right: 11px; top: 50%;
+      transform: translateY(-50%);
+      padding: 5px; color: var(--gray-d1);
+      display: flex; align-items: center;
+      transition: color .15s;
+    }
+    .toggle-pass svg { width: 16px; height: 16px; }
+    .toggle-pass:hover { color: var(--ink-2); }
+
+    /* ── Opts row ── */
+    .opts {
+      display: flex; align-items: center;
+      justify-content: space-between;
+      margin-top: 16px;
+    }
+    .check-wrap {
+      display: flex; align-items: center; gap: 7px;
+      cursor: pointer; user-select: none;
+    }
+    .check-wrap input {
+      width: 15px; height: 15px;
+      accent-color: var(--orange); cursor: pointer;
+    }
+    .check-label { font-size: 12px; font-weight: 500; color: var(--ink-2); }
+    .forgot { font-size: 12px; font-weight: 600; color: var(--orange); text-decoration: none; }
+
+    /* ── Primary button ── */
+    .btn-primary {
+      width: 100%; height: 50px;
+      background: linear-gradient(180deg, #ff9800 0%, #ffbd5d 100%);
+      color: var(--white);
+      border: 1.5px solid var(--black);
+      border-radius: 13px;
+      box-shadow: var(--shadow);
+      font-size: 15px; font-weight: 700;
+      font-family: inherit;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      transition: transform .1s ease, box-shadow .1s ease;
+      margin-bottom: 12px;
+    }
+    .btn-primary:active { transform: translate(1px,1px); box-shadow: 1px 1px 0 #000; }
+    .btn-primary:disabled { opacity: .6; cursor: not-allowed; transform: none !important; }
+
+    /* ── Register promo card ── */
+    .register-row {
+      display: flex; align-items: center; gap: 12px;
+      background: var(--white);
+      border: 1.5px solid var(--gray-e5);
+      border-radius: 13px;
+      box-shadow: var(--shadow);
+      padding: 14px 16px;
+      text-decoration: none; color: inherit;
+      transition: transform .1s ease, box-shadow .1s ease;
+      margin-bottom: 12px;
+    }
+    .register-row:active { transform: translate(1px,1px); box-shadow: 1px 1px 0 #000; }
+
+    .rr-icon {
+      width: 40px; height: 40px; flex-shrink: 0;
+      background: linear-gradient(180deg, #ff9800 0%, #ffbd5d 100%);
+      border: 1.5px solid var(--black);
+      border-radius: 50%;
+      box-shadow: 1px 1px 0 #000;
+      display: grid; place-items: center;
+      font-size: 17px;
+    }
+    .rr-text { flex: 1; min-width: 0; }
+    .rr-title { font-size: 13px; font-weight: 700; color: var(--ink); line-height: 1.3; }
+    .rr-sub   { font-size: 11px; color: var(--ink-3); margin-top: 2px; }
+
+    .rr-arrow {
+      flex: none; width: 30px; height: 30px;
+      border-radius: 50%;
+      background: linear-gradient(90deg, #ff9800 0%, #ffc46d 100%);
+      border: 1.5px solid var(--black);
+      box-shadow: 1px 1px 0 #000;
+      display: grid; place-items: center; color: var(--white);
+    }
+    .rr-arrow svg { width: 14px; height: 14px; }
+
+    /* ── Divider ── */
+    .divider {
+      display: flex; align-items: center; gap: 10px;
+      margin: 4px 0 12px;
+    }
+    .divider::before, .divider::after {
+      content: ''; flex: 1; height: 1px; background: var(--gray-e5);
+    }
+    .divider-text { font-size: 11px; color: var(--gray-d1); font-weight: 500; white-space: nowrap; }
+
+    /* ── Footer ── */
+    .footer-note {
+      text-align: center; font-size: 11px;
+      color: var(--ink-3); margin-top: auto; padding-top: 8px;
+    }
+    .footer-note a { color: var(--ink-2); font-weight: 600; text-decoration: none; }
+
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      20%,60%  { transform: translateX(-6px); }
+      40%,80%  { transform: translateX(6px); }
+    }
+
+    @media (max-width: 340px) { .app { padding-left: 16px; padding-right: 16px; } }
+    @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <!-- Page header -->
+  <div class="page-header">
+    <div class="brand-row">
+      <div class="brand-icon">🐾</div>
+      <span class="brand-name">AnabulKu</span>
+    </div>
+    <h1 class="page-title">Halo,<br><span>Selamat Datang!</span></h1>
+    <p class="page-sub">Masuk untuk menemukan klinik terbaik buat hewan kesayanganmu.</p>
+  </div>
+
+  <!-- Form card -->
+  <p class="section-title">Masuk ke akun</p>
+  <div class="form-card" id="formCard">
+    <form id="loginForm" novalidate>
+
+      <div class="field">
+        <label class="field-label" for="fIdentifier">Email / Username</label>
+        <div class="input-wrap">
+          <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+          </svg>
+          <input class="field-input no-right-pad" type="text" id="fIdentifier"
+            placeholder="email atau username kamu" autocomplete="username" required />
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="fPass">Kata Sandi</label>
+        <div class="input-wrap">
+          <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+            <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+          <input class="field-input" type="password" id="fPass"
+            placeholder="kata sandi kamu" autocomplete="current-password" required />
+          <button type="button" class="toggle-pass" id="togglePass" aria-label="Tampilkan kata sandi" tabindex="-1">
+            <svg id="iconEye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+            </svg>
+            <svg id="iconEyeOff" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" hidden>
+              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+              <line x1="1" y1="1" x2="23" y2="23"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="opts">
+        <label class="check-wrap">
+          <input type="checkbox" id="rememberMe" />
+          <span class="check-label">Ingat saya</span>
+        </label>
+        <a href="#" class="forgot">Lupa kata sandi?</a>
+      </div>
+    </form>
+  </div>
+
+  <button class="btn-primary" type="submit" form="loginForm" id="btnLogin">
+    <span id="btnText">Masuk Sekarang</span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true" width="16" height="16">
+      <path d="M5 12h14M12 5l7 7-7 7"/>
+    </svg>
+  </button>
+
+  <div class="divider"><span class="divider-text">Belum punya akun?</span></div>
+
+  <a class="register-row" href="register.html">
+    <div class="rr-icon">🐾</div>
+    <div class="rr-text">
+      <p class="rr-title">Daftar gratis sekarang</p>
+      <p class="rr-sub">Bergabung dan rawat hewan kesayanganmu</p>
+    </div>
+    <div class="rr-arrow">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true">
+        <path d="M5 12h14M12 5l7 7-7 7"/>
+      </svg>
+    </div>
+  </a>
+
+  <p class="footer-note">Tim internal? <a href="admin-login.html">Panel Admin →</a></p>
+
+</div>
+
+<script>
+(function () {
+  'use strict';
+  const LS = {
+    get: (k, d) => { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } },
+    set: (k, v) => localStorage.setItem(k, JSON.stringify(v)),
+  };
+
+  const sess = LS.get('anabulku_user_session', {});
+  if (sess && sess.loggedIn) window.location.replace('home.html');
+
+  const saved = localStorage.getItem('anabulku_user_remember');
+  if (saved) {
+    document.getElementById('fIdentifier').value = saved;
+    document.getElementById('rememberMe').checked = true;
+  }
+
+  document.getElementById('togglePass').addEventListener('click', () => {
+    const inp = document.getElementById('fPass');
+    const hide = inp.type === 'password';
+    inp.type = hide ? 'text' : 'password';
+    document.getElementById('iconEye').hidden    = hide;
+    document.getElementById('iconEyeOff').hidden = !hide;
+  });
+
+  function markErr(id) {
+    const el = document.getElementById(id);
+    el.classList.add('is-error');
+    el.addEventListener('input', () => el.classList.remove('is-error'), { once: true });
+  }
+
+  function shake() {
+    const c = document.getElementById('formCard');
+    c.style.animation = 'none'; c.offsetHeight;
+    c.style.animation = 'shake .4s ease';
+  }
+
+  document.getElementById('loginForm').addEventListener('submit', e => {
+    e.preventDefault();
+    const id   = document.getElementById('fIdentifier').value.trim();
+    const pass = document.getElementById('fPass').value;
+    const btn  = document.getElementById('btnLogin');
+    const txt  = document.getElementById('btnText');
+
+    document.getElementById('fIdentifier').classList.remove('is-error');
+    document.getElementById('fPass').classList.remove('is-error');
+
+    let err = false;
+    if (!id)   { markErr('fIdentifier'); err = true; }
+    if (!pass) { markErr('fPass');       err = true; }
+    if (err)   { shake(); return; }
+
+    txt.textContent = 'Memproses…'; btn.disabled = true;
+
+    setTimeout(() => {
+      const users = LS.get('anabulku_users', []);
+      const user  = users.find(u => (u.email === id || u.username === id) && u.password === pass);
+      if (user) {
+        if (document.getElementById('rememberMe').checked) {
+          localStorage.setItem('anabulku_user_remember', id);
+        } else {
+          localStorage.removeItem('anabulku_user_remember');
+        }
+        LS.set('anabulku_user_session', {
+          loggedIn: true, nama: user.nama, email: user.email,
+          username: user.username, noHp: user.noHp || '',
+          kota: user.kota || '', role: user.role || 'user',
+        });
+        window.location.href = 'home.html';
+      } else {
+        markErr('fIdentifier'); markErr('fPass');
+        shake();
+        txt.textContent = 'Masuk Sekarang'; btn.disabled = false;
+      }
+    }, 400);
+  });
+
+  setTimeout(() => document.getElementById('fIdentifier').focus(), 150);
+})();
+</script>
+</body>
+</html>
