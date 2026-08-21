@@ -275,27 +275,27 @@
 
   function renderKlinikTable() {
     updateBadges();
-    let data = getKliniks();
+    // Build {clinic, idx} pairs from a single parse so indexOf is not needed
+    const allKliniks = getKliniks();
+    let pairs = allKliniks.map((c, i) => ({ c, idx: i }));
 
-    if (klinikFilter !== 'semua') data = data.filter(c => klinikStatus(c) === klinikFilter);
+    if (klinikFilter !== 'semua') pairs = pairs.filter(p => klinikStatus(p.c) === klinikFilter);
     if (klinikSearch) {
       const q = klinikSearch.toLowerCase();
-      data = data.filter(c =>
-        (c.namaKlinik||'').toLowerCase().includes(q) ||
-        (c.kota||'').toLowerCase().includes(q) ||
-        (c.namaOwner||'').toLowerCase().includes(q)
+      pairs = pairs.filter(p =>
+        (p.c.namaKlinik||'').toLowerCase().includes(q) ||
+        (p.c.kota||'').toLowerCase().includes(q) ||
+        (p.c.namaOwner||'').toLowerCase().includes(q)
       );
     }
 
     const tbody = document.getElementById('klinikTbody');
-    if (!data.length) {
+    if (!pairs.length) {
       tbody.innerHTML = '<tr><td colspan="10" class="empty-state">Tidak ada data klinik.</td></tr>';
       return;
     }
 
-    const allKliniks = getKliniks();
-    tbody.innerHTML = data.map((c, i) => {
-      const idx = allKliniks.indexOf(c);
+    tbody.innerHTML = pairs.map(({ c, idx }, i) => {
       const st  = klinikStatus(c);
       const hewan = Array.isArray(c.hewanDilayani) ? c.hewanDilayani.join(', ') : (c.hewanDilayani || '—');
       return `<tr>
@@ -338,6 +338,62 @@
     renderKlinikTable();
   });
 
+  /* ── Sync klinik yang sudah aktif ke anabulku:partner:clinics
+       agar mitra.js & clinics.js (home.html) dapat membacanya ── */
+  function syncApprovedToPartnerList(klinikObj) {
+    if (!klinikObj || !klinikObj.namaKlinik) return;
+    const clinic = {
+      id:              klinikObj.id || ('mitra-' + Date.now()),
+      name:            klinikObj.namaKlinik,
+      namaKlinik:      klinikObj.namaKlinik,
+      address:         [klinikObj.alamat, klinikObj.kota, klinikObj.provinsi].filter(Boolean).join(', '),
+      alamat:          klinikObj.alamat || '',
+      kota:            klinikObj.kota || '',
+      provinsi:        klinikObj.provinsi || '',
+      whatsapp:        klinikObj.waKlinik || '',
+      waKlinik:        klinikObj.waKlinik || '',
+      tipeKlinik:      klinikObj.tipeKlinik || '',
+      hewanDilayani:   Array.isArray(klinikObj.hewanDilayani) ? klinikObj.hewanDilayani : [],
+      layanan:         klinikObj.layanan || [],
+      jadwal:          klinikObj.jadwal || [],
+      harisBuka:       klinikObj.harisBuka || '',
+      jamBuka:         klinikObj.jamBuka || '',
+      jamTutup:        klinikObj.jamTutup || '',
+      rating:          klinikObj.googleRating || klinikObj.rating || null,
+      ratingCount:     0,
+      lat:             klinikObj.lat || '',
+      lng:             klinikObj.lng || '',
+      formattedAddress:klinikObj.formattedAddress || '',
+      photo:           klinikObj.fotoDataUrl || '',
+      fotoDataUrl:     klinikObj.fotoDataUrl || '',
+      logo:            klinikObj.logoDataUrl || '',
+      logoDataUrl:     klinikObj.logoDataUrl || '',
+      mapsUri:         klinikObj.googleMaps || '',
+      adminStatus:     'aktif',
+      approvedAt:      klinikObj.approvedAt || new Date().toISOString(),
+      registeredAt:    klinikObj.createdAt || klinikObj.registeredAt || new Date().toISOString(),
+    };
+
+    try {
+      const raw  = localStorage.getItem('anabulku:partner:clinics');
+      const list = raw ? JSON.parse(raw) : [];
+      const idx  = list.findIndex(c => c.id === clinic.id || c.namaKlinik === clinic.namaKlinik);
+      if (idx >= 0) list[idx] = clinic;
+      else list.push(clinic);
+      localStorage.setItem('anabulku:partner:clinics', JSON.stringify(list));
+    } catch (_) { /* storage penuh — abaikan */ }
+  }
+
+  /* Hapus klinik dari anabulku:partner:clinics saat nonaktif / ditolak */
+  function removeFromPartnerList(namaKlinik) {
+    try {
+      const raw  = localStorage.getItem('anabulku:partner:clinics');
+      if (!raw) return;
+      const list = JSON.parse(raw).filter(c => c.namaKlinik !== namaKlinik);
+      localStorage.setItem('anabulku:partner:clinics', JSON.stringify(list));
+    } catch (_) {}
+  }
+
   /* Global klinik actions */
   window.approveKlinik = function(idx) {
     const list = getKliniks();
@@ -345,6 +401,7 @@
     list[idx].adminStatus = 'aktif';
     list[idx].approvedAt  = new Date().toISOString();
     saveKliniks(list);
+    syncApprovedToPartnerList(list[idx]);   /* ← sync ke partner list */
     renderKlinikTable(); renderOverview();
     showToast('Klinik disetujui dan kini aktif.');
   };
@@ -352,8 +409,10 @@
   window.rejectKlinik = function(idx) {
     const list = getKliniks();
     if (!list[idx]) return;
+    const nama = list[idx].namaKlinik;
     list[idx].adminStatus = 'ditolak';
     saveKliniks(list);
+    removeFromPartnerList(nama);           /* ← hapus dari user app */
     renderKlinikTable(); renderOverview();
     showToast('Klinik ditolak.', 'error');
   };
@@ -362,8 +421,10 @@
     if (!confirm('Nonaktifkan klinik ini?')) return;
     const list = getKliniks();
     if (!list[idx]) return;
+    const nama = list[idx].namaKlinik;
     list[idx].adminStatus = 'nonaktif';
     saveKliniks(list);
+    removeFromPartnerList(nama);           /* ← hapus dari user app */
     renderKlinikTable();
     showToast('Klinik dinonaktifkan.');
   };
@@ -372,6 +433,7 @@
     const list = getKliniks();
     const nama = list[idx]?.namaKlinik || 'klinik ini';
     if (!confirm(`Hapus "${nama}" secara permanen? Data tidak dapat dikembalikan.`)) return;
+    removeFromPartnerList(nama);           /* ← hapus dari user app */
     list.splice(idx, 1);
     saveKliniks(list);
     renderKlinikTable(); renderOverview();
@@ -689,21 +751,20 @@
 
     } else {
       /* ── Tab: Pemilik Klinik (dari mitra/daftar.html) ── */
-      let data = getKliniks();
+      const allKliniks = getKliniks();
+      let pairs = allKliniks.map((c, i) => ({ c, idx: i }));
       if (penggunaSearch) {
         const q = penggunaSearch.toLowerCase();
-        data = data.filter(c =>
-          (c.namaOwner||'').toLowerCase().includes(q) ||
-          (c.email||'').toLowerCase().includes(q)
+        pairs = pairs.filter(p =>
+          (p.c.namaOwner||'').toLowerCase().includes(q) ||
+          (p.c.email||'').toLowerCase().includes(q)
         );
       }
-      if (!data.length) {
+      if (!pairs.length) {
         tbody.innerHTML = '<tr><td colspan="8" class="empty-state">Tidak ada data pemilik klinik.</td></tr>';
         return;
       }
-      const allKliniks = getKliniks();
-      tbody.innerHTML = data.map((c, i) => {
-        const idx = allKliniks.indexOf(c);
+      tbody.innerHTML = pairs.map(({ c, idx }, i) => {
         return `<tr>
           <td>${i+1}</td>
           <td><strong>${esc(c.namaOwner || '—')}</strong></td>
@@ -900,7 +961,8 @@
     if (!confirm('Reset SEMUA data platform? Klinik, booking, dan pengaturan akan hilang!')) return;
     if (!confirm('Yakin? Ini tidak bisa dibatalkan!')) return;
     ['mitraKlinik','anabulku_bookings','anabulku_pasiens','anabulku_dokters',
-     'anabulku_klinik','anabulku_pengumuman','anabulku_settings'].forEach(k => localStorage.removeItem(k));
+     'anabulku_klinik','anabulku_pengumuman','anabulku_settings',
+     'anabulku:partner:clinics'].forEach(k => localStorage.removeItem(k));
     renderOverview();
     showToast('Semua data platform direset.', 'error');
   });

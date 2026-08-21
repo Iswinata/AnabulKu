@@ -33,7 +33,8 @@
       background: #e7dbd0;
       display: flex;
       justify-content: center;
-      min-height: 100vh; min-height: 100dvh;
+      height: 100vh; height: 100dvh;
+      overflow: hidden;
       -webkit-font-smoothing: antialiased;
     }
 
@@ -43,11 +44,11 @@
     /* ── shell ── */
     .app {
       width: 100%; max-width: 393px;
-      min-height: 100vh; min-height: 100dvh;
+      height: 100vh; height: 100dvh;
       background: var(--frame-bg);
       padding: 0 22px 40px;
       display: flex; flex-direction: column;
-      overflow-x: hidden;
+      overflow: hidden;
       box-shadow: 0 0 40px -10px rgba(0,0,0,.18);
     }
 
@@ -156,6 +157,7 @@
       padding: 5px; color: var(--gray-d1);
       display: flex; align-items: center;
       transition: color .15s;
+      -webkit-tap-highlight-color: transparent;
     }
     .toggle-pass svg { width: 16px; height: 16px; }
     .toggle-pass:hover { color: var(--ink-2); }
@@ -296,12 +298,14 @@
           <input class="field-input" type="password" id="fPass"
             placeholder="kata sandi kamu" autocomplete="current-password" required />
           <button type="button" class="toggle-pass" id="togglePass" aria-label="Tampilkan kata sandi" tabindex="-1">
-            <svg id="iconEye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
-              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
-            </svg>
-            <svg id="iconEyeOff" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" hidden>
+            <!-- eye-off (default: password hidden) -->
+            <svg id="iconEyeOff" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
               <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
               <line x1="1" y1="1" x2="23" y2="23"/>
+            </svg>
+            <!-- eye (shown when password is visible) -->
+            <svg id="iconEye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" hidden>
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
             </svg>
           </button>
         </div>
@@ -360,12 +364,13 @@
     document.getElementById('rememberMe').checked = true;
   }
 
+  document.getElementById('togglePass').addEventListener('mousedown', e => e.preventDefault());
   document.getElementById('togglePass').addEventListener('click', () => {
     const inp = document.getElementById('fPass');
-    const hide = inp.type === 'password';
-    inp.type = hide ? 'text' : 'password';
-    document.getElementById('iconEye').hidden    = hide;
-    document.getElementById('iconEyeOff').hidden = !hide;
+    const isPass = inp.type === 'password';
+    inp.type = isPass ? 'text' : 'password';
+    document.getElementById('iconEyeOff').hidden = isPass;
+    document.getElementById('iconEye').hidden    = !isPass;
   });
 
   function markErr(id) {

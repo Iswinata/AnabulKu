@@ -72,9 +72,16 @@
   /* ── Date strip — 7 days starting from today ── */
   var DAY_LETTERS_ID = ["M", "S", "S", "R", "K", "J", "S"]; // Min=0,Sen=1,...,Sab=6
 
-  /* Active date state */
-  var activeDate = new Date();
-  var activeDateISO = activeDate.toISOString().slice(0, 10);
+  /* Convert a local Date to YYYY-MM-DD in local timezone (not UTC) */
+  function localISODate(d) {
+    var y  = d.getFullYear();
+    var mo = String(d.getMonth() + 1).padStart("2", "0");
+    var da = String(d.getDate()).padStart("2", "0");
+    return y + "-" + mo + "-" + da;
+  }
+
+  /* Active date state — use local date so UTC offset doesn't shift the day */
+  var activeDateISO = localISODate(new Date());
 
   function buildDateStrip(onDateChange) {
     var strip = $("cdDateStrip");
@@ -90,7 +97,7 @@
       var dayOfWeek = d.getDay();
       var dayLetter = DAY_LETTERS_ID[dayOfWeek];
       var dayNum    = d.getDate();
-      var isoDate   = d.toISOString().slice(0, 10);
+      var isoDate   = localISODate(d);
 
       var btn = document.createElement("button");
       btn.className = "cd-day-btn" + (i === 0 ? " is-active" : "");
@@ -275,17 +282,28 @@
     }, 3500);
   }
 
+  /* ── Map ISO date → Indonesian day name ── */
+  var ID_DAYS = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+
+  function isoToDayName(isoDate) {
+    var d = new Date(isoDate + "T00:00");
+    return ID_DAYS[d.getDay()];
+  }
+
   /* ── Render doctor cards ── */
   function buildDoctorCards(clinic, dateISO) {
     var section = $("cdDoctors");
     if (!section) return;
 
-    var dokters = clinic.dokters || [];
+    var targetDate = dateISO || activeDateISO;
+    var selectedDayName = isoToDayName(targetDate);
+
+    var allDokters = clinic.dokters || [];
 
     /* Fallback: if dokters array empty, create placeholder from clinic owner */
-    if (!dokters.length) {
+    if (!allDokters.length) {
       if (clinic.namaOwner) {
-        dokters = [{
+        allDokters = [{
           nama:         "drh. " + clinic.namaOwner,
           spesialisasi: clinic.tipeKlinik || "Dokter Hewan",
           hari:         clinic.harisBuka  || "",
@@ -295,12 +313,34 @@
       }
     }
 
-    if (!dokters.length) {
+    if (!allDokters.length) {
       section.innerHTML = '<p class="cd-no-doctors">Informasi dokter belum tersedia.</p>';
       return;
     }
 
-    var targetDate = dateISO || activeDateISO;
+    /* Filter by selected day */
+    var dokters = allDokters.filter(function(doc) {
+      var hariArr = typeof doc.hari === "string"
+        ? doc.hari.split(/[,\s]+/).filter(Boolean)
+        : (Array.isArray(doc.hari) ? doc.hari : []);
+      /* If no schedule defined, show on all days */
+      if (!hariArr.length) return true;
+      return hariArr.indexOf(selectedDayName) >= 0;
+    });
+
+    if (!dokters.length) {
+      section.innerHTML =
+        '<div class="cd-no-doctors-day">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="#D1D5DB" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="40" height="40" aria-hidden="true">' +
+            '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>' +
+            '<circle cx="9" cy="7" r="4"/>' +
+            '<path d="M23 21v-2a4 4 0 0 0-3-3.87"/>' +
+            '<path d="M16 3.13a4 4 0 0 1 0 7.75"/>' +
+          '</svg>' +
+          '<p>Tidak ada dokter pada hari yang kamu pilih.</p>' +
+        '</div>';
+      return;
+    }
 
     section.innerHTML = dokters.map(function(doc) {
       /* Schedule tags */
@@ -309,7 +349,8 @@
         : (Array.isArray(doc.hari) ? doc.hari : []);
 
       var dayTags = hariArr.map(function(h) {
-        return '<span class="cd-day-tag">' + esc(h) + '</span>';
+        var isToday = h === selectedDayName;
+        return '<span class="cd-day-tag' + (isToday ? ' is-today' : '') + '">' + esc(h) + '</span>';
       }).join("");
 
       /* Generate time slots */

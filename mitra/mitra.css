@@ -865,6 +865,149 @@ button { font-family: inherit; border: none; background: none; cursor: pointer; 
   box-shadow: 1px 1px 0 #000;
 }
 
+/* ---------- Jadwal Operasional per hari ---------- */
+.jadwal-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.jadwal-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 12px;
+  background: #fff;
+  border-radius: 12px;
+  border: 1.5px solid #E5E7EB;
+  transition: border-color 0.15s, background 0.15s;
+}
+.jadwal-row:has(.jadwal-toggle.is-on) {
+  border-color: #FED7AA;
+  background: #FFFBF5;
+}
+
+/* Baris atas: nama hari + toggle + label tutup */
+.jadwal-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Nama hari */
+.jadwal-nama {
+  font-family: 'Poppins';
+  font-size: 13px;
+  font-weight: 600;
+  color: #111827;
+  flex: 1;
+}
+.jadwal-nama--off {
+  color: #9CA3AF;
+  font-weight: 400;
+}
+
+/* Toggle switch */
+.jadwal-toggle {
+  position: relative;
+  width: 40px;
+  height: 22px;
+  border-radius: 999px;
+  background: #D1D5DB;
+  border: none;
+  flex-shrink: 0;
+  transition: background 0.2s;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.jadwal-toggle::after {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  top: 3px;
+  left: 3px;
+  transition: transform 0.2s ease;
+}
+.jadwal-toggle.is-on {
+  background: #FF9800;
+}
+.jadwal-toggle.is-on::after {
+  transform: translateX(18px);
+}
+
+/* Baris bawah: input jam */
+.jadwal-jam {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Pill container per jam */
+.jadwal-jam-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #F3F4F6;
+  border: 1.5px solid #E5E7EB;
+  border-radius: 8px;
+  padding: 5px 10px;
+  flex: 1;
+}
+.jadwal-jam-pill:focus-within {
+  border-color: #FF9800;
+  background: #FFF7ED;
+}
+.jadwal-jam-pill span {
+  font-size: 11px;
+  color: #9CA3AF;
+  font-weight: 500;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.jadwal-input {
+  flex: 1;
+  min-width: 0;
+  height: 28px;
+  background: transparent;
+  border: none;
+  padding: 0;
+  font-family: 'Poppins';
+  font-size: 13px;
+  font-weight: 600;
+  color: #111827;
+  text-align: left;
+  outline: none;
+  -webkit-appearance: none;
+}
+.jadwal-input::-webkit-calendar-picker-indicator {
+  opacity: 0.4;
+  cursor: pointer;
+  margin-left: auto;
+}
+
+.jadwal-sep {
+  font-family: 'Poppins';
+  font-size: 16px;
+  font-weight: 400;
+  color: #D1D5DB;
+  flex-shrink: 0;
+}
+
+/* Label "Tutup" saat toggle off */
+.jadwal-tutup-label {
+  font-family: 'Poppins';
+  font-size: 12px;
+  font-weight: 500;
+  color: #9CA3AF;
+  letter-spacing: 0.02em;
+}
+
 /* ---------- Service chips ---------- */
 .service-grid {
   display: flex;

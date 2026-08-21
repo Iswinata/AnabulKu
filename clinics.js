@@ -47,6 +47,11 @@
     } catch (e) { return []; }
   }
 
+  /* Hanya tampilkan klinik yang sudah disetujui admin (adminStatus === 'aktif') */
+  function getApprovedClinics() {
+    return getMitraClinics().filter(function(c) { return c.adminStatus === 'aktif'; });
+  }
+
   /* Saring klinik berdasarkan kategori yang dipilih */
   function filterClinics(clinics, category) {
     if (category === "terdekat") return clinics; /* tampilkan semua */
@@ -214,10 +219,32 @@
       titleEl.textContent = LABELS[category] || LABELS.terdekat;
       section.scrollIntoView({ behavior: "smooth", block: "nearest" });
 
-      var all      = getMitraClinics();
-      var filtered = filterClinics(all, category);
+      /* Build list of {clinic, originalIdx} for approved clinics only.
+         We keep the original index from the full mitraKlinik array so that
+         clinic-detail.js (which reads the same full array) gets the right entry. */
+      var fullList = getMitraClinics();
+      var approvedWithIdx = [];
+      for (var j = 0; j < fullList.length; j++) {
+        if (fullList[j].adminStatus === 'aktif') {
+          approvedWithIdx.push({ clinic: fullList[j], idx: j });
+        }
+      }
 
-      if (!filtered.length) {
+      /* Filter by category */
+      var rx = FILTER[category];
+      var filteredWithIdx = category === 'terdekat' ? approvedWithIdx : approvedWithIdx.filter(function(entry) {
+        var c = entry.clinic;
+        var tipe = (c.tipeKlinik || '').toLowerCase();
+        if (!rx) return true;
+        if (Array.isArray(c.hewanDilayani)) {
+          return c.hewanDilayani.some(function(h) { return rx.test(h); });
+        }
+        var hewan = (c.hewanDilayani || '').toLowerCase();
+        if (hewan === 'semua') return true;
+        return rx.test(hewan) || rx.test(tipe) || rx.test(c.namaKlinik || '');
+      });
+
+      if (!filteredWithIdx.length) {
         listEl.innerHTML = emptyHtml();
         noteEl.textContent = "";
         return;
@@ -226,11 +253,11 @@
       /* Render cards — pass userLocation for distance chip.
          If geolocation hasn't resolved yet, re-render once it does. */
       function renderCards(loc) {
-        listEl.innerHTML = filtered.map(function(c) {
-          var originalIdx = all.indexOf(c);
-          return cardHtml(c, originalIdx, loc);
+        listEl.innerHTML = filteredWithIdx.map(function(entry) {
+          /* Pass the original full-array index so clinic-detail.js loads the right clinic */
+          return cardHtml(entry.clinic, entry.idx, loc);
         }).join("");
-        noteEl.textContent = filtered.length + " klinik mitra terdaftar";
+        noteEl.textContent = filteredWithIdx.length + " klinik mitra terdaftar";
       }
 
       if (userLocation) {

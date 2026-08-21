@@ -238,32 +238,143 @@
         </div>
         <div class="field-group">
           <div class="field">
-            <label class="field-label">Hari Buka <span class="req" aria-hidden="true">*</span></label>
-            <div class="day-grid">
-              <label class="day-chip"><input type="checkbox" name="hari" value="Senin" /><span>Sen</span></label>
-              <label class="day-chip"><input type="checkbox" name="hari" value="Selasa" /><span>Sel</span></label>
-              <label class="day-chip"><input type="checkbox" name="hari" value="Rabu" /><span>Rab</span></label>
-              <label class="day-chip"><input type="checkbox" name="hari" value="Kamis" /><span>Kam</span></label>
-              <label class="day-chip"><input type="checkbox" name="hari" value="Jumat" /><span>Jum</span></label>
-              <label class="day-chip"><input type="checkbox" name="hari" value="Sabtu" /><span>Sab</span></label>
-              <label class="day-chip"><input type="checkbox" name="hari" value="Minggu" /><span>Min</span></label>
-            </div>
+            <label class="field-label">Jadwal per Hari <span class="req" aria-hidden="true">*</span></label>
             <p class="field-error day-error" role="alert"></p>
-          </div>
-          <div class="field row-field">
-            <div class="field-half">
-              <label class="field-label" for="jamBuka">Jam Buka <span class="req" aria-hidden="true">*</span></label>
-              <input class="field-input" type="time" id="jamBuka" name="jamBuka" value="08:00" required />
+            <div class="jadwal-list" id="jadwalList">
+              <!-- Senin -->
+              <div class="jadwal-row" data-day="Senin">
+                <div class="jadwal-top">
+                  <span class="jadwal-nama">Senin</span>
+                  <button type="button" class="jadwal-toggle is-on" aria-pressed="true" aria-label="Toggle Senin"></button>
+                  <span class="jadwal-tutup-label" hidden>Tutup</span>
+                </div>
+                <div class="jadwal-jam">
+                  <div class="jadwal-jam-pill">
+                    <span>Buka</span>
+                    <input class="jadwal-input" type="time" name="bukaSenin" value="08:00" aria-label="Jam buka Senin" />
+                  </div>
+                  <span class="jadwal-sep">–</span>
+                  <div class="jadwal-jam-pill">
+                    <span>Tutup</span>
+                    <input class="jadwal-input" type="time" name="tutupSenin" value="20:00" aria-label="Jam tutup Senin" />
+                  </div>
+                </div>
+              </div>
+              <!-- Selasa -->
+              <div class="jadwal-row" data-day="Selasa">
+                <div class="jadwal-top">
+                  <span class="jadwal-nama">Selasa</span>
+                  <button type="button" class="jadwal-toggle is-on" aria-pressed="true" aria-label="Toggle Selasa"></button>
+                  <span class="jadwal-tutup-label" hidden>Tutup</span>
+                </div>
+                <div class="jadwal-jam">
+                  <div class="jadwal-jam-pill">
+                    <span>Buka</span>
+                    <input class="jadwal-input" type="time" name="bukaSelasa" value="08:00" aria-label="Jam buka Selasa" />
+                  </div>
+                  <span class="jadwal-sep">–</span>
+                  <div class="jadwal-jam-pill">
+                    <span>Tutup</span>
+                    <input class="jadwal-input" type="time" name="tutupSelasa" value="20:00" aria-label="Jam tutup Selasa" />
+                  </div>
+                </div>
+              </div>
+              <!-- Rabu -->
+              <div class="jadwal-row" data-day="Rabu">
+                <div class="jadwal-top">
+                  <span class="jadwal-nama">Rabu</span>
+                  <button type="button" class="jadwal-toggle is-on" aria-pressed="true" aria-label="Toggle Rabu"></button>
+                  <span class="jadwal-tutup-label" hidden>Tutup</span>
+                </div>
+                <div class="jadwal-jam">
+                  <div class="jadwal-jam-pill">
+                    <span>Buka</span>
+                    <input class="jadwal-input" type="time" name="bukaRabu" value="08:00" aria-label="Jam buka Rabu" />
+                  </div>
+                  <span class="jadwal-sep">–</span>
+                  <div class="jadwal-jam-pill">
+                    <span>Tutup</span>
+                    <input class="jadwal-input" type="time" name="tutupRabu" value="20:00" aria-label="Jam tutup Rabu" />
+                  </div>
+                </div>
+              </div>
+              <!-- Kamis -->
+              <div class="jadwal-row" data-day="Kamis">
+                <div class="jadwal-top">
+                  <span class="jadwal-nama">Kamis</span>
+                  <button type="button" class="jadwal-toggle is-on" aria-pressed="true" aria-label="Toggle Kamis"></button>
+                  <span class="jadwal-tutup-label" hidden>Tutup</span>
+                </div>
+                <div class="jadwal-jam">
+                  <div class="jadwal-jam-pill">
+                    <span>Buka</span>
+                    <input class="jadwal-input" type="time" name="bukaKamis" value="08:00" aria-label="Jam buka Kamis" />
+                  </div>
+                  <span class="jadwal-sep">–</span>
+                  <div class="jadwal-jam-pill">
+                    <span>Tutup</span>
+                    <input class="jadwal-input" type="time" name="tutupKamis" value="20:00" aria-label="Jam tutup Kamis" />
+                  </div>
+                </div>
+              </div>
+              <!-- Jumat -->
+              <div class="jadwal-row" data-day="Jumat">
+                <div class="jadwal-top">
+                  <span class="jadwal-nama">Jumat</span>
+                  <button type="button" class="jadwal-toggle is-on" aria-pressed="true" aria-label="Toggle Jumat"></button>
+                  <span class="jadwal-tutup-label" hidden>Tutup</span>
+                </div>
+                <div class="jadwal-jam">
+                  <div class="jadwal-jam-pill">
+                    <span>Buka</span>
+                    <input class="jadwal-input" type="time" name="bukaJumat" value="08:00" aria-label="Jam buka Jumat" />
+                  </div>
+                  <span class="jadwal-sep">–</span>
+                  <div class="jadwal-jam-pill">
+                    <span>Tutup</span>
+                    <input class="jadwal-input" type="time" name="tutupJumat" value="20:00" aria-label="Jam tutup Jumat" />
+                  </div>
+                </div>
+              </div>
+              <!-- Sabtu -->
+              <div class="jadwal-row" data-day="Sabtu">
+                <div class="jadwal-top">
+                  <span class="jadwal-nama">Sabtu</span>
+                  <button type="button" class="jadwal-toggle is-on" aria-pressed="true" aria-label="Toggle Sabtu"></button>
+                  <span class="jadwal-tutup-label" hidden>Tutup</span>
+                </div>
+                <div class="jadwal-jam">
+                  <div class="jadwal-jam-pill">
+                    <span>Buka</span>
+                    <input class="jadwal-input" type="time" name="bukaSabtu" value="08:00" aria-label="Jam buka Sabtu" />
+                  </div>
+                  <span class="jadwal-sep">–</span>
+                  <div class="jadwal-jam-pill">
+                    <span>Tutup</span>
+                    <input class="jadwal-input" type="time" name="tutupSabtu" value="18:00" aria-label="Jam tutup Sabtu" />
+                  </div>
+                </div>
+              </div>
+              <!-- Minggu -->
+              <div class="jadwal-row" data-day="Minggu">
+                <div class="jadwal-top">
+                  <span class="jadwal-nama jadwal-nama--off">Minggu</span>
+                  <button type="button" class="jadwal-toggle" aria-pressed="false" aria-label="Toggle Minggu"></button>
+                  <span class="jadwal-tutup-label">Tutup</span>
+                </div>
+                <div class="jadwal-jam" hidden>
+                  <div class="jadwal-jam-pill">
+                    <span>Buka</span>
+                    <input class="jadwal-input" type="time" name="bukaMinggu" value="08:00" aria-label="Jam buka Minggu" />
+                  </div>
+                  <span class="jadwal-sep">–</span>
+                  <div class="jadwal-jam-pill">
+                    <span>Tutup</span>
+                    <input class="jadwal-input" type="time" name="tutupMinggu" value="18:00" aria-label="Jam tutup Minggu" />
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="field-half">
-              <label class="field-label" for="jamTutup">Jam Tutup <span class="req" aria-hidden="true">*</span></label>
-              <input class="field-input" type="time" id="jamTutup" name="jamTutup" value="17:00" required />
-            </div>
-          </div>
-          <div class="field">
-            <label class="field-label" for="catatanJadwal">Catatan Jadwal</label>
-            <input class="field-input" type="text" id="catatanJadwal" name="catatanJadwal"
-              placeholder="Mis: Libur nasional, tutup lebih awal hari Jumat" />
           </div>
         </div>
       </div>
@@ -384,9 +495,9 @@
             </defs>
           </svg>
         </div>
-        <h2 class="success-title">Pendaftaran Berhasil!</h2>
-        <p class="success-sub">Klinik <strong id="successClinicName"></strong> sudah terdaftar sebagai mitra AnabulKu. Tim kami akan meninjau data dalam 1×24 jam.</p>
-        <a class="cta-btn" href="dashboard.html">Buka Dashboard Klinik</a>
+        <h2 class="success-title">Pendaftaran Terkirim!</h2>
+        <p class="success-sub">Klinik <strong id="successClinicName"></strong> berhasil didaftarkan. Tim AnabulKu akan meninjau dan menyetujui pendaftaran dalam 1×24 jam. Setelah disetujui, Anda dapat masuk melalui halaman login mitra.</p>
+        <a class="cta-btn" href="login.html">Masuk ke Dashboard</a>
         <a class="cta-btn cta-btn--outline" href="../home.html">Buka Aplikasi User</a>
       </div>
     </div>

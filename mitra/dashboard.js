@@ -5,6 +5,18 @@
 (function () {
   'use strict';
 
+  /* ── Session guard: redirect ke login jika belum login ── */
+  (function checkSession() {
+    try {
+      const sess = JSON.parse(localStorage.getItem('mitraSession') || 'null');
+      if (!sess || !sess.loggedIn) {
+        window.location.replace('login.html');
+      }
+    } catch (_) {
+      window.location.replace('login.html');
+    }
+  })();
+
   /* ── Storage helpers ── */
   const LS = {
     get: (key, def) => { try { return JSON.parse(localStorage.getItem(key)) ?? def; } catch { return def; } },
@@ -53,7 +65,8 @@
           nama:         d.nama,
           spesialisasi: d.spesialis || 'Dokter Umum',
           hp:           d.hp || '',
-          hari:         Array.isArray(d.hari) ? d.hari.join(', ') : (d.hari || ''),
+          /* Keep hari as array so clinic-detail.js can filter by day name */
+          hari:         Array.isArray(d.hari) ? d.hari : (d.hari ? d.hari.split(/[,\s]+/).filter(Boolean) : []),
           jamMulai:     d.jamMulai  || '08:00',
           jamSelesai:   d.jamSelesai || '17:00',
         })),
@@ -166,6 +179,13 @@
     if (el.tagName === 'A') {
       el.addEventListener('click', e => { e.preventDefault(); goPage(el.dataset.page); });
     }
+  });
+
+  /* ── Logout ── */
+  document.getElementById('btnLogoutMitra').addEventListener('click', () => {
+    if (!confirm('Yakin ingin keluar dari dashboard?')) return;
+    localStorage.removeItem('mitraSession');
+    window.location.replace('login.html');
   });
 
   /* ── Sidebar mobile toggle ── */
@@ -590,7 +610,20 @@
 
     const SHORT = { Senin:'Sen', Selasa:'Sel', Rabu:'Rab', Kamis:'Kam', Jumat:'Jum', Sabtu:'Sab', Minggu:'Min' };
 
-    grid.innerHTML = dokters.map(d => `
+    grid.innerHTML = dokters.map(d => {
+      /* Normalisasi jadwal ke format baru */
+      const jadwal = Array.isArray(d.jadwal) && d.jadwal.length
+        ? d.jadwal
+        : (Array.isArray(d.hari) ? d.hari.map(h => ({ hari: h, mulai: d.jamMulai || '08:00', selesai: d.jamSelesai || '17:00' })) : []);
+
+      const jadwalRows = jadwal.map(j =>
+        `<div class="dokter-jadwal-row">
+          <span class="dokter-jadwal-hari">${esc(SHORT[j.hari] || j.hari)}</span>
+          <span class="dokter-jadwal-jam">${esc(j.mulai)} – ${esc(j.selesai)}</span>
+        </div>`
+      ).join('');
+
+      return `
       <div class="dokter-card">
         <div class="dokter-card-header">
           <div style="display:flex;align-items:center;gap:12px">
@@ -607,21 +640,12 @@
         </div>
         <div class="dokter-schedule">
           <div class="dokter-schedule-row">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-            <div class="dokter-days">
-              ${(d.hari || []).map(h => `<span class="dokter-day-chip">${SHORT[h] || h}</span>`).join('')}
-            </div>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" style="flex-shrink:0"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+            <div class="dokter-jadwal-list">${jadwalRows || '<span style="color:#9CA3AF;font-size:12px">Belum ada jadwal</span>'}</div>
           </div>
-          <div class="dokter-schedule-row">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-            <span>${esc(d.jamMulai) || '08:00'} – ${esc(d.jamSelesai) || '17:00'}</span>
-          </div>
-          ${d.hp ? `<div class="dokter-schedule-row">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.63 3.4 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.89a16 16 0 0 0 5.55 5.55l.97-.97a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.07 16c.001.31.001.62-.001.92z"/></svg>
-            <span>${esc(d.hp)}</span>
-          </div>` : ''}
         </div>
-      </div>`).join('');
+      </div>`;
+    }).join('');
   }
 
   window.editDokter = function(id) {
@@ -638,6 +662,82 @@
     showToast('Dokter dihapus.', 'error');
   };
 
+  /* ── Jadwal toggle di modal dokter ── */
+  const HARI_LIST = ['Senin','Selasa','Rabu','Kamis','Jumat','Sabtu','Minggu'];
+
+  function initDokterJadwalToggles() {
+    document.querySelectorAll('#dokterJadwalList .jadwal-toggle').forEach(btn => {
+      /* Hindari duplikat listener saat modal dibuka ulang */
+      btn.replaceWith(btn.cloneNode(true));
+    });
+    document.querySelectorAll('#dokterJadwalList .jadwal-toggle').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const row     = btn.closest('.jadwal-row');
+        const jamEl   = row.querySelector('.jadwal-jam');
+        const lblEl   = row.querySelector('.jadwal-tutup-label');
+        const namaEl  = row.querySelector('.jadwal-nama');
+        const isOn    = btn.getAttribute('aria-pressed') === 'true';
+
+        btn.setAttribute('aria-pressed', String(!isOn));
+        btn.classList.toggle('is-on', !isOn);
+        jamEl.hidden  = isOn;
+        lblEl.hidden  = !isOn;
+        namaEl.classList.toggle('jadwal-nama--off', isOn);
+      });
+    });
+  }
+
+  /* Reset semua hari ke "libur", lalu terapkan data jadwal dokter */
+  function resetDokterJadwal(jadwal) {
+    /* jadwal: array of {hari, mulai, selesai} atau legacy {hari:[], jamMulai, jamSelesai} */
+    /* Normalisasi ke map: { "Senin": {mulai, selesai}, ... } */
+    const map = {};
+
+    if (Array.isArray(jadwal) && jadwal.length && typeof jadwal[0] === 'object' && jadwal[0].hari) {
+      /* Format baru: [{hari, mulai, selesai}] */
+      jadwal.forEach(j => { map[j.hari] = { mulai: j.mulai || '08:00', selesai: j.selesai || '17:00' }; });
+    } else if (Array.isArray(jadwal)) {
+      /* Format lama: ['Senin', 'Selasa', ...] (dari field .hari lama) — abaikan jam */
+      jadwal.forEach(h => { if (typeof h === 'string') map[h] = { mulai: '08:00', selesai: '17:00' }; });
+    }
+
+    document.querySelectorAll('#dokterJadwalList .jadwal-row').forEach(row => {
+      const day    = row.dataset.day;
+      const btn    = row.querySelector('.jadwal-toggle');
+      const jamEl  = row.querySelector('.jadwal-jam');
+      const lblEl  = row.querySelector('.jadwal-tutup-label');
+      const namaEl = row.querySelector('.jadwal-nama');
+
+      const aktif = !!map[day];
+      btn.setAttribute('aria-pressed', String(aktif));
+      btn.classList.toggle('is-on', aktif);
+      jamEl.hidden  = !aktif;
+      lblEl.hidden  = aktif;
+      namaEl.classList.toggle('jadwal-nama--off', !aktif);
+
+      if (aktif) {
+        const inputMulai   = row.querySelector(`input[name="dokterMulai${day}"]`);
+        const inputSelesai = row.querySelector(`input[name="dokterSelesai${day}"]`);
+        if (inputMulai)   inputMulai.value   = map[day].mulai;
+        if (inputSelesai) inputSelesai.value = map[day].selesai;
+      }
+    });
+  }
+
+  /* Baca jadwal dari form modal → array [{hari, mulai, selesai}] */
+  function readDokterJadwal() {
+    const result = [];
+    document.querySelectorAll('#dokterJadwalList .jadwal-row').forEach(row => {
+      const btn = row.querySelector('.jadwal-toggle');
+      if (btn.getAttribute('aria-pressed') !== 'true') return;
+      const day = row.dataset.day;
+      const mulai   = (row.querySelector(`input[name="dokterMulai${day}"]`)?.value)   || '08:00';
+      const selesai = (row.querySelector(`input[name="dokterSelesai${day}"]`)?.value) || '17:00';
+      result.push({ hari: day, mulai, selesai });
+    });
+    return result;
+  }
+
   /* ── Modal Dokter ── */
   const modalDokter      = document.getElementById('modalDokter');
   const modalDokterTitle = document.getElementById('modalDokterTitle');
@@ -646,15 +746,23 @@
     const isEdit = !!data;
     modalDokterTitle.textContent = isEdit ? 'Edit Dokter' : 'Tambah Dokter';
     document.getElementById('dokterEditId').value = data?.id || '';
-    document.getElementById('dNama').value       = data?.nama || '';
-    document.getElementById('dSpesialis').value  = data?.spesialis || '';
-    document.getElementById('dHP').value         = data?.hp || '';
-    document.getElementById('dJamMulai').value   = data?.jamMulai || '08:00';
-    document.getElementById('dJamSelesai').value = data?.jamSelesai || '17:00';
-    /* Reset hari checkboxes */
-    document.querySelectorAll('input[name="dHari"]').forEach(cb => {
-      cb.checked = !!(data?.hari || []).includes(cb.value);
-    });
+    document.getElementById('dNama').value        = data?.nama || '';
+    document.getElementById('dSpesialis').value   = data?.spesialis || '';
+
+    /* Init toggle listener (clone dulu untuk hapus listener lama) */
+    initDokterJadwalToggles();
+
+    /* Restore jadwal */
+    if (data) {
+      /* Format baru: jadwal array; Format lama: hari array + jamMulai/jamSelesai */
+      const jadwalData = Array.isArray(data.jadwal) && data.jadwal.length
+        ? data.jadwal
+        : (Array.isArray(data.hari) ? data.hari.map(h => ({ hari: h, mulai: data.jamMulai || '08:00', selesai: data.jamSelesai || '17:00' })) : []);
+      resetDokterJadwal(jadwalData);
+    } else {
+      resetDokterJadwal([]);
+    }
+
     modalDokter.hidden = false;
     document.getElementById('dNama').focus();
   }
@@ -670,17 +778,23 @@
     const nama = document.getElementById('dNama').value.trim();
     if (!nama) { showToast('Nama dokter wajib diisi.', 'error'); return; }
 
-    const hari = [...document.querySelectorAll('input[name="dHari"]:checked')].map(cb => cb.value);
+    const jadwal = readDokterJadwal();
+    if (!jadwal.length) { showToast('Pilih minimal satu hari tugas.', 'error'); return; }
+
+    /* Kompat: hari[] dan jamMulai/jamSelesai untuk syncToMitraKlinik & clinic-detail */
+    const hari      = jadwal.map(j => j.hari);
+    const jamMulai  = jadwal[0]?.mulai   || '08:00';
+    const jamSelesai = jadwal[0]?.selesai || '17:00';
 
     const editId = document.getElementById('dokterEditId').value;
     const obj = {
       id:         editId || uid(),
       nama,
       spesialis:  document.getElementById('dSpesialis').value.trim(),
-      hp:         document.getElementById('dHP').value.trim(),
-      hari,
-      jamMulai:   document.getElementById('dJamMulai').value,
-      jamSelesai: document.getElementById('dJamSelesai').value,
+      jadwal,        /* format baru: [{hari, mulai, selesai}] */
+      hari,          /* format lama: compat */
+      jamMulai,      /* format lama: compat */
+      jamSelesai,    /* format lama: compat */
     };
 
     if (editId) {

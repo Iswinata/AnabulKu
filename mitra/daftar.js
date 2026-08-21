@@ -123,12 +123,12 @@
       }
     });
 
-    // Step 3: at least one day checked
+    // Step 3: at least one day toggle ON
     if (n === 3) {
-      const days = step.querySelectorAll('input[name="hari"]:checked');
+      const onToggles = step.querySelectorAll('.jadwal-toggle.is-on');
       const dayErr = step.querySelector('.day-error');
-      if (days.length === 0) {
-        if (dayErr) { dayErr.textContent = 'Pilih minimal satu hari.'; dayErr.classList.add('is-visible'); }
+      if (onToggles.length === 0) {
+        if (dayErr) { dayErr.textContent = 'Aktifkan minimal satu hari operasional.'; dayErr.classList.add('is-visible'); }
         valid = false;
       } else {
         if (dayErr) dayErr.classList.remove('is-visible');
@@ -186,11 +186,33 @@
     return valid;
   }
 
+  /* ── Collect jadwal per hari dari toggle UI ── */
+  function collectJadwal() {
+    const rows = document.querySelectorAll('#jadwalList .jadwal-row');
+    const jadwal = [];
+    rows.forEach(row => {
+      const day     = row.dataset.day;
+      const toggle  = row.querySelector('.jadwal-toggle');
+      const isOn    = toggle && toggle.classList.contains('is-on');
+      const inputs  = row.querySelectorAll('.jadwal-input');
+      jadwal.push({
+        hari:    day,
+        buka:    isOn,
+        jamBuka: isOn && inputs[0] ? inputs[0].value : '',
+        jamTutup: isOn && inputs[1] ? inputs[1].value : '',
+      });
+    });
+    return jadwal;
+  }
+
   /* ── Collect all form data ── */
   function collectData() {
     const get = id => (document.getElementById(id)?.value || '').trim();
     const getChecked = name =>
       [...document.querySelectorAll(`input[name="${name}"]:checked`)].map(el => el.value);
+
+    const jadwal = collectJadwal();
+    const hariAktif = jadwal.filter(j => j.buka).map(j => j.hari);
 
     return {
       namaKlinik:      get('namaKlinik'),
@@ -205,10 +227,8 @@
       lng:             get('klinikLng'),
       formattedAddress:get('formattedAddress'),
       googleRating:    get('googleRating'),
-      harisBuka:       getChecked('hari').join(', '),
-      jamBuka:         get('jamBuka'),
-      jamTutup:        get('jamTutup'),
-      catatanJadwal:   get('catatanJadwal'),
+      jadwal:          jadwal,
+      harisBuka:       hariAktif.join(', '),
       layanan:         'Konsultasi Umum',
       hargaMulai:      get('hargaMulai'),
       emailAkun:       get('emailAkun'),
@@ -221,18 +241,26 @@
   /* ── Build confirmation card ── */
   function buildConfirmCard() {
     const d = collectData();
+
+    // Format jadwal untuk ditampilkan
+    const jadwalText = Array.isArray(d.jadwal)
+      ? d.jadwal
+          .filter(j => j.buka)
+          .map(j => `${j.hari} (${j.jamBuka}–${j.jamTutup})`)
+          .join(', ') || '—'
+      : d.harisBuka || '—';
+
     const rows = [
-      { lbl: 'Nama Klinik',       val: d.namaKlinik    || '—' },
-      { lbl: 'WhatsApp',          val: d.waKlinik       || '—' },
-      { lbl: 'Tipe Layanan',      val: d.tipeKlinik === 'klinik_hewan' ? 'Klinik Hewan' : d.tipeKlinik === 'grooming_hewan' ? 'Grooming Hewan' : d.tipeKlinik || '—' },
-      { lbl: 'Hewan Dilayani',    val: Array.isArray(d.hewanDilayani) && d.hewanDilayani.length ? d.hewanDilayani.map(h => h.charAt(0).toUpperCase() + h.slice(1)).join(', ') : '—' },
-      { lbl: 'Alamat',            val: `${d.alamat}, ${d.kota}, ${d.provinsi} ${d.kodePos}`.replace(/^, |, $/g,'') || '—' },
-      { lbl: 'Hari Buka',         val: d.harisBuka      || '—' },
-      { lbl: 'Jam Operasional',   val: d.jamBuka && d.jamTutup ? `${d.jamBuka} – ${d.jamTutup}` : '—' },
-      { lbl: 'Layanan',           val: d.layanan         || '—' },
-      { lbl: 'Harga Mulai',       val: d.hargaMulai ? `Rp ${d.hargaMulai}` : '—' },
-      { lbl: 'Email Akun',        val: d.emailAkun      || '—' },
-      { lbl: 'Nama Pemilik / PIC',val: d.namaOwner      || '—' },
+      { lbl: 'Nama Klinik',        val: d.namaKlinik    || '—' },
+      { lbl: 'WhatsApp',           val: d.waKlinik       || '—' },
+      { lbl: 'Tipe Layanan',       val: d.tipeKlinik === 'klinik_hewan' ? 'Klinik Hewan' : d.tipeKlinik === 'grooming_hewan' ? 'Grooming Hewan' : d.tipeKlinik || '—' },
+      { lbl: 'Hewan Dilayani',     val: Array.isArray(d.hewanDilayani) && d.hewanDilayani.length ? d.hewanDilayani.map(h => h.charAt(0).toUpperCase() + h.slice(1)).join(', ') : '—' },
+      { lbl: 'Alamat',             val: `${d.alamat}, ${d.kota}, ${d.provinsi} ${d.kodePos}`.replace(/^, |, $/g,'') || '—' },
+      { lbl: 'Jadwal Operasional', val: jadwalText },
+      { lbl: 'Layanan',            val: d.layanan         || '—' },
+      { lbl: 'Harga Mulai',        val: d.hargaMulai ? `Rp ${d.hargaMulai}` : '—' },
+      { lbl: 'Email Akun',         val: d.emailAkun      || '—' },
+      { lbl: 'Nama Pemilik / PIC', val: d.namaOwner      || '—' },
     ];
 
     confirmCard.innerHTML = rows.map(r => `
@@ -253,13 +281,23 @@
   /* ── Submit ── */
   function submitForm() {
     const data = collectData();
-    data.status    = 'pending';
-    data.createdAt = new Date().toISOString();
+    data.adminStatus = 'pending'; /* menunggu persetujuan admin */
+    data.status      = 'pending'; /* backward compat */
+    data.createdAt   = new Date().toISOString();
+    data.id          = Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
 
-    // Save to localStorage so the main app can read it
+    // Simpan password (simpan as-is untuk demo)
+    const pwdVal = document.getElementById('password')?.value || '';
+    data.password = pwdVal;
+
+    // Save to localStorage so the admin app can read it
     const existing = JSON.parse(localStorage.getItem('mitraKlinik') || '[]');
     existing.push(data);
     localStorage.setItem('mitraKlinik', JSON.stringify(existing));
+
+    // TIDAK auto-login — mitra harus menunggu persetujuan admin
+    // Setelah admin ACC, mitra dapat login melalui login.html
+    localStorage.removeItem('mitraSession');
 
     // Show success
     if (successClinicName) successClinicName.textContent = data.namaKlinik;
@@ -528,11 +566,32 @@
     }
   });
 
+  /* ── Jadwal toggle handler ── */
+  function setupJadwalToggles() {
+    const jadwalList = document.getElementById('jadwalList');
+    if (!jadwalList) return;
+    jadwalList.addEventListener('click', e => {
+      const toggle = e.target.closest('.jadwal-toggle');
+      if (!toggle) return;
+      const row        = toggle.closest('.jadwal-row');
+      const jamWrap    = row.querySelector('.jadwal-jam');
+      const tutupLabel = row.querySelector('.jadwal-tutup-label');
+      const namaEl     = row.querySelector('.jadwal-nama');
+      const isOn       = toggle.classList.toggle('is-on');
+
+      toggle.setAttribute('aria-pressed', isOn ? 'true' : 'false');
+      if (jamWrap)    jamWrap.hidden    = !isOn;
+      if (tutupLabel) tutupLabel.hidden = isOn;
+      if (namaEl)     namaEl.classList.toggle('jadwal-nama--off', !isOn);
+    });
+  }
+
   /* ── Init ── */
   buildDots();
   showStep(1);
   setupUpload('logoUpload', 'logoPreview', 'logoPlaceholder', 'logoThumb', 'logo');
   setupUpload('fotoUpload', 'fotoPreview', 'fotoPlaceholder', 'fotoThumb', 'foto');
   setupPwdToggle();
+  setupJadwalToggles();
 
 })();

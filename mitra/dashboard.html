@@ -52,6 +52,10 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
         Ke Landing Page
       </a>
+      <button class="nav-item nav-item--logout" id="btnLogoutMitra" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Keluar
+      </button>
       <div class="clinic-info" id="sidebarClinicInfo">
         <div class="clinic-logo" id="sidebarLogo">K</div>
         <div>
@@ -571,29 +575,99 @@
             <input class="field-input" type="text" id="dSpesialis" placeholder="Mis: Kucing & Anjing, Bedah" />
           </div>
           <div class="field">
-            <label class="field-label" for="dHP">No. HP</label>
-            <input class="field-input" type="tel" id="dHP" placeholder="08xxxxxxxxxx" />
-          </div>
-          <div class="field">
-            <label class="field-label">Hari Tugas <span class="req">*</span></label>
-            <div class="day-grid">
-              <label class="day-chip"><input type="checkbox" name="dHari" value="Senin" /><span>Sen</span></label>
-              <label class="day-chip"><input type="checkbox" name="dHari" value="Selasa" /><span>Sel</span></label>
-              <label class="day-chip"><input type="checkbox" name="dHari" value="Rabu" /><span>Rab</span></label>
-              <label class="day-chip"><input type="checkbox" name="dHari" value="Kamis" /><span>Kam</span></label>
-              <label class="day-chip"><input type="checkbox" name="dHari" value="Jumat" /><span>Jum</span></label>
-              <label class="day-chip"><input type="checkbox" name="dHari" value="Sabtu" /><span>Sab</span></label>
-              <label class="day-chip"><input type="checkbox" name="dHari" value="Minggu" /><span>Min</span></label>
-            </div>
-          </div>
-          <div class="row-field">
-            <div class="field field-half">
-              <label class="field-label" for="dJamMulai">Jam Mulai</label>
-              <input class="field-input" type="time" id="dJamMulai" value="08:00" />
-            </div>
-            <div class="field field-half">
-              <label class="field-label" for="dJamSelesai">Jam Selesai</label>
-              <input class="field-input" type="time" id="dJamSelesai" value="17:00" />
+            <label class="field-label">Jadwal Tugas <span class="req">*</span></label>
+            <div class="jadwal-list" id="dokterJadwalList">
+              <!-- Senin -->
+              <div class="jadwal-row" data-day="Senin">
+                <div class="jadwal-top">
+                  <span class="jadwal-nama">Senin</span>
+                  <button type="button" class="jadwal-toggle" aria-pressed="false" aria-label="Toggle Senin"></button>
+                  <span class="jadwal-tutup-label">Libur</span>
+                </div>
+                <div class="jadwal-jam" hidden>
+                  <div class="jadwal-jam-pill"><span>Mulai</span><input class="jadwal-input" type="time" name="dokterMulaiSenin" value="08:00" /></div>
+                  <span class="jadwal-sep">–</span>
+                  <div class="jadwal-jam-pill"><span>Selesai</span><input class="jadwal-input" type="time" name="dokterSelesaiSenin" value="17:00" /></div>
+                </div>
+              </div>
+              <!-- Selasa -->
+              <div class="jadwal-row" data-day="Selasa">
+                <div class="jadwal-top">
+                  <span class="jadwal-nama">Selasa</span>
+                  <button type="button" class="jadwal-toggle" aria-pressed="false" aria-label="Toggle Selasa"></button>
+                  <span class="jadwal-tutup-label">Libur</span>
+                </div>
+                <div class="jadwal-jam" hidden>
+                  <div class="jadwal-jam-pill"><span>Mulai</span><input class="jadwal-input" type="time" name="dokterMulaiSelasa" value="08:00" /></div>
+                  <span class="jadwal-sep">–</span>
+                  <div class="jadwal-jam-pill"><span>Selesai</span><input class="jadwal-input" type="time" name="dokterSelesaiSelasa" value="17:00" /></div>
+                </div>
+              </div>
+              <!-- Rabu -->
+              <div class="jadwal-row" data-day="Rabu">
+                <div class="jadwal-top">
+                  <span class="jadwal-nama">Rabu</span>
+                  <button type="button" class="jadwal-toggle" aria-pressed="false" aria-label="Toggle Rabu"></button>
+                  <span class="jadwal-tutup-label">Libur</span>
+                </div>
+                <div class="jadwal-jam" hidden>
+                  <div class="jadwal-jam-pill"><span>Mulai</span><input class="jadwal-input" type="time" name="dokterMulaiRabu" value="08:00" /></div>
+                  <span class="jadwal-sep">–</span>
+                  <div class="jadwal-jam-pill"><span>Selesai</span><input class="jadwal-input" type="time" name="dokterSelesaiRabu" value="17:00" /></div>
+                </div>
+              </div>
+              <!-- Kamis -->
+              <div class="jadwal-row" data-day="Kamis">
+                <div class="jadwal-top">
+                  <span class="jadwal-nama">Kamis</span>
+                  <button type="button" class="jadwal-toggle" aria-pressed="false" aria-label="Toggle Kamis"></button>
+                  <span class="jadwal-tutup-label">Libur</span>
+                </div>
+                <div class="jadwal-jam" hidden>
+                  <div class="jadwal-jam-pill"><span>Mulai</span><input class="jadwal-input" type="time" name="dokterMulaiKamis" value="08:00" /></div>
+                  <span class="jadwal-sep">–</span>
+                  <div class="jadwal-jam-pill"><span>Selesai</span><input class="jadwal-input" type="time" name="dokterSelesaiKamis" value="17:00" /></div>
+                </div>
+              </div>
+              <!-- Jumat -->
+              <div class="jadwal-row" data-day="Jumat">
+                <div class="jadwal-top">
+                  <span class="jadwal-nama">Jumat</span>
+                  <button type="button" class="jadwal-toggle" aria-pressed="false" aria-label="Toggle Jumat"></button>
+                  <span class="jadwal-tutup-label">Libur</span>
+                </div>
+                <div class="jadwal-jam" hidden>
+                  <div class="jadwal-jam-pill"><span>Mulai</span><input class="jadwal-input" type="time" name="dokterMulaiJumat" value="08:00" /></div>
+                  <span class="jadwal-sep">–</span>
+                  <div class="jadwal-jam-pill"><span>Selesai</span><input class="jadwal-input" type="time" name="dokterSelesaiJumat" value="17:00" /></div>
+                </div>
+              </div>
+              <!-- Sabtu -->
+              <div class="jadwal-row" data-day="Sabtu">
+                <div class="jadwal-top">
+                  <span class="jadwal-nama">Sabtu</span>
+                  <button type="button" class="jadwal-toggle" aria-pressed="false" aria-label="Toggle Sabtu"></button>
+                  <span class="jadwal-tutup-label">Libur</span>
+                </div>
+                <div class="jadwal-jam" hidden>
+                  <div class="jadwal-jam-pill"><span>Mulai</span><input class="jadwal-input" type="time" name="dokterMulaiSabtu" value="08:00" /></div>
+                  <span class="jadwal-sep">–</span>
+                  <div class="jadwal-jam-pill"><span>Selesai</span><input class="jadwal-input" type="time" name="dokterSelesaiSabtu" value="17:00" /></div>
+                </div>
+              </div>
+              <!-- Minggu -->
+              <div class="jadwal-row" data-day="Minggu">
+                <div class="jadwal-top">
+                  <span class="jadwal-nama jadwal-nama--off">Minggu</span>
+                  <button type="button" class="jadwal-toggle" aria-pressed="false" aria-label="Toggle Minggu"></button>
+                  <span class="jadwal-tutup-label">Libur</span>
+                </div>
+                <div class="jadwal-jam" hidden>
+                  <div class="jadwal-jam-pill"><span>Mulai</span><input class="jadwal-input" type="time" name="dokterMulaiMinggu" value="08:00" /></div>
+                  <span class="jadwal-sep">–</span>
+                  <div class="jadwal-jam-pill"><span>Selesai</span><input class="jadwal-input" type="time" name="dokterSelesaiMinggu" value="17:00" /></div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

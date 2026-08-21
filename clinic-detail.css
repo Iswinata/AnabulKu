@@ -101,59 +101,61 @@
 }
 
 /* ===================================================================
-   Date Picker Strip — S M T W T F S  (7 day scroll)
-   Spec: Frame 3732, 346.85×60.92 at top 237
+   Date Picker Strip — 7 day scroll
 =================================================================== */
 .cd-date-section {
-  margin-top: 18px;
+  margin-top: 20px;
 }
 
 .cd-date-strip {
-  display: flex;
-  gap: 7px;
-  overflow-x: auto;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  padding-bottom: 4px;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  padding: 2px 0 6px;
 }
-.cd-date-strip::-webkit-scrollbar { display: none; }
 
 .cd-day-btn {
-  flex: none;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  width: 40px;
-  height: 61px;
-  padding: 6px 0;
+  justify-content: center;
+  gap: 5px;
+  width: 100%;
+  height: 60px;
+  padding: 8px 4px;
   background: #fff;
-  border: 1.04px solid rgba(0,0,0,0.1);
-  border-radius: 10px;
+  border: 1.5px solid #E5E7EB;
+  border-radius: 12px;
   cursor: pointer;
   font-family: 'Poppins', sans-serif;
-  transition: background 0.15s, border-color 0.15s, transform 0.1s;
+  transition: background 0.15s, border-color 0.15s, box-shadow 0.15s, transform 0.1s;
 }
-.cd-day-btn:active { transform: translate(1px,1px); }
+.cd-day-btn:hover:not(.is-active) {
+  border-color: #FFCC80;
+  background: #FFF7ED;
+}
+.cd-day-btn:active { transform: translate(1px, 1px); }
 
 .cd-day-btn.is-active {
-  background: linear-gradient(180deg, #ff9800 0.01%, #ffbc59 100%);
-  border-color: #ffc774;
-  box-shadow: 1px 1px 0 #000;
+  background: linear-gradient(180deg, #FF9800 0%, #FFBC59 100%);
+  border-color: #FF9800;
+  box-shadow: 2px 2px 0 #000;
 }
 
 .cd-day-letter {
-  font-size: 12.5px;
-  font-weight: 500;
-  color: #000;
+  font-size: 11px;
+  font-weight: 600;
+  color: #6B7280;
   line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
 }
-.cd-day-btn.is-active .cd-day-letter { color: #fff; }
+.cd-day-btn.is-active .cd-day-letter { color: #fff3e0; }
 
 .cd-day-num {
-  font-size: 12.5px;
-  font-weight: 500;
-  color: #000;
+  font-size: 16px;
+  font-weight: 700;
+  color: #111827;
   line-height: 1;
 }
 .cd-day-btn.is-active .cd-day-num { color: #fff; }
@@ -346,4 +348,28 @@
   color: #9CA3AF;
   font-size: 13px;
   padding: 24px 0;
+}
+
+/* Empty state when no doctors on the selected day */
+.cd-no-doctors-day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 32px 16px;
+  text-align: center;
+}
+.cd-no-doctors-day p {
+  color: #9CA3AF;
+  font-size: 13px;
+  font-weight: 500;
+  margin: 0;
+}
+
+/* Day tag — highlight the currently selected day */
+.cd-day-tag.is-today {
+  background: #FF9800;
+  color: #fff;
+  font-weight: 700;
+  border-color: #FF9800;
 }
