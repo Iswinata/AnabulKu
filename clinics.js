@@ -162,9 +162,7 @@
 
       if (!filtered.length) {
         listEl.innerHTML = emptyHtml();
-        noteEl.textContent = all.length === 0
-          ? "Belum ada klinik yang mendaftar sebagai mitra."
-          : "Tidak ada klinik untuk kategori ini.";
+        noteEl.textContent = "";
         return;
       }
 
