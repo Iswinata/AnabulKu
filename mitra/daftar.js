@@ -124,6 +124,18 @@
       }
     }
 
+    // Step 1: at least one hewan checked
+    if (n === 1) {
+      const hewans = step.querySelectorAll('input[name="hewanDilayani"]:checked');
+      const hewanErr = step.querySelector('.hewan-error');
+      if (hewans.length === 0) {
+        if (hewanErr) { hewanErr.textContent = 'Pilih minimal satu jenis hewan.'; hewanErr.classList.add('is-visible'); }
+        valid = false;
+      } else {
+        if (hewanErr) hewanErr.classList.remove('is-visible');
+      }
+    }
+
     // Step 4: at least one service checked
     if (n === 4) {
       const services = step.querySelectorAll('input[name="layanan"]:checked');
@@ -133,6 +145,19 @@
         valid = false;
       } else {
         if (srvErr) srvErr.classList.remove('is-visible');
+      }
+    }
+
+    // Step 2: coordinates must be set
+    if (n === 2) {
+      const lat = document.getElementById('klinikLat');
+      const lng = document.getElementById('klinikLng');
+      const coordErr = document.getElementById('step2')?.querySelector('.map-coord-error');
+      if (!lat?.value || !lng?.value) {
+        if (coordErr) { coordErr.textContent = 'Tentukan titik lokasi di peta.'; coordErr.classList.add('is-visible'); }
+        valid = false;
+      } else {
+        if (coordErr) coordErr.classList.remove('is-visible');
       }
     }
 
@@ -187,12 +212,13 @@
       namaKlinik:    get('namaKlinik'),
       waKlinik:      get('waKlinik'),
       tipeKlinik:    get('tipeKlinik'),
-      hewanDilayani: get('hewanDilayani'),
+      hewanDilayani: getChecked('hewanDilayani'), /* array: ['kucing','anjing','reptil'] */
       alamat:        get('alamat'),
       kota:          get('kota'),
       provinsi:      get('provinsi'),
       kodePos:       get('kodePos'),
-      googleMaps:    get('googleMaps'),
+      lat:           get('klinikLat'),
+      lng:           get('klinikLng'),
       harisBuka:     getChecked('hari').join(', '),
       jamBuka:       get('jamBuka'),
       jamTutup:      get('jamTutup'),
@@ -214,8 +240,8 @@
     const rows = [
       { lbl: 'Nama Klinik',       val: d.namaKlinik    || '—' },
       { lbl: 'WhatsApp',          val: d.waKlinik       || '—' },
-      { lbl: 'Tipe Klinik',       val: d.tipeKlinik     || '—' },
-      { lbl: 'Hewan Dilayani',    val: d.hewanDilayani  || '—' },
+      { lbl: 'Tipe Layanan',      val: d.tipeKlinik === 'klinik_hewan' ? 'Klinik Hewan' : d.tipeKlinik === 'grooming_hewan' ? 'Grooming Hewan' : d.tipeKlinik || '—' },
+      { lbl: 'Hewan Dilayani',    val: Array.isArray(d.hewanDilayani) && d.hewanDilayani.length ? d.hewanDilayani.map(h => h.charAt(0).toUpperCase() + h.slice(1)).join(', ') : '—' },
       { lbl: 'Alamat',            val: `${d.alamat}, ${d.kota}, ${d.provinsi} ${d.kodePos}`.replace(/^, |, $/g,'') || '—' },
       { lbl: 'Hari Buka',         val: d.harisBuka      || '—' },
       { lbl: 'Jam Operasional',   val: d.jamBuka && d.jamTutup ? `${d.jamBuka} – ${d.jamTutup}` : '—' },
@@ -343,6 +369,120 @@
       }
     });
   }
+
+  /* ── Google Maps picker ── */
+  /* Called by Maps JS API after it loads (window.initMapPicker) */
+  window.initMapPicker = function () {
+    const btn        = document.getElementById('btnPickMap');
+    const wrap       = document.getElementById('mapPickerWrap');
+    const canvasEl   = document.getElementById('mapPicker');
+    const latInput   = document.getElementById('klinikLat');
+    const lngInput   = document.getElementById('klinikLng');
+    const statusEl   = document.getElementById('mapCoordsStatus');
+    if (!btn || !canvasEl) return;
+
+    const fallback = (window.ANABULKU_CONFIG && window.ANABULKU_CONFIG.FALLBACK_CENTER)
+      || { lat: -7.9666, lng: 112.6326 };
+
+    let map = null;
+    let marker = null;
+    let mapReady = false;
+
+    function setCoords(lat, lng) {
+      latInput.value = lat.toFixed(7);
+      lngInput.value = lng.toFixed(7);
+      statusEl.textContent = `📍 Koordinat tersimpan: ${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+      statusEl.className = 'map-coords-status map-coords-set';
+      /* clear any error */
+      const err = document.querySelector('.map-coord-error');
+      if (err) err.classList.remove('is-visible');
+    }
+
+    function initMap(center) {
+      if (mapReady) return;
+      mapReady = true;
+      wrap.hidden = false;
+
+      map = new google.maps.Map(canvasEl, {
+        center: center,
+        zoom: 16,
+        mapTypeControl: false,
+        streetViewControl: false,
+        fullscreenControl: false,
+      });
+
+      marker = new google.maps.Marker({
+        position: center,
+        map: map,
+        draggable: true,
+        title: 'Seret untuk atur lokasi',
+      });
+
+      setCoords(center.lat, center.lng);
+
+      /* Drag end → update coords */
+      marker.addListener('dragend', () => {
+        const pos = marker.getPosition();
+        setCoords(pos.lat(), pos.lng());
+      });
+
+      /* Click on map → move marker */
+      map.addListener('click', (e) => {
+        marker.setPosition(e.latLng);
+        setCoords(e.latLng.lat(), e.latLng.lng());
+      });
+    }
+
+    btn.addEventListener('click', () => {
+      if (mapReady) {
+        /* toggle visibility */
+        wrap.hidden = !wrap.hidden;
+        if (!wrap.hidden) google.maps.event.trigger(map, 'resize');
+        return;
+      }
+
+      btn.textContent = 'Memuat peta…';
+      btn.disabled = true;
+
+      /* Try to get user's current location first */
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (pos) => {
+            btn.disabled = false;
+            btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Ubah Lokasi di Peta`;
+            initMap({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+          },
+          () => {
+            btn.disabled = false;
+            btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Ubah Lokasi di Peta`;
+            initMap(fallback);
+          },
+          { timeout: 6000 }
+        );
+      } else {
+        btn.disabled = false;
+        initMap(fallback);
+      }
+    });
+  };
+
+  /* If Maps API failed to load, set up a plain-link fallback */
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      if (typeof google === 'undefined' || !google.maps) {
+        const btn = document.getElementById('btnPickMap');
+        const statusEl = document.getElementById('mapCoordsStatus');
+        if (btn) {
+          btn.onclick = () => {
+            const url = 'https://www.google.com/maps';
+            window.open(url, '_blank');
+            statusEl.textContent = 'Google Maps dibuka di tab baru. Salin koordinat dari URL maps dan masukkan manual.';
+            statusEl.className = 'map-coords-status';
+          };
+        }
+      }
+    }, 4000);
+  });
 
   /* ── Next / Submit button ── */
   btnNext.addEventListener('click', () => {

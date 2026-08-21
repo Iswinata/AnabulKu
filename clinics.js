@@ -55,9 +55,16 @@
     if (!rx) return clinics;
 
     return clinics.filter(function (c) {
+      var tipe = (c.tipeKlinik || "").toLowerCase();
+
+      /* hewanDilayani bisa berupa array (format baru) atau string (format lama) */
+      if (Array.isArray(c.hewanDilayani)) {
+        /* format baru: array of strings, e.g. ['kucing', 'anjing'] */
+        return c.hewanDilayani.some(function (h) { return rx.test(h); });
+      }
+
+      /* format lama: string tunggal */
       var hewan = (c.hewanDilayani || "").toLowerCase();
-      var tipe  = (c.tipeKlinik    || "").toLowerCase();
-      /* "semua" artinya melayani semua jenis hewan */
       if (hewan === "semua") return true;
       return rx.test(hewan) || rx.test(tipe) || rx.test(c.namaKlinik || "");
     });
@@ -67,7 +74,7 @@
      Render
   ================================================================= */
 
-  function cardHtml(c, idx) {
+  function cardHtml(c, idx, userLoc) {
     /* Link to clinic detail page */
     var href = "clinic-detail.html?id=" + idx;
 
@@ -85,6 +92,20 @@
     /* WhatsApp chip */
     var waNum = (c.waKlinik || "").replace(/\D/g, "");
 
+    /* Distance chip — only if clinic has coords and user location is known */
+    var distChip = "";
+    var cLat = parseFloat(c.lat);
+    var cLng = parseFloat(c.lng);
+    if (userLoc && !isNaN(cLat) && !isNaN(cLng)) {
+      var km = haversineKm(userLoc.lat, userLoc.lng, cLat, cLng);
+      distChip = '<span class="clinic-chip clinic-chip--dist">' +
+        '<svg class="clinic-ico" viewBox="0 0 24 24" fill="none" stroke="#FF9800" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+          '<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>' +
+        '</svg>' +
+        '<span class="clinic-val">' + esc(fmtDistance(km)) + '</span>' +
+      '</span>';
+    }
+
     return '' +
       '<a class="clinic-card" href="' + esc(href) + '">' +
         '<span class="clinic-texture" aria-hidden="true"></span>' +
@@ -93,6 +114,7 @@
           '<span class="clinic-name">' + esc(c.namaKlinik || "Klinik Hewan") + '</span>' +
           '<span class="clinic-addr">' + esc([c.kota, c.provinsi].filter(Boolean).join(", ") || c.alamat || "") + '</span>' +
           '<span class="clinic-meta">' +
+            distChip +
             (jam ? '<span class="clinic-chip">' +
               '<svg class="clinic-ico" viewBox="0 0 24 24" aria-hidden="true">' +
                 '<path fill="#AC6600" d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2zm.5 10.8V7a.5.5 0 0 0-1 0v6.2l4.2 2.4a.5.5 0 1 0 .5-.87L12.5 12.8z"/>' +
@@ -121,6 +143,38 @@
   }
 
   /* =================================================================
+     Geolocation & Distance
+  ================================================================= */
+
+  /** Haversine formula — returns distance in km between two lat/lng points */
+  function haversineKm(lat1, lng1, lat2, lng2) {
+    var R = 6371;
+    var dLat = (lat2 - lat1) * Math.PI / 180;
+    var dLng = (lng2 - lng1) * Math.PI / 180;
+    var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+            Math.sin(dLng/2) * Math.sin(dLng/2);
+    return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  }
+
+  function fmtDistance(km) {
+    if (km < 1) return Math.round(km * 1000) + " m";
+    return km.toFixed(1) + " km";
+  }
+
+  /** Get user location — returns Promise<{lat,lng}|null> */
+  function getUserLocation() {
+    return new Promise(function(resolve) {
+      if (!navigator.geolocation) { resolve(null); return; }
+      navigator.geolocation.getCurrentPosition(
+        function(pos) { resolve({ lat: pos.coords.latitude, lng: pos.coords.longitude }); },
+        function()    { resolve(null); },
+        { timeout: 6000 }
+      );
+    });
+  }
+
+  /* =================================================================
      Controller
   ================================================================= */
 
@@ -136,6 +190,10 @@
     var noteEl  = $("#clinic-note", section);
     var cats    = document.querySelectorAll(".cat[data-category]");
     var activeCategory = null;
+    var userLocation = null; /* cached after first geolocation */
+
+    /* Try to get user location eagerly on init for faster first display */
+    getUserLocation().then(function(loc) { userLocation = loc; });
 
     function setActive(btn) {
       for (var i = 0; i < cats.length; i++) cats[i].classList.remove("is-active");
@@ -166,12 +224,26 @@
         return;
       }
 
-      /* Pass original index so clinic-detail.html?id= matches localStorage array position */
-      listEl.innerHTML = filtered.map(function(c) {
-        var originalIdx = all.indexOf(c);
-        return cardHtml(c, originalIdx);
-      }).join("");
-      noteEl.textContent = filtered.length + " klinik mitra terdaftar";
+      /* Render cards — pass userLocation for distance chip.
+         If geolocation hasn't resolved yet, re-render once it does. */
+      function renderCards(loc) {
+        listEl.innerHTML = filtered.map(function(c) {
+          var originalIdx = all.indexOf(c);
+          return cardHtml(c, originalIdx, loc);
+        }).join("");
+        noteEl.textContent = filtered.length + " klinik mitra terdaftar";
+      }
+
+      if (userLocation) {
+        renderCards(userLocation);
+      } else {
+        /* Render immediately without distance, then re-render with distance once ready */
+        renderCards(null);
+        getUserLocation().then(function(loc) {
+          userLocation = loc;
+          if (loc && activeCategory === category) renderCards(loc);
+        });
+      }
     }
 
     for (var i = 0; i < cats.length; i++) {
