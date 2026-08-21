@@ -22,6 +22,7 @@
   /* ── State ── */
   let currentStep = 1;
   let dokterCount = 1;
+  let mapAutoOpen = false; /* set to true when step 2 is shown before Maps API is ready */
 
   /* ── DOM refs ── */
   const stepDots   = document.getElementById('stepDots');
@@ -83,6 +84,20 @@
 
     // Build confirm card on step 7
     if (n === 7) buildConfirmCard();
+
+    // Auto-open map when arriving at step 2
+    if (n === 2) {
+      mapAutoOpen = true; /* flag read by initMapPicker */
+      setTimeout(function () {
+        var btn = document.getElementById('btnPickMap');
+        /* Maps API already loaded — open immediately */
+        if (btn && typeof google !== 'undefined' && google.maps && google.maps.Map) {
+          btn.click();
+          mapAutoOpen = false;
+        }
+        /* else: initMapPicker callback will handle it via the mapAutoOpen flag */
+      }, 150);
+    }
   }
 
   function goTo(n) {
@@ -380,6 +395,12 @@
     const lngInput   = document.getElementById('klinikLng');
     const statusEl   = document.getElementById('mapCoordsStatus');
     if (!btn || !canvasEl) return;
+
+    /* If user already navigated to step 2 before API loaded, open automatically */
+    if (mapAutoOpen) {
+      mapAutoOpen = false;
+      setTimeout(function () { btn.click(); }, 50);
+    }
 
     const fallback = (window.ANABULKU_CONFIG && window.ANABULKU_CONFIG.FALLBACK_CENTER)
       || { lat: -7.9666, lng: 112.6326 };
