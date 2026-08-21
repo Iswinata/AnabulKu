@@ -60,7 +60,7 @@
         <div class="clinic-logo" id="sidebarLogo">K</div>
         <div>
           <p class="clinic-name" id="sidebarClinicName">Nama Klinik</p>
-          <p class="clinic-status">● Online</p>
+          <p class="clinic-status" id="sidebarOwnerName">● Online</p>
         </div>
       </div>
     </div>
@@ -357,25 +357,99 @@
           <h2 class="section-card-title" style="margin-bottom:16px;">Jadwal Operasional</h2>
           <div class="field-group">
             <div class="field">
-              <label class="field-label">Hari Buka</label>
-              <div class="day-grid">
-                <label class="day-chip"><input type="checkbox" name="profilHari" value="Senin" /><span>Sen</span></label>
-                <label class="day-chip"><input type="checkbox" name="profilHari" value="Selasa" /><span>Sel</span></label>
-                <label class="day-chip"><input type="checkbox" name="profilHari" value="Rabu" /><span>Rab</span></label>
-                <label class="day-chip"><input type="checkbox" name="profilHari" value="Kamis" /><span>Kam</span></label>
-                <label class="day-chip"><input type="checkbox" name="profilHari" value="Jumat" /><span>Jum</span></label>
-                <label class="day-chip"><input type="checkbox" name="profilHari" value="Sabtu" /><span>Sab</span></label>
-                <label class="day-chip"><input type="checkbox" name="profilHari" value="Minggu" /><span>Min</span></label>
-              </div>
-            </div>
-            <div class="field row-field">
-              <div class="field-half">
-                <label class="field-label" for="profilJamBuka">Jam Buka</label>
-                <input class="field-input" type="time" id="profilJamBuka" value="08:00" />
-              </div>
-              <div class="field-half">
-                <label class="field-label" for="profilJamTutup">Jam Tutup</label>
-                <input class="field-input" type="time" id="profilJamTutup" value="17:00" />
+              <label class="field-label">Jam per Hari</label>
+              <div class="jadwal-list" id="profilJadwalList">
+                <!-- Senin -->
+                <div class="jadwal-row" data-day="Senin">
+                  <div class="jadwal-top">
+                    <span class="jadwal-nama">Senin</span>
+                    <button type="button" class="jadwal-toggle" aria-pressed="false" aria-label="Toggle Senin"></button>
+                    <span class="jadwal-tutup-label">Libur</span>
+                  </div>
+                  <div class="jadwal-jam" hidden>
+                    <div class="jadwal-jam-pill"><span>Buka</span><input class="jadwal-input" type="time" name="profilBukaSenin" value="08:00" /></div>
+                    <span class="jadwal-sep">–</span>
+                    <div class="jadwal-jam-pill"><span>Tutup</span><input class="jadwal-input" type="time" name="profilTutupSenin" value="20:00" /></div>
+                  </div>
+                </div>
+                <!-- Selasa -->
+                <div class="jadwal-row" data-day="Selasa">
+                  <div class="jadwal-top">
+                    <span class="jadwal-nama">Selasa</span>
+                    <button type="button" class="jadwal-toggle" aria-pressed="false" aria-label="Toggle Selasa"></button>
+                    <span class="jadwal-tutup-label">Libur</span>
+                  </div>
+                  <div class="jadwal-jam" hidden>
+                    <div class="jadwal-jam-pill"><span>Buka</span><input class="jadwal-input" type="time" name="profilBukaSelasa" value="08:00" /></div>
+                    <span class="jadwal-sep">–</span>
+                    <div class="jadwal-jam-pill"><span>Tutup</span><input class="jadwal-input" type="time" name="profilTutupSelasa" value="20:00" /></div>
+                  </div>
+                </div>
+                <!-- Rabu -->
+                <div class="jadwal-row" data-day="Rabu">
+                  <div class="jadwal-top">
+                    <span class="jadwal-nama">Rabu</span>
+                    <button type="button" class="jadwal-toggle" aria-pressed="false" aria-label="Toggle Rabu"></button>
+                    <span class="jadwal-tutup-label">Libur</span>
+                  </div>
+                  <div class="jadwal-jam" hidden>
+                    <div class="jadwal-jam-pill"><span>Buka</span><input class="jadwal-input" type="time" name="profilBukaRabu" value="08:00" /></div>
+                    <span class="jadwal-sep">–</span>
+                    <div class="jadwal-jam-pill"><span>Tutup</span><input class="jadwal-input" type="time" name="profilTutupRabu" value="20:00" /></div>
+                  </div>
+                </div>
+                <!-- Kamis -->
+                <div class="jadwal-row" data-day="Kamis">
+                  <div class="jadwal-top">
+                    <span class="jadwal-nama">Kamis</span>
+                    <button type="button" class="jadwal-toggle" aria-pressed="false" aria-label="Toggle Kamis"></button>
+                    <span class="jadwal-tutup-label">Libur</span>
+                  </div>
+                  <div class="jadwal-jam" hidden>
+                    <div class="jadwal-jam-pill"><span>Buka</span><input class="jadwal-input" type="time" name="profilBukaKamis" value="08:00" /></div>
+                    <span class="jadwal-sep">–</span>
+                    <div class="jadwal-jam-pill"><span>Tutup</span><input class="jadwal-input" type="time" name="profilTutupKamis" value="20:00" /></div>
+                  </div>
+                </div>
+                <!-- Jumat -->
+                <div class="jadwal-row" data-day="Jumat">
+                  <div class="jadwal-top">
+                    <span class="jadwal-nama">Jumat</span>
+                    <button type="button" class="jadwal-toggle" aria-pressed="false" aria-label="Toggle Jumat"></button>
+                    <span class="jadwal-tutup-label">Libur</span>
+                  </div>
+                  <div class="jadwal-jam" hidden>
+                    <div class="jadwal-jam-pill"><span>Buka</span><input class="jadwal-input" type="time" name="profilBukaJumat" value="08:00" /></div>
+                    <span class="jadwal-sep">–</span>
+                    <div class="jadwal-jam-pill"><span>Tutup</span><input class="jadwal-input" type="time" name="profilTutupJumat" value="20:00" /></div>
+                  </div>
+                </div>
+                <!-- Sabtu -->
+                <div class="jadwal-row" data-day="Sabtu">
+                  <div class="jadwal-top">
+                    <span class="jadwal-nama">Sabtu</span>
+                    <button type="button" class="jadwal-toggle" aria-pressed="false" aria-label="Toggle Sabtu"></button>
+                    <span class="jadwal-tutup-label">Libur</span>
+                  </div>
+                  <div class="jadwal-jam" hidden>
+                    <div class="jadwal-jam-pill"><span>Buka</span><input class="jadwal-input" type="time" name="profilBukaSabtu" value="08:00" /></div>
+                    <span class="jadwal-sep">–</span>
+                    <div class="jadwal-jam-pill"><span>Tutup</span><input class="jadwal-input" type="time" name="profilTutupSabtu" value="18:00" /></div>
+                  </div>
+                </div>
+                <!-- Minggu -->
+                <div class="jadwal-row" data-day="Minggu">
+                  <div class="jadwal-top">
+                    <span class="jadwal-nama jadwal-nama--off">Minggu</span>
+                    <button type="button" class="jadwal-toggle" aria-pressed="false" aria-label="Toggle Minggu"></button>
+                    <span class="jadwal-tutup-label">Libur</span>
+                  </div>
+                  <div class="jadwal-jam" hidden>
+                    <div class="jadwal-jam-pill"><span>Buka</span><input class="jadwal-input" type="time" name="profilBukaMinggu" value="08:00" /></div>
+                    <span class="jadwal-sep">–</span>
+                    <div class="jadwal-jam-pill"><span>Tutup</span><input class="jadwal-input" type="time" name="profilTutupMinggu" value="18:00" /></div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

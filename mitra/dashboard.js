@@ -206,6 +206,10 @@
     const n = klinik.namaKlinik || 'Klinik Saya';
     document.getElementById('sidebarClinicName').textContent = n;
     document.getElementById('sidebarLogo').textContent = n.charAt(0).toUpperCase();
+
+    /* Tampilkan nama owner di bawah nama klinik (status "Online") */
+    const ownerEl = document.getElementById('sidebarOwnerName');
+    if (ownerEl) ownerEl.textContent = klinik.namaOwner ? '● ' + klinik.namaOwner : '● Online';
   }
 
   /* ── Nav badge: pending bookings ── */
@@ -233,10 +237,10 @@
     document.getElementById('statPasien').textContent         = pasiens.length;
     document.getElementById('statPendapatan').textContent     = rupiah(todayPendapatan);
 
-    /* Greeting */
+    /* Greeting — pakai nama klinik */
     const h = new Date().getHours();
     const greeting = h < 11 ? 'Selamat pagi' : h < 15 ? 'Selamat siang' : h < 18 ? 'Selamat sore' : 'Selamat malam';
-    const nama = klinik.namaOwner || klinik.namaKlinik || '';
+    const nama = klinik.namaKlinik || klinik.namaOwner || '';
     document.getElementById('overviewGreeting').textContent = `${greeting}${nama ? ', ' + nama : ''}!`;
 
     /* Date */
@@ -864,22 +868,106 @@
   /* ================================================================
      PROFIL
   ================================================================ */
-  function loadProfil() {
-    document.getElementById('profilNama').value    = klinik.namaKlinik || '';
-    document.getElementById('profilWA').value      = klinik.waKlinik   || '';
-    document.getElementById('profilAlamat').value  = klinik.alamat     || '';
-    document.getElementById('profilKota').value    = klinik.kota       || '';
-    document.getElementById('profilJamBuka').value = klinik.jamBuka    || '08:00';
-    document.getElementById('profilJamTutup').value = klinik.jamTutup  || '17:00';
-
-    /* Hari checkboxes */
-    const hariList = Array.isArray(klinik.harisBuka)
-      ? klinik.harisBuka
-      : (klinik.harisBuka || '').split(', ').filter(Boolean);
-
-    document.querySelectorAll('input[name="profilHari"]').forEach(cb => {
-      cb.checked = hariList.includes(cb.value);
+  /* ── Helper: init toggle untuk profilJadwalList ── */
+  function initProfilJadwalToggles() {
+    document.querySelectorAll('#profilJadwalList .jadwal-toggle').forEach(btn => {
+      btn.replaceWith(btn.cloneNode(true));
     });
+    document.querySelectorAll('#profilJadwalList .jadwal-toggle').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const row    = btn.closest('.jadwal-row');
+        const jamEl  = row.querySelector('.jadwal-jam');
+        const lblEl  = row.querySelector('.jadwal-tutup-label');
+        const namaEl = row.querySelector('.jadwal-nama');
+        const isOn   = btn.getAttribute('aria-pressed') === 'true';
+        btn.setAttribute('aria-pressed', String(!isOn));
+        btn.classList.toggle('is-on', !isOn);
+        jamEl.hidden  = isOn;
+        lblEl.hidden  = !isOn;
+        namaEl.classList.toggle('jadwal-nama--off', isOn);
+      });
+    });
+  }
+
+  /* Isi profilJadwalList dari data jadwal klinik.
+     Format daftar.js: jadwal = [{hari, jamBuka, jamTutup, buka}, ...]
+     field-name input: profilBuka{Hari} / profilTutup{Hari} */
+  function loadProfilJadwal() {
+    /* Bangun map dari data jadwal klinik */
+    const map = {};
+
+    /* Format daftar.js: [{hari:'Senin', jamBuka:'08:00', jamTutup:'20:00', buka:true}] */
+    if (Array.isArray(klinik.jadwal) && klinik.jadwal.length) {
+      klinik.jadwal.forEach(j => {
+        if (!j.hari) return;
+        map[j.hari] = {
+          aktif: j.buka !== false,
+          buka:  j.jamBuka  || j.mulai   || '08:00',
+          tutup: j.jamTutup || j.selesai || '20:00',
+        };
+      });
+    }
+
+    /* Fallback ke harisBuka string + jamBuka/jamTutup tunggal */
+    if (!Object.keys(map).length && klinik.harisBuka) {
+      const hariList = (klinik.harisBuka || '').split(', ').filter(Boolean);
+      hariList.forEach(h => {
+        map[h] = { aktif: true, buka: klinik.jamBuka || '08:00', tutup: klinik.jamTutup || '20:00' };
+      });
+    }
+
+    document.querySelectorAll('#profilJadwalList .jadwal-row').forEach(row => {
+      const day    = row.dataset.day;
+      const btn    = row.querySelector('.jadwal-toggle');
+      const jamEl  = row.querySelector('.jadwal-jam');
+      const lblEl  = row.querySelector('.jadwal-tutup-label');
+      const namaEl = row.querySelector('.jadwal-nama');
+      const entry  = map[day];
+      const aktif  = !!(entry && entry.aktif);
+
+      btn.setAttribute('aria-pressed', String(aktif));
+      btn.classList.toggle('is-on', aktif);
+      jamEl.hidden  = !aktif;
+      lblEl.hidden  = aktif;
+      namaEl.classList.toggle('jadwal-nama--off', !aktif);
+
+      if (entry) {
+        const inputBuka  = row.querySelector(`input[name="profilBuka${day}"]`);
+        const inputTutup = row.querySelector(`input[name="profilTutup${day}"]`);
+        if (inputBuka)  inputBuka.value  = entry.buka;
+        if (inputTutup) inputTutup.value = entry.tutup;
+      }
+    });
+  }
+
+  /* Baca jadwal dari profilJadwalList → array [{hari, jamBuka, jamTutup, buka}] */
+  function readProfilJadwal() {
+    const result = [];
+    document.querySelectorAll('#profilJadwalList .jadwal-row').forEach(row => {
+      const day   = row.dataset.day;
+      const btn   = row.querySelector('.jadwal-toggle');
+      const aktif = btn.getAttribute('aria-pressed') === 'true';
+      const inputBuka  = row.querySelector(`input[name="profilBuka${day}"]`);
+      const inputTutup = row.querySelector(`input[name="profilTutup${day}"]`);
+      result.push({
+        hari:     day,
+        buka:     aktif,
+        jamBuka:  inputBuka  ? inputBuka.value  : '08:00',
+        jamTutup: inputTutup ? inputTutup.value : '20:00',
+      });
+    });
+    return result;
+  }
+
+  function loadProfil() {
+    document.getElementById('profilNama').value   = klinik.namaKlinik || '';
+    document.getElementById('profilWA').value     = klinik.waKlinik   || '';
+    document.getElementById('profilAlamat').value = klinik.alamat     || '';
+    document.getElementById('profilKota').value   = klinik.kota       || '';
+
+    /* Init toggle listeners lalu isi jadwal */
+    initProfilJadwalToggles();
+    loadProfilJadwal();
   }
 
   document.getElementById('btnSimpanProfil').addEventListener('click', () => {
@@ -887,9 +975,17 @@
     klinik.waKlinik   = document.getElementById('profilWA').value.trim();
     klinik.alamat     = document.getElementById('profilAlamat').value.trim();
     klinik.kota       = document.getElementById('profilKota').value.trim();
-    klinik.jamBuka    = document.getElementById('profilJamBuka').value;
-    klinik.jamTutup   = document.getElementById('profilJamTutup').value;
-    klinik.harisBuka  = [...document.querySelectorAll('input[name="profilHari"]:checked')].map(cb => cb.value).join(', ');
+
+    /* Simpan jadwal per hari */
+    const jadwal = readProfilJadwal();
+    klinik.jadwal    = jadwal;
+    klinik.harisBuka = jadwal.filter(j => j.buka).map(j => j.hari).join(', ');
+
+    /* Derivasi jamBuka/jamTutup dari hari pertama yang aktif */
+    const firstAktif = jadwal.find(j => j.buka);
+    klinik.jamBuka  = firstAktif ? firstAktif.jamBuka  : (klinik.jamBuka  || '08:00');
+    klinik.jamTutup = firstAktif ? firstAktif.jamTutup : (klinik.jamTutup || '20:00');
+
     save();
     updateSidebarClinic();
     showToast('Profil klinik disimpan.');
@@ -899,23 +995,70 @@
      INIT
   ================================================================ */
   function init() {
-    /* Try to load klinik data from registration form (localStorage key: mitraKlinik) */
-    if (!klinik.namaKlinik) {
-      const reg = LS.get('mitraKlinik', []);
-      if (Array.isArray(reg) && reg.length) {
-        const latest = reg[reg.length - 1];
-        klinik = {
-          namaKlinik: latest.namaKlinik || '',
-          waKlinik:   latest.waKlinik   || '',
-          alamat:     latest.alamat     || '',
-          kota:       latest.kota       || '',
-          jamBuka:    latest.jamBuka    || '08:00',
-          jamTutup:   latest.jamTutup   || '17:00',
-          harisBuka:  latest.harisBuka  || '',
-          namaOwner:  latest.namaOwner  || '',
-        };
-        save();
+    /* Ambil session login untuk identifikasi klinik yang benar */
+    const sess = LS.get('mitraSession', null);
+
+    /* SELALU sync dari mitraKlinik[] saat init agar data pendaftaran selalu fresh.
+       Data pendaftaran (mitraKlinik) adalah source of truth untuk profil klinik. */
+    const reg = LS.get('mitraKlinik', []);
+    if (Array.isArray(reg) && reg.length) {
+      /* Cari klinik berdasarkan mitraId dari session, fallback ke email lalu namaKlinik */
+      let match = null;
+      if (sess?.mitraId) {
+        match = reg.find(k => k.id === sess.mitraId);
       }
+      if (!match && sess?.email) {
+        match = reg.find(k => k.emailAkun && k.emailAkun.toLowerCase() === sess.email.toLowerCase());
+      }
+      if (!match && sess?.namaKlinik) {
+        match = reg.find(k => k.namaKlinik === sess.namaKlinik);
+      }
+      /* fallback: klinik terakhir yang didaftarkan */
+      if (!match) match = reg[reg.length - 1];
+
+      if (match) {
+        /* Derivasi jamBuka/jamTutup dari jadwal[] jika field langsung kosong */
+        let jamBuka  = match.jamBuka  || '';
+        let jamTutup = match.jamTutup || '';
+        if ((!jamBuka || !jamTutup) && Array.isArray(match.jadwal) && match.jadwal.length) {
+          const firstDay = match.jadwal.find(j => j.buka !== false);
+          if (firstDay) {
+            jamBuka  = jamBuka  || firstDay.jamBuka  || '08:00';
+            jamTutup = jamTutup || firstDay.jamTutup || '20:00';
+          }
+        }
+
+        /* Merge: data pendaftaran menimpa profil lama, tapi booking/pasien/dokter dipertahankan */
+        klinik = Object.assign({}, klinik, {
+          namaKlinik:    match.namaKlinik    || klinik.namaKlinik || '',
+          waKlinik:      match.waKlinik      || klinik.waKlinik   || '',
+          alamat:        match.alamat        || klinik.alamat     || '',
+          kota:          match.kota          || klinik.kota       || '',
+          provinsi:      match.provinsi      || '',
+          kodePos:       match.kodePos       || '',
+          jamBuka,
+          jamTutup,
+          harisBuka:     match.harisBuka     || '',
+          jadwal:        match.jadwal        || [],
+          namaOwner:     match.namaOwner     || klinik.namaOwner || '',
+          tipeKlinik:    match.tipeKlinik    || '',
+          hewanDilayani: match.hewanDilayani || [],
+          layanan:       match.layanan       || '',
+          hargaMulai:    match.hargaMulai    || '',
+          googleRating:  match.googleRating  || null,
+          adminStatus:   match.adminStatus   || match.status || '',
+          _mitraId:      match.id            || '',
+        });
+        LS.set('anabulku_klinik', klinik);
+      }
+    }
+
+    /* Fallback: ambil dari session jika mitraKlinik[] tidak ada */
+    if (!klinik.namaKlinik && sess?.namaKlinik) {
+      klinik.namaKlinik = sess.namaKlinik;
+    }
+    if (!klinik.namaOwner && sess?.namaOwner) {
+      klinik.namaOwner = sess.namaOwner;
     }
 
     updateSidebarClinic();

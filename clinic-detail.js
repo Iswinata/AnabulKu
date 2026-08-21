@@ -300,35 +300,33 @@
 
     var allDokters = clinic.dokters || [];
 
-    /* Fallback: if dokters array empty, create placeholder from clinic owner */
+    /* Jika klinik belum mengisi tim dokter, sembunyikan seluruh section */
     if (!allDokters.length) {
-      if (clinic.namaOwner) {
-        allDokters = [{
-          nama:         "drh. " + clinic.namaOwner,
-          spesialisasi: clinic.tipeKlinik || "Dokter Hewan",
-          hari:         clinic.harisBuka  || "",
-          jamMulai:     clinic.jamBuka    || "08:00",
-          jamSelesai:   clinic.jamTutup   || "17:00",
-        }];
-      }
-    }
-
-    if (!allDokters.length) {
-      section.innerHTML = '<p class="cd-no-doctors">Informasi dokter belum tersedia.</p>';
+      section.hidden = true;
       return;
     }
 
-    /* Filter by selected day */
+    section.hidden = false;
+
+    /* Filter by selected day — support both formats:
+       Format baru: doc.jadwal = [{hari, mulai, selesai}]
+       Format lama: doc.hari = ['Senin', 'Selasa', ...] */
     var dokters = allDokters.filter(function(doc) {
+      /* Format baru: jadwal array */
+      if (Array.isArray(doc.jadwal) && doc.jadwal.length) {
+        return doc.jadwal.some(function(j) { return j.hari === selectedDayName; });
+      }
+      /* Format lama: hari array atau string */
       var hariArr = typeof doc.hari === "string"
         ? doc.hari.split(/[,\s]+/).filter(Boolean)
         : (Array.isArray(doc.hari) ? doc.hari : []);
-      /* If no schedule defined, show on all days */
+      /* Jika tidak ada jadwal sama sekali, tampilkan di semua hari */
       if (!hariArr.length) return true;
       return hariArr.indexOf(selectedDayName) >= 0;
     });
 
     if (!dokters.length) {
+      section.hidden = false;
       section.innerHTML =
         '<div class="cd-no-doctors-day">' +
           '<svg viewBox="0 0 24 24" fill="none" stroke="#D1D5DB" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="40" height="40" aria-hidden="true">' +
