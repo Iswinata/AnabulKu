@@ -56,7 +56,7 @@
 
     /* ── Page header ── */
     .page-header {
-      padding: 22px 0 12px;
+      padding: 26px 0 14px;
       flex-shrink: 0;
     }
 
@@ -65,84 +65,84 @@
       margin-bottom: 12px;
     }
     .brand-icon {
-      width: 34px; height: 34px;
+      width: 36px; height: 36px;
       background: linear-gradient(180deg, #ff9800 0%, #ffbd5d 100%);
       border: 1.5px solid var(--black);
       border-radius: 10px;
       box-shadow: 1px 1px 0 #000;
       display: grid; place-items: center;
-      font-size: 15px; flex-shrink: 0;
+      font-size: 16px; flex-shrink: 0;
     }
     .brand-name {
-      font-size: 16px; font-weight: 800;
+      font-size: 17px; font-weight: 800;
       color: var(--ink); letter-spacing: -.3px;
     }
 
     .page-title {
-      font-size: 22px; font-weight: 800;
+      font-size: 24px; font-weight: 800;
       color: var(--ink); line-height: 1.2;
       letter-spacing: -.5px;
-      margin-bottom: 4px;
+      margin-bottom: 5px;
     }
     .page-title span { color: var(--orange-d); }
 
     .page-sub {
-      font-size: 11.5px; color: var(--ink-3);
-      line-height: 1.45;
+      font-size: 12.5px; color: var(--ink-3);
+      line-height: 1.5;
     }
 
     /* ── Section header ── */
     .section-title {
-      font-size: 10px; font-weight: 700;
+      font-size: 11px; font-weight: 700;
       color: #ac6600;
       text-transform: uppercase; letter-spacing: .07em;
-      margin-bottom: 7px;
+      margin-bottom: 8px;
     }
 
     /* ── Form card ── */
     .form-card {
       background: var(--white);
       border: 1.5px solid var(--gray-e5);
-      border-radius: 12px;
+      border-radius: 14px;
       box-shadow: var(--shadow);
-      padding: 14px 15px;
-      margin-bottom: 10px;
+      padding: 18px 18px;
+      margin-bottom: 12px;
       flex-shrink: 0;
     }
 
-    .field { margin-bottom: 12px; }
+    .field { margin-bottom: 14px; }
     .field:last-of-type { margin-bottom: 0; }
 
     .field-label {
       display: block;
-      font-size: 10px; font-weight: 700;
+      font-size: 11px; font-weight: 700;
       color: var(--ink-2);
       text-transform: uppercase; letter-spacing: .06em;
-      margin-bottom: 5px;
+      margin-bottom: 6px;
     }
 
     .input-wrap { position: relative; }
 
     .input-icon {
       position: absolute;
-      left: 11px; top: 50%;
+      left: 12px; top: 50%;
       transform: translateY(-50%);
-      width: 14px; height: 14px;
+      width: 16px; height: 16px;
       color: var(--gray-d1); pointer-events: none;
     }
 
     .field-input {
-      width: 100%; height: 42px;
+      width: 100%; height: 50px;
       border: 1.5px solid var(--gray-e5);
-      border-radius: 9px;
+      border-radius: 11px;
       background: #fafafa;
-      padding: 0 40px 0 36px;
-      font-size: 13px; font-family: inherit;
+      padding: 0 44px 0 40px;
+      font-size: 14px; font-family: inherit;
       color: var(--ink); outline: none;
       transition: border-color .15s, box-shadow .15s, background .15s;
       -webkit-appearance: none;
     }
-    .field-input.no-right-pad { padding-right: 12px; }
+    .field-input.no-right-pad { padding-right: 14px; }
     .field-input:focus {
       border-color: var(--orange);
       background: var(--white);
@@ -152,51 +152,51 @@
       border-color: var(--red);
       box-shadow: 0 0 0 3px rgba(239,68,68,.1);
     }
-    .field-input::placeholder { color: #c0c8d2; font-size: 12px; }
+    .field-input::placeholder { color: #c0c8d2; font-size: 13px; }
 
     /* ── Toggle password — satu ikon mata ── */
     .toggle-pass {
-      position: absolute; right: 10px; top: 50%;
+      position: absolute; right: 11px; top: 50%;
       transform: translateY(-50%);
       padding: 4px; color: var(--gray-d1);
       display: flex; align-items: center;
       transition: color .15s;
       -webkit-tap-highlight-color: transparent;
     }
-    .toggle-pass svg { width: 15px; height: 15px; }
+    .toggle-pass svg { width: 17px; height: 17px; }
     .toggle-pass:hover { color: var(--ink-2); }
 
     /* ── Opts row ── */
     .opts {
       display: flex; align-items: center;
       justify-content: space-between;
-      margin-top: 12px;
+      margin-top: 14px;
     }
     .check-wrap {
       display: flex; align-items: center; gap: 6px;
       cursor: pointer; user-select: none;
     }
     .check-wrap input {
-      width: 13px; height: 13px;
+      width: 14px; height: 14px;
       accent-color: var(--orange); cursor: pointer;
     }
-    .check-label { font-size: 11px; font-weight: 500; color: var(--ink-2); }
-    .forgot { font-size: 11px; font-weight: 600; color: var(--orange); text-decoration: none; }
+    .check-label { font-size: 12px; font-weight: 500; color: var(--ink-2); }
+    .forgot { font-size: 12px; font-weight: 600; color: var(--orange); text-decoration: none; }
 
     /* ── Primary button ── */
     .btn-primary {
-      width: 100%; height: 46px;
+      width: 100%; height: 52px;
       flex-shrink: 0;
       background: linear-gradient(180deg, #ff9800 0%, #ffbd5d 100%);
       color: var(--white);
       border: 1.5px solid var(--black);
-      border-radius: 12px;
+      border-radius: 13px;
       box-shadow: var(--shadow);
-      font-size: 14px; font-weight: 700;
+      font-size: 15px; font-weight: 700;
       font-family: inherit;
       display: flex; align-items: center; justify-content: center; gap: 8px;
       transition: transform .1s ease, box-shadow .1s ease;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
     }
     .btn-primary:active { transform: translate(1px,1px); box-shadow: 1px 1px 0 #000; }
     .btn-primary:disabled { opacity: .6; cursor: not-allowed; transform: none !important; }
@@ -206,54 +206,54 @@
       display: flex; align-items: center; gap: 10px;
       background: var(--white);
       border: 1.5px solid var(--gray-e5);
-      border-radius: 12px;
+      border-radius: 13px;
       box-shadow: var(--shadow);
-      padding: 11px 14px;
+      padding: 13px 16px;
       text-decoration: none; color: inherit;
       transition: transform .1s ease, box-shadow .1s ease;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
       flex-shrink: 0;
     }
     .register-row:active { transform: translate(1px,1px); box-shadow: 1px 1px 0 #000; }
 
     .rr-icon {
-      width: 34px; height: 34px; flex-shrink: 0;
+      width: 36px; height: 36px; flex-shrink: 0;
       background: linear-gradient(180deg, #ff9800 0%, #ffbd5d 100%);
       border: 1.5px solid var(--black);
       border-radius: 50%;
       box-shadow: 1px 1px 0 #000;
       display: grid; place-items: center;
-      font-size: 15px;
+      font-size: 16px;
     }
     .rr-text { flex: 1; min-width: 0; }
-    .rr-title { font-size: 12px; font-weight: 700; color: var(--ink); line-height: 1.3; }
-    .rr-sub   { font-size: 10px; color: var(--ink-3); margin-top: 1px; }
+    .rr-title { font-size: 13px; font-weight: 700; color: var(--ink); line-height: 1.3; }
+    .rr-sub   { font-size: 11px; color: var(--ink-3); margin-top: 2px; }
 
     .rr-arrow {
-      flex: none; width: 26px; height: 26px;
+      flex: none; width: 28px; height: 28px;
       border-radius: 50%;
       background: linear-gradient(90deg, #ff9800 0%, #ffc46d 100%);
       border: 1.5px solid var(--black);
       box-shadow: 1px 1px 0 #000;
       display: grid; place-items: center; color: var(--white);
     }
-    .rr-arrow svg { width: 12px; height: 12px; }
+    .rr-arrow svg { width: 13px; height: 13px; }
 
     /* ── Divider ── */
     .divider {
       display: flex; align-items: center; gap: 8px;
-      margin: 2px 0 10px;
+      margin: 2px 0 12px;
       flex-shrink: 0;
     }
     .divider::before, .divider::after {
       content: ''; flex: 1; height: 1px; background: var(--gray-e5);
     }
-    .divider-text { font-size: 10px; color: var(--gray-d1); font-weight: 500; white-space: nowrap; }
+    .divider-text { font-size: 11px; color: var(--gray-d1); font-weight: 500; white-space: nowrap; }
 
     /* ── Footer ── */
     .footer-note {
-      text-align: center; font-size: 10px;
-      color: var(--ink-3); margin-top: auto; padding-top: 4px;
+      text-align: center; font-size: 11px;
+      color: var(--ink-3); margin-top: auto; padding-top: 6px;
       flex-shrink: 0;
     }
     .footer-note a { color: var(--ink-2); font-weight: 600; text-decoration: none; }
@@ -305,13 +305,10 @@
           </svg>
           <input class="field-input" type="password" id="fPass"
             placeholder="kata sandi kamu" autocomplete="current-password" required />
-          <!-- Satu ikon mata: coret = password tersembunyi, tidak coret = password terlihat -->
           <button type="button" class="toggle-pass" id="togglePass" aria-label="Tampilkan kata sandi" tabindex="-1">
             <svg id="eyeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
-              <!-- Mata -->
               <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
               <circle cx="12" cy="12" r="3"/>
-              <!-- Garis coret — tampil saat password tersembunyi -->
               <line id="eyeSlash" x1="2" y1="2" x2="22" y2="22"/>
             </svg>
           </button>
@@ -330,7 +327,7 @@
 
   <button class="btn-primary" type="submit" form="loginForm" id="btnLogin">
     <span id="btnText">Masuk Sekarang</span>
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true" width="15" height="15">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true" width="16" height="16">
       <path d="M5 12h14M12 5l7 7-7 7"/>
     </svg>
   </button>
@@ -378,8 +375,7 @@
   document.getElementById('togglePass').addEventListener('mousedown', e => e.preventDefault());
   document.getElementById('togglePass').addEventListener('click', () => {
     const isHidden = passInput.type === 'password';
-    passInput.type    = isHidden ? 'text' : 'password';
-    /* Coret = tersembunyi, tidak coret = terlihat */
+    passInput.type = isHidden ? 'text' : 'password';
     eyeSlash.style.display = isHidden ? 'none' : '';
     document.getElementById('togglePass').setAttribute('aria-label',
       isHidden ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi');

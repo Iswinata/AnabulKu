@@ -72,16 +72,16 @@
       display: flex; align-items: center; gap: 7px;
     }
     .brand-icon {
-      width: 30px; height: 30px;
+      width: 32px; height: 32px;
       background: linear-gradient(180deg, #ff9800 0%, #ffbd5d 100%);
       border: 1.5px solid var(--black);
       border-radius: 9px;
       box-shadow: 1px 1px 0 #000;
       display: grid; place-items: center;
-      font-size: 13px; flex-shrink: 0;
+      font-size: 14px; flex-shrink: 0;
     }
     .brand-name {
-      font-size: 14px; font-weight: 800;
+      font-size: 15px; font-weight: 800;
       color: var(--ink); letter-spacing: -.3px;
     }
 
@@ -101,7 +101,7 @@
     .btn-back svg { width: 11px; height: 11px; }
 
     .page-title {
-      font-size: 20px; font-weight: 800;
+      font-size: 21px; font-weight: 800;
       color: var(--ink); line-height: 1.2;
       letter-spacing: -.5px;
       margin-bottom: 3px;
@@ -109,7 +109,7 @@
     .page-title span { color: var(--orange-d); }
 
     .page-sub {
-      font-size: 11px; color: var(--ink-3);
+      font-size: 11.5px; color: var(--ink-3);
       line-height: 1.4;
     }
 
@@ -125,12 +125,12 @@
     .step-item { display: flex; align-items: center; gap: 4px; }
 
     .step-circle {
-      width: 24px; height: 24px;
+      width: 26px; height: 26px;
       border-radius: 50%;
       border: 1.5px solid var(--gray-d1);
       background: var(--white);
       display: grid; place-items: center;
-      font-size: 9px; font-weight: 700;
+      font-size: 10px; font-weight: 700;
       color: var(--gray-d1); flex-shrink: 0;
       transition: background .2s, color .2s, border-color .2s;
     }
@@ -146,7 +146,7 @@
     }
 
     .step-label {
-      font-size: 9.5px; font-weight: 600;
+      font-size: 10px; font-weight: 600;
       color: var(--gray-d1); white-space: nowrap;
     }
     .step-label.active { color: var(--orange-d); }
@@ -162,10 +162,10 @@
 
     /* ── Section title ── */
     .section-title {
-      font-size: 10px; font-weight: 700;
+      font-size: 11px; font-weight: 700;
       color: #ac6600;
       text-transform: uppercase; letter-spacing: .07em;
-      margin-bottom: 6px;
+      margin-bottom: 7px;
       flex-shrink: 0;
     }
 
@@ -173,47 +173,47 @@
     .form-card {
       background: var(--white);
       border: 1.5px solid var(--gray-e5);
-      border-radius: 11px;
+      border-radius: 13px;
       box-shadow: var(--shadow);
-      padding: 12px 14px;
-      margin-bottom: 8px;
+      padding: 16px 16px;
+      margin-bottom: 10px;
       flex-shrink: 0;
     }
 
-    .field { margin-bottom: 10px; }
+    .field { margin-bottom: 12px; }
     .field:last-child { margin-bottom: 0; }
 
     .field-label {
       display: block;
-      font-size: 10px; font-weight: 700;
+      font-size: 11px; font-weight: 700;
       color: var(--ink-2);
       text-transform: uppercase; letter-spacing: .06em;
-      margin-bottom: 4px;
+      margin-bottom: 5px;
     }
-    .field-hint { font-size: 9.5px; color: var(--ink-3); margin-top: 3px; }
+    .field-hint { font-size: 10px; color: var(--ink-3); margin-top: 3px; }
 
     .input-wrap { position: relative; }
 
     .input-icon {
       position: absolute;
-      left: 10px; top: 50%;
+      left: 12px; top: 50%;
       transform: translateY(-50%);
-      width: 13px; height: 13px;
+      width: 15px; height: 15px;
       color: var(--gray-d1); pointer-events: none;
     }
 
     .field-input {
-      width: 100%; height: 40px;
+      width: 100%; height: 48px;
       border: 1.5px solid var(--gray-e5);
-      border-radius: 8px;
+      border-radius: 10px;
       background: #fafafa;
-      padding: 0 38px 0 34px;
-      font-size: 12.5px; font-family: inherit;
+      padding: 0 42px 0 38px;
+      font-size: 13.5px; font-family: inherit;
       color: var(--ink); outline: none;
       transition: border-color .15s, box-shadow .15s, background .15s;
       -webkit-appearance: none;
     }
-    .field-input.no-right-pad { padding-right: 12px; }
+    .field-input.no-right-pad { padding-right: 14px; }
     .field-input:focus {
       border-color: var(--orange);
       background: var(--white);
@@ -223,18 +223,18 @@
       border-color: var(--red);
       box-shadow: 0 0 0 3px rgba(239,68,68,.1);
     }
-    .field-input::placeholder { color: #c0c8d2; font-size: 11.5px; }
+    .field-input::placeholder { color: #c0c8d2; font-size: 12.5px; }
 
     /* ── Toggle password — satu ikon mata ── */
     .toggle-pass {
-      position: absolute; right: 9px; top: 50%;
+      position: absolute; right: 10px; top: 50%;
       transform: translateY(-50%);
       padding: 4px; color: var(--gray-d1);
       display: flex; align-items: center;
       transition: color .15s;
       -webkit-tap-highlight-color: transparent;
     }
-    .toggle-pass svg { width: 14px; height: 14px; }
+    .toggle-pass svg { width: 16px; height: 16px; }
     .toggle-pass:hover { color: var(--ink-2); }
 
     /* password strength */
@@ -243,7 +243,7 @@
       background: var(--gray-e5); margin-top: 5px; overflow: hidden;
     }
     .strength-fill { height: 100%; border-radius: 99px; width: 0%; transition: width .3s, background .3s; }
-    .strength-text { font-size: 9.5px; font-weight: 600; margin-top: 2px; color: var(--ink-3); }
+    .strength-text { font-size: 10px; font-weight: 600; margin-top: 2px; color: var(--ink-3); }
 
     /* ── Step panels ── */
     .step-panel { display: none; flex-direction: column; flex: 1; }
@@ -251,32 +251,32 @@
 
     /* ── Buttons ── */
     .btn-next {
-      width: 100%; height: 44px;
+      width: 100%; height: 50px;
       flex-shrink: 0;
       background: linear-gradient(180deg, #ff9800 0%, #ffbd5d 100%);
       color: var(--white);
       border: 1.5px solid var(--black);
-      border-radius: 11px;
+      border-radius: 12px;
       box-shadow: var(--shadow);
-      font-size: 13px; font-weight: 700;
+      font-size: 14px; font-weight: 700;
       font-family: inherit;
       display: flex; align-items: center; justify-content: center; gap: 7px;
       transition: transform .1s ease, box-shadow .1s ease;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
     }
     .btn-next:active { transform: translate(1px,1px); box-shadow: 1px 1px 0 #000; }
     .btn-next:disabled { opacity: .6; cursor: not-allowed; transform: none !important; }
 
-    .btn-row { display: flex; gap: 8px; margin-bottom: 8px; flex-shrink: 0; }
+    .btn-row { display: flex; gap: 8px; margin-bottom: 10px; flex-shrink: 0; }
 
     .btn-prev {
-      height: 44px; padding: 0 14px;
+      height: 50px; padding: 0 16px;
       flex-shrink: 0;
       background: var(--white); color: var(--ink-2);
       border: 1.5px solid var(--black);
-      border-radius: 11px;
+      border-radius: 12px;
       box-shadow: var(--shadow);
-      font-size: 12px; font-weight: 600;
+      font-size: 12.5px; font-weight: 600;
       font-family: inherit;
       display: flex; align-items: center; justify-content: center; gap: 5px;
       transition: transform .1s ease, box-shadow .1s ease;
@@ -288,19 +288,19 @@
     .summary-card {
       background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
       border: 1.5px solid #fed7aa;
-      border-radius: 11px;
+      border-radius: 12px;
       box-shadow: var(--shadow);
-      padding: 10px 13px;
-      margin-bottom: 8px;
+      padding: 12px 14px;
+      margin-bottom: 10px;
       flex-shrink: 0;
     }
     .summary-card-title {
-      font-size: 9px; font-weight: 700; color: var(--ink-3);
+      font-size: 10px; font-weight: 700; color: var(--ink-3);
       text-transform: uppercase; letter-spacing: .06em; margin-bottom: 7px;
     }
     .summary-row {
       display: flex; justify-content: space-between; align-items: center;
-      font-size: 11.5px; padding: 4px 0;
+      font-size: 12px; padding: 4px 0;
       border-bottom: 1px solid rgba(255,152,0,.15);
     }
     .summary-row:last-child { border-bottom: none; }
@@ -316,19 +316,19 @@
     .tos-wrap {
       display: flex; align-items: flex-start; gap: 7px;
       cursor: pointer; user-select: none;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
       flex-shrink: 0;
     }
     .tos-wrap input[type="checkbox"] {
-      width: 13px; height: 13px;
+      width: 14px; height: 14px;
       accent-color: var(--orange); flex-shrink: 0; margin-top: 2px;
     }
-    .tos-text { font-size: 10.5px; color: var(--ink-2); line-height: 1.5; }
+    .tos-text { font-size: 11px; color: var(--ink-2); line-height: 1.5; }
     .tos-text a { color: var(--orange); font-weight: 600; text-decoration: none; }
 
     /* ── Login link ── */
     .login-link {
-      text-align: center; font-size: 11px;
+      text-align: center; font-size: 11.5px;
       color: var(--ink-2); font-weight: 500;
       margin-top: auto; padding-top: 4px;
       flex-shrink: 0;
@@ -368,12 +368,12 @@
     }
 
     .btn-goto-login {
-      margin-top: 22px; width: 100%; height: 46px;
+      margin-top: 22px; width: 100%; height: 50px;
       flex-shrink: 0;
       background: linear-gradient(180deg, #ff9800 0%, #ffbd5d 100%);
       color: var(--white);
       border: 1.5px solid var(--black);
-      border-radius: 11px;
+      border-radius: 12px;
       box-shadow: var(--shadow);
       font-size: 14px; font-weight: 700; font-family: inherit;
       display: flex; align-items: center; justify-content: center; gap: 8px;
@@ -466,7 +466,7 @@
       </div>
       <button class="btn-next" id="btnStep1">
         Lanjut
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true" width="14" height="14">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true" width="15" height="15">
           <path d="M5 12h14M12 5l7 7-7 7"/>
         </svg>
       </button>
@@ -506,7 +506,6 @@
             </svg>
             <input class="field-input" type="password" id="inputRegPass"
               placeholder="Min. 8 karakter" autocomplete="new-password" />
-            <!-- Satu ikon mata: coret = password tersembunyi, tidak coret = terlihat -->
             <button type="button" class="toggle-pass" id="toggleRegPass" aria-label="Tampilkan kata sandi" tabindex="-1">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
@@ -521,14 +520,14 @@
       </div>
       <div class="btn-row">
         <button class="btn-prev" id="btnBack1">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true" width="11" height="11">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true" width="12" height="12">
             <path d="M19 12H5M12 5l-7 7 7 7"/>
           </svg>
           Kembali
         </button>
         <button class="btn-next" id="btnStep2" style="flex:1;margin-bottom:0">
           Lanjut
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true" width="14" height="14">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true" width="15" height="15">
             <path d="M5 12h14M12 5l7 7-7 7"/>
           </svg>
         </button>
@@ -578,14 +577,14 @@
       </label>
       <div class="btn-row">
         <button class="btn-prev" id="btnBack2">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true" width="11" height="11">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true" width="12" height="12">
             <path d="M19 12H5M12 5l-7 7 7 7"/>
           </svg>
           Kembali
         </button>
         <button class="btn-next" id="btnRegister" style="flex:1;margin-bottom:0">
           <span id="regBtnText">Buat Akun</span>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true" width="14" height="14">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true" width="15" height="15">
             <polyline points="20 6 9 17 4 12"/>
           </svg>
         </button>
@@ -680,7 +679,6 @@
   document.getElementById('toggleRegPass').addEventListener('click', () => {
     const isHidden = regPassInput.type === 'password';
     regPassInput.type = isHidden ? 'text' : 'password';
-    /* coret = tersembunyi, tidak coret = terlihat */
     regEyeSlash.style.display = isHidden ? 'none' : '';
     document.getElementById('toggleRegPass').setAttribute('aria-label',
       isHidden ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi');
