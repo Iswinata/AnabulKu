@@ -10,31 +10,33 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --frame-bg:  #fcece3;
-      --orange:    #ff9800;
-      --orange-d:  #f57c00;
-      --orange-l:  #ffbd5d;
-      --ink:       #2c3e50;
-      --ink-2:     #4b5563;
-      --ink-3:     #6b7280;
-      --gray-e5:   #e5e7eb;
-      --gray-d1:   #d1d5db;
-      --red:       #ef4444;
-      --black:     #000;
-      --white:     #fff;
-      --shadow:    2px 2px 0px #000;
+      --frame-bg: #fcece3;
+      --orange:   #ff9800;
+      --orange-d: #f57c00;
+      --orange-l: #ffbd5d;
+      --ink:      #2c3e50;
+      --ink-2:    #4b5563;
+      --ink-3:    #6b7280;
+      --gray-e5:  #e5e7eb;
+      --gray-d1:  #d1d5db;
+      --red:      #ef4444;
+      --black:    #000;
+      --white:    #fff;
+      --shadow:   2px 2px 0px #000;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { -webkit-text-size-adjust: 100%; }
+    html, body {
+      height: 100%; height: 100dvh;
+      overflow: hidden;
+      -webkit-text-size-adjust: 100%;
+    }
 
     body {
       font-family: "Poppins", system-ui, sans-serif;
       background: #e7dbd0;
       display: flex;
       justify-content: center;
-      height: 100vh; height: 100dvh;
-      overflow: hidden;
       -webkit-font-smoothing: antialiased;
     }
 
@@ -46,101 +48,101 @@
       width: 100%; max-width: 393px;
       height: 100vh; height: 100dvh;
       background: var(--frame-bg);
-      padding: 0 22px 24px;
+      padding: 0 20px 16px;
       display: flex; flex-direction: column;
-      overflow-y: auto;
-      overflow-x: hidden;
+      overflow: hidden;
       box-shadow: 0 0 40px -10px rgba(0,0,0,.18);
     }
 
     /* ── Page header ── */
     .page-header {
-      padding: 28px 0 16px;
+      padding: 22px 0 12px;
       flex-shrink: 0;
     }
 
     .brand-row {
-      display: flex; align-items: center; gap: 10px;
-      margin-bottom: 16px;
+      display: flex; align-items: center; gap: 8px;
+      margin-bottom: 12px;
     }
     .brand-icon {
-      width: 40px; height: 40px;
+      width: 34px; height: 34px;
       background: linear-gradient(180deg, #ff9800 0%, #ffbd5d 100%);
       border: 1.5px solid var(--black);
-      border-radius: 12px;
+      border-radius: 10px;
       box-shadow: 1px 1px 0 #000;
       display: grid; place-items: center;
-      font-size: 18px; flex-shrink: 0;
+      font-size: 15px; flex-shrink: 0;
     }
     .brand-name {
-      font-size: 18px; font-weight: 800;
+      font-size: 16px; font-weight: 800;
       color: var(--ink); letter-spacing: -.3px;
     }
 
     .page-title {
-      font-size: 26px; font-weight: 800;
+      font-size: 22px; font-weight: 800;
       color: var(--ink); line-height: 1.2;
       letter-spacing: -.5px;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
     }
     .page-title span { color: var(--orange-d); }
 
     .page-sub {
-      font-size: 13px; color: var(--ink-3);
-      line-height: 1.5;
+      font-size: 11.5px; color: var(--ink-3);
+      line-height: 1.45;
     }
 
     /* ── Section header ── */
     .section-title {
-      font-size: 11px; font-weight: 700;
+      font-size: 10px; font-weight: 700;
       color: #ac6600;
       text-transform: uppercase; letter-spacing: .07em;
-      margin-bottom: 10px;
+      margin-bottom: 7px;
     }
 
     /* ── Form card ── */
     .form-card {
       background: var(--white);
       border: 1.5px solid var(--gray-e5);
-      border-radius: 13px;
+      border-radius: 12px;
       box-shadow: var(--shadow);
-      padding: 20px 18px;
-      margin-bottom: 12px;
+      padding: 14px 15px;
+      margin-bottom: 10px;
+      flex-shrink: 0;
     }
 
-    .field { margin-bottom: 16px; }
+    .field { margin-bottom: 12px; }
     .field:last-of-type { margin-bottom: 0; }
 
     .field-label {
       display: block;
-      font-size: 11px; font-weight: 700;
+      font-size: 10px; font-weight: 700;
       color: var(--ink-2);
       text-transform: uppercase; letter-spacing: .06em;
-      margin-bottom: 7px;
+      margin-bottom: 5px;
     }
 
     .input-wrap { position: relative; }
 
     .input-icon {
       position: absolute;
-      left: 13px; top: 50%;
+      left: 11px; top: 50%;
       transform: translateY(-50%);
-      width: 16px; height: 16px;
+      width: 14px; height: 14px;
       color: var(--gray-d1); pointer-events: none;
     }
 
     .field-input {
-      width: 100%; height: 48px;
+      width: 100%; height: 42px;
       border: 1.5px solid var(--gray-e5);
-      border-radius: 10px;
+      border-radius: 9px;
       background: #fafafa;
-      padding: 0 44px 0 42px;
-      font-size: 14px; font-family: inherit;
+      padding: 0 40px 0 36px;
+      font-size: 13px; font-family: inherit;
       color: var(--ink); outline: none;
       transition: border-color .15s, box-shadow .15s, background .15s;
       -webkit-appearance: none;
     }
-    .field-input.no-right-pad { padding-right: 14px; }
+    .field-input.no-right-pad { padding-right: 12px; }
     .field-input:focus {
       border-color: var(--orange);
       background: var(--white);
@@ -150,105 +152,109 @@
       border-color: var(--red);
       box-shadow: 0 0 0 3px rgba(239,68,68,.1);
     }
-    .field-input::placeholder { color: #c0c8d2; font-size: 13px; }
+    .field-input::placeholder { color: #c0c8d2; font-size: 12px; }
 
+    /* ── Toggle password — satu ikon mata ── */
     .toggle-pass {
-      position: absolute; right: 11px; top: 50%;
+      position: absolute; right: 10px; top: 50%;
       transform: translateY(-50%);
-      padding: 5px; color: var(--gray-d1);
+      padding: 4px; color: var(--gray-d1);
       display: flex; align-items: center;
       transition: color .15s;
       -webkit-tap-highlight-color: transparent;
     }
-    .toggle-pass svg { width: 16px; height: 16px; }
+    .toggle-pass svg { width: 15px; height: 15px; }
     .toggle-pass:hover { color: var(--ink-2); }
 
     /* ── Opts row ── */
     .opts {
       display: flex; align-items: center;
       justify-content: space-between;
-      margin-top: 16px;
+      margin-top: 12px;
     }
     .check-wrap {
-      display: flex; align-items: center; gap: 7px;
+      display: flex; align-items: center; gap: 6px;
       cursor: pointer; user-select: none;
     }
     .check-wrap input {
-      width: 15px; height: 15px;
+      width: 13px; height: 13px;
       accent-color: var(--orange); cursor: pointer;
     }
-    .check-label { font-size: 12px; font-weight: 500; color: var(--ink-2); }
-    .forgot { font-size: 12px; font-weight: 600; color: var(--orange); text-decoration: none; }
+    .check-label { font-size: 11px; font-weight: 500; color: var(--ink-2); }
+    .forgot { font-size: 11px; font-weight: 600; color: var(--orange); text-decoration: none; }
 
     /* ── Primary button ── */
     .btn-primary {
-      width: 100%; height: 50px;
+      width: 100%; height: 46px;
       flex-shrink: 0;
       background: linear-gradient(180deg, #ff9800 0%, #ffbd5d 100%);
       color: var(--white);
       border: 1.5px solid var(--black);
-      border-radius: 13px;
+      border-radius: 12px;
       box-shadow: var(--shadow);
-      font-size: 15px; font-weight: 700;
+      font-size: 14px; font-weight: 700;
       font-family: inherit;
       display: flex; align-items: center; justify-content: center; gap: 8px;
       transition: transform .1s ease, box-shadow .1s ease;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
     .btn-primary:active { transform: translate(1px,1px); box-shadow: 1px 1px 0 #000; }
     .btn-primary:disabled { opacity: .6; cursor: not-allowed; transform: none !important; }
 
     /* ── Register promo card ── */
     .register-row {
-      display: flex; align-items: center; gap: 12px;
+      display: flex; align-items: center; gap: 10px;
       background: var(--white);
       border: 1.5px solid var(--gray-e5);
-      border-radius: 13px;
+      border-radius: 12px;
       box-shadow: var(--shadow);
-      padding: 14px 16px;
+      padding: 11px 14px;
       text-decoration: none; color: inherit;
       transition: transform .1s ease, box-shadow .1s ease;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
+      flex-shrink: 0;
     }
     .register-row:active { transform: translate(1px,1px); box-shadow: 1px 1px 0 #000; }
 
     .rr-icon {
-      width: 40px; height: 40px; flex-shrink: 0;
+      width: 34px; height: 34px; flex-shrink: 0;
       background: linear-gradient(180deg, #ff9800 0%, #ffbd5d 100%);
       border: 1.5px solid var(--black);
       border-radius: 50%;
       box-shadow: 1px 1px 0 #000;
       display: grid; place-items: center;
-      font-size: 17px;
+      font-size: 15px;
     }
     .rr-text { flex: 1; min-width: 0; }
-    .rr-title { font-size: 13px; font-weight: 700; color: var(--ink); line-height: 1.3; }
-    .rr-sub   { font-size: 11px; color: var(--ink-3); margin-top: 2px; }
+    .rr-title { font-size: 12px; font-weight: 700; color: var(--ink); line-height: 1.3; }
+    .rr-sub   { font-size: 10px; color: var(--ink-3); margin-top: 1px; }
 
     .rr-arrow {
-      flex: none; width: 30px; height: 30px;
+      flex: none; width: 26px; height: 26px;
       border-radius: 50%;
       background: linear-gradient(90deg, #ff9800 0%, #ffc46d 100%);
       border: 1.5px solid var(--black);
       box-shadow: 1px 1px 0 #000;
       display: grid; place-items: center; color: var(--white);
     }
-    .rr-arrow svg { width: 14px; height: 14px; }
+    .rr-arrow svg { width: 12px; height: 12px; }
 
     /* ── Divider ── */
     .divider {
-      display: flex; align-items: center; gap: 10px;
-      margin: 4px 0 12px;
+      display: flex; align-items: center; gap: 8px;
+      margin: 2px 0 10px;
+      flex-shrink: 0;
     }
     .divider::before, .divider::after {
       content: ''; flex: 1; height: 1px; background: var(--gray-e5);
     }
-    .divider-text { font-size: 11px; color: var(--gray-d1); font-weight: 500; white-space: nowrap; }
+    .divider-text { font-size: 10px; color: var(--gray-d1); font-weight: 500; white-space: nowrap; }
 
     /* ── Footer ── */
     .footer-note {
-      text-align: center; font-size: 11px;
-      color: var(--ink-3); margin-top: auto; padding-top: 8px;
+      text-align: center; font-size: 10px;
+      color: var(--ink-3); margin-top: auto; padding-top: 4px;
+      flex-shrink: 0;
     }
     .footer-note a { color: var(--ink-2); font-weight: 600; text-decoration: none; }
 
@@ -258,7 +264,7 @@
       40%,80%  { transform: translateX(6px); }
     }
 
-    @media (max-width: 340px) { .app { padding-left: 16px; padding-right: 16px; } }
+    @media (max-width: 340px) { .app { padding-left: 14px; padding-right: 14px; } }
     @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
   </style>
 </head>
@@ -299,15 +305,14 @@
           </svg>
           <input class="field-input" type="password" id="fPass"
             placeholder="kata sandi kamu" autocomplete="current-password" required />
+          <!-- Satu ikon mata: coret = password tersembunyi, tidak coret = password terlihat -->
           <button type="button" class="toggle-pass" id="togglePass" aria-label="Tampilkan kata sandi" tabindex="-1">
-            <!-- eye-off (default: password hidden) -->
-            <svg id="iconEyeOff" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
-              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
-              <line x1="1" y1="1" x2="23" y2="23"/>
-            </svg>
-            <!-- eye (shown when password is visible) -->
-            <svg id="iconEye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" hidden>
-              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+            <svg id="eyeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+              <!-- Mata -->
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+              <circle cx="12" cy="12" r="3"/>
+              <!-- Garis coret — tampil saat password tersembunyi -->
+              <line id="eyeSlash" x1="2" y1="2" x2="22" y2="22"/>
             </svg>
           </button>
         </div>
@@ -325,7 +330,7 @@
 
   <button class="btn-primary" type="submit" form="loginForm" id="btnLogin">
     <span id="btnText">Masuk Sekarang</span>
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true" width="16" height="16">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true" width="15" height="15">
       <path d="M5 12h14M12 5l7 7-7 7"/>
     </svg>
   </button>
@@ -366,13 +371,18 @@
     document.getElementById('rememberMe').checked = true;
   }
 
+  /* Toggle password — satu ikon mata */
+  const passInput  = document.getElementById('fPass');
+  const eyeSlash   = document.getElementById('eyeSlash');
+
   document.getElementById('togglePass').addEventListener('mousedown', e => e.preventDefault());
   document.getElementById('togglePass').addEventListener('click', () => {
-    const inp = document.getElementById('fPass');
-    const isPass = inp.type === 'password';
-    inp.type = isPass ? 'text' : 'password';
-    document.getElementById('iconEyeOff').hidden = isPass;
-    document.getElementById('iconEye').hidden    = !isPass;
+    const isHidden = passInput.type === 'password';
+    passInput.type    = isHidden ? 'text' : 'password';
+    /* Coret = tersembunyi, tidak coret = terlihat */
+    eyeSlash.style.display = isHidden ? 'none' : '';
+    document.getElementById('togglePass').setAttribute('aria-label',
+      isHidden ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi');
   });
 
   function markErr(id) {
