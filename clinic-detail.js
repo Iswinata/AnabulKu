@@ -31,29 +31,46 @@
     return isNaN(id) ? 0 : id;
   }
 
+  /* ── Aktif klinik dan mitraId-nya ── */
+  var activeMitraId = "";
+
   /* ── Load clinic data from localStorage ── */
   function loadClinic(idx) {
     try {
       var raw = localStorage.getItem("mitraKlinik");
       var list = raw ? JSON.parse(raw) : [];
-      return list[idx] || null;
+      var c = list[idx] || null;
+      if (c) activeMitraId = c.id || "";
+      return c;
     } catch (e) { return null; }
   }
 
-  /* ── Load existing bookings from dashboard ── */
+  /* ── Key namespace booking per klinik ── */
+  function bookingKey() {
+    return activeMitraId ? "anabulku_bookings_" + activeMitraId : "anabulku_bookings";
+  }
+
+  /* ── Load existing bookings dari namespace klinik ini ── */
   function loadBookings() {
     try {
-      var raw = localStorage.getItem("anabulku_bookings");
+      var raw = localStorage.getItem(bookingKey());
       return raw ? JSON.parse(raw) : [];
     } catch (e) { return []; }
   }
 
-  /* ── Save new booking from user ── */
+  /* ── Save new booking: tulis ke namespace klinik + ke key global (untuk riwayat user) ── */
   function saveBooking(booking) {
     try {
-      var list = loadBookings();
-      list.unshift(booking);
-      localStorage.setItem("anabulku_bookings", JSON.stringify(list));
+      /* 1. Tulis ke namespace klinik agar dashboard mitra bisa membacanya */
+      var listKlinik = loadBookings();
+      listKlinik.unshift(booking);
+      localStorage.setItem(bookingKey(), JSON.stringify(listKlinik));
+
+      /* 2. Tulis juga ke key global anabulku_bookings untuk riwayat user app */
+      var globalRaw = localStorage.getItem("anabulku_bookings");
+      var listGlobal = globalRaw ? JSON.parse(globalRaw) : [];
+      listGlobal.unshift(booking);
+      localStorage.setItem("anabulku_bookings", JSON.stringify(listGlobal));
     } catch (e) { /* silent */ }
   }
 
@@ -125,67 +142,123 @@
     });
   }
 
-  /* ── Generate time slots from a single time range ── */
-  function generateSlotsFromRange(jamMulai, jamSelesai) {
-    if (!jamMulai || !jamSelesai) return [];
-
+  /* ── Generate jam per-jam dari range waktu ──
+     "08:00"–"12:00" → ["08:00","09:00","10:00","11:00"] */
+  function generateHourSlots(mulai, selesai) {
+    if (!mulai || !selesai) return [];
     var slots = [];
-    var start = parseInt(jamMulai.replace(":", ""), 10);
-    var end   = parseInt(jamSelesai.replace(":", ""), 10);
-
-    for (var t = start; t < end; t += 100) {
-      var h = Math.floor(t / 100);
-      var m = t % 100;
-      if (m >= 60) { h++; m -= 60; t = h * 100 + m; }
-      if (h >= 24) break;
-
-      var hStr = String(h).padStart(2, "0");
-      var mStr = String(m).padStart(2, "0");
-      slots.push(hStr + ":" + mStr);
+    var startH = parseInt(mulai.split(":")[0], 10);
+    var startM = parseInt(mulai.split(":")[1] || "0", 10);
+    var endH   = parseInt(selesai.split(":")[0], 10);
+    var endM   = parseInt(selesai.split(":")[1] || "0", 10);
+    var endTotal = endH * 60 + endM;
+    var cur = startH * 60 + startM;
+    while (cur < endTotal) {
+      var h = Math.floor(cur / 60);
+      var m = cur % 60;
+      slots.push(String(h).padStart(2, "0") + ":" + String(m).padStart(2, "0"));
+      cur += 60;
     }
     return slots;
   }
 
-  /* ── Get time slots per-sesi untuk satu hari ──
-     Return array of sessions, tiap sesi = {label, slots:[]}
-     Mendukung format baru (doc.jadwal) dan format lama (doc.hari + jamMulai/jamSelesai) */
-  function getDoctorSessionSlots(doc, dayName, clinicJamBuka, clinicJamTutup) {
+  /* ── Kumpulkan sesi dokter di hari tertentu ──
+     Return [{sesiLabel, slots:[jam,...]}]
+     Tiap sesi punya header label (range) + pilihan jam per jam di dalamnya */
+  function getDoctorSesiSlots(doc, dayName) {
+    var result = [];
+
     /* Format baru: jadwal = [{hari, mulai, selesai, sessions:[{mulai,selesai}]}] */
     if (Array.isArray(doc.jadwal) && doc.jadwal.length) {
       var dayEntry = null;
       for (var i = 0; i < doc.jadwal.length; i++) {
         if (doc.jadwal[i].hari === dayName) { dayEntry = doc.jadwal[i]; break; }
       }
-      if (dayEntry) {
-        var sessions = Array.isArray(dayEntry.sessions) && dayEntry.sessions.length
-          ? dayEntry.sessions
-          : [{ mulai: dayEntry.mulai || "08:00", selesai: dayEntry.selesai || "17:00" }];
+      if (!dayEntry) return [];
 
-        return sessions.map(function(s) {
-          return {
-            label: s.mulai + "–" + s.selesai,
-            slots: generateSlotsFromRange(s.mulai, s.selesai),
-          };
-        }).filter(function(s) { return s.slots.length > 0; });
-      }
+      var sessions = Array.isArray(dayEntry.sessions) && dayEntry.sessions.length
+        ? dayEntry.sessions
+        : [{ mulai: dayEntry.mulai || "08:00", selesai: dayEntry.selesai || "17:00" }];
+
+      sessions.forEach(function(s, si) {
+        var mulai   = s.mulai   || "08:00";
+        var selesai = s.selesai || "17:00";
+        result.push({
+          sesiLabel: "Sesi " + (si + 1) + " · " + mulai + "–" + selesai,
+          slots: generateHourSlots(mulai, selesai)
+        });
+      });
+      return result;
     }
 
-    /* Format lama: satu sesi dari jamMulai/jamSelesai */
-    var jamMulai   = doc.jamMulai   || clinicJamBuka;
-    var jamSelesai = doc.jamSelesai || clinicJamTutup;
-    var slots = generateSlotsFromRange(jamMulai, jamSelesai);
-    if (!slots.length) slots = ["09:00", "10:00", "13:00", "15:00", "16:00"];
-    var label = (jamMulai && jamSelesai) ? jamMulai + "–" + jamSelesai : "Sesi";
-    return [{ label: label, slots: slots }];
+    /* Format lama */
+    if (doc.jamMulai && doc.jamSelesai) {
+      result.push({
+        sesiLabel: doc.jamMulai + "–" + doc.jamSelesai,
+        slots: generateHourSlots(doc.jamMulai, doc.jamSelesai)
+      });
+    }
+    return result;
   }
 
-  /* Flatten semua slot dari semua sesi (untuk getBookedSlots check) */
-  function flattenSessionSlots(sessionSlots) {
-    var all = [];
-    sessionSlots.forEach(function(s) {
-      s.slots.forEach(function(t) { if (all.indexOf(t) < 0) all.push(t); });
-    });
-    return all;
+  /* ── Cek apakah jam sudah lewat (hari ini) ── */
+  function isSlotPast(dateISO, timeStr) {
+    var todayISO = (function() {
+      var n = new Date();
+      return n.getFullYear() + "-" +
+        String(n.getMonth() + 1).padStart(2, "0") + "-" +
+        String(n.getDate()).padStart(2, "0");
+    })();
+    if (dateISO !== todayISO) return false;
+    var now  = new Date();
+    var nowM = now.getHours() * 60 + now.getMinutes();
+    var parts = timeStr.split(":");
+    var slotM = parseInt(parts[0], 10) * 60 + parseInt(parts[1] || "0", 10);
+    return slotM <= nowM;
+  }
+
+  /* ── Ambil data user yang sedang login ── */
+  function getLoggedInUser() {
+    try {
+      var sess = JSON.parse(localStorage.getItem("anabulku_user_session")) || {};
+      if (!sess.loggedIn) return null;
+      /* Cari noHp dari anabulku_users berdasarkan email */
+      var users = JSON.parse(localStorage.getItem("anabulku_users")) || [];
+      var found = users.find(function(u) { return u.email === sess.email; });
+      return {
+        nama: found ? (found.nama || sess.nama || "") : (sess.nama || ""),
+        noHp: found ? (found.noHp || "") : ""
+      };
+    } catch (e) { return null; }
+  }
+
+  /* ── Build <option> list dari hewanDilayani klinik ──
+     Nilai dari daftar.html: kucing, anjing, reptil
+     Fallback ke daftar lengkap jika klinik tidak punya data */
+  var HEWAN_LABEL_MAP = {
+    kucing:  "Kucing",
+    anjing:  "Anjing",
+    reptil:  "Reptil / Eksotik",
+    kelinci: "Kelinci",
+    burung:  "Burung",
+    hamster: "Hamster",
+    lainnya: "Lainnya",
+  };
+
+  var HEWAN_FALLBACK = ["kucing", "anjing", "reptil", "kelinci", "burung", "hamster"];
+
+  function buildHewanOptions(clinic) {
+    var list = Array.isArray(clinic.hewanDilayani) && clinic.hewanDilayani.length
+      ? clinic.hewanDilayani
+      : HEWAN_FALLBACK;
+
+    /* Hapus "lainnya" dari daftar — hanya tampilkan hewan yang dipilih klinik */
+    var items = list.filter(function(v) { return v.toLowerCase() !== "lainnya"; });
+
+    return items.map(function(val) {
+      var label = HEWAN_LABEL_MAP[val.toLowerCase()] || (val.charAt(0).toUpperCase() + val.slice(1));
+      return '<option value="' + esc(label) + '">' + esc(label) + '</option>';
+    }).join("");
   }
 
   /* ── Booking form modal ── */
@@ -209,7 +282,7 @@
         '<div class="cd-modal-body">' +
           '<div class="cd-modal-info">' +
             '<p><strong>' + esc(clinic.namaKlinik) + '</strong></p>' +
-            '<p>' + esc(doc.nama) + ' · ' + esc(tanggal) + ' pukul ' + esc(jam) + '</p>' +
+            '<p>' + esc(doc.nama) + ' · ' + esc(tanggal) + (jam ? ' pukul ' + esc(jam) : '') + '</p>' +
           '</div>' +
           '<div class="cd-modal-field">' +
             '<label class="cd-modal-label" for="cdNamaPemilik">Nama Pemilik *</label>' +
@@ -224,19 +297,13 @@
               '<label class="cd-modal-label" for="cdNamaHewan">Nama Hewan *</label>' +
               '<input class="cd-modal-input" type="text" id="cdNamaHewan" placeholder="Nama hewan peliharaan" />' +
             '</div>' +
-            '<div class="cd-modal-field">' +
-              '<label class="cd-modal-label" for="cdJenisHewan">Jenis Hewan *</label>' +
-              '<select class="cd-modal-input" id="cdJenisHewan">' +
-                '<option value="" disabled selected>Pilih jenis</option>' +
-                '<option value="Kucing">Kucing</option>' +
-                '<option value="Anjing">Anjing</option>' +
-                '<option value="Kelinci">Kelinci</option>' +
-                '<option value="Hamster">Hamster</option>' +
-                '<option value="Burung">Burung</option>' +
-                '<option value="Reptil">Reptil</option>' +
-                '<option value="Lainnya">Lainnya</option>' +
-              '</select>' +
-            '</div>' +
+          '<div class="cd-modal-field">' +
+            '<label class="cd-modal-label" for="cdJenisHewan">Jenis Hewan *</label>' +
+            '<select class="cd-modal-input" id="cdJenisHewan">' +
+              '<option value="" disabled selected>Pilih jenis</option>' +
+              buildHewanOptions(clinic) +
+            '</select>' +
+          '</div>' +
           '</div>' +
           '<div class="cd-modal-field">' +
             '<label class="cd-modal-label" for="cdKeluhan">Keluhan / Catatan</label>' +
@@ -251,6 +318,15 @@
       '</div>';
 
     document.body.appendChild(modalEl);
+
+    /* Auto-fill data user yang login */
+    var loggedUser = getLoggedInUser();
+    if (loggedUser) {
+      var namaInput = modalEl.querySelector("#cdNamaPemilik");
+      var noHPInput = modalEl.querySelector("#cdNoHP");
+      if (namaInput && loggedUser.nama) namaInput.value = loggedUser.nama;
+      if (noHPInput && loggedUser.noHp) noHPInput.value = loggedUser.noHp;
+    }
 
     /* Close handlers */
     function closeModal() { if (modalEl) { modalEl.remove(); modalEl = null; } }
@@ -293,11 +369,16 @@
       };
 
       saveBooking(booking);
-      closeModal();
-      showSuccessToast("Booking berhasil! Klinik akan mengkonfirmasi segera.");
 
-      /* Re-render doctor section to mark slot as taken */
-      buildDoctorCards(clinic, activeDateISO);
+      /* Simpan pending payment untuk halaman pembayaran */
+      try {
+        localStorage.setItem("anabulku_pending_payment", JSON.stringify(booking));
+      } catch (e) { /* silent */ }
+
+      closeModal();
+
+      /* Redirect ke halaman pembayaran */
+      window.location.href = "payment.html";
     });
 
     /* Focus first input */
@@ -415,31 +496,39 @@
           esc(doc.jamMulai || "08:00") + "–" + esc(doc.jamSelesai || "17:00") + '</p>';
       }
 
-      /* ── Time slots: per-sesi dari getDoctorSessionSlots ── */
-      var sessionSlots = getDoctorSessionSlots(doc, selectedDayName, clinic.jamBuka, clinic.jamTutup);
-      var bookedSlots  = getBookedSlots(doc.nama, targetDate);
-      var multiSesi    = sessionSlots.length > 1;
 
-      /* Render tiap sesi sebagai blok tersendiri dengan header rentang jam */
-      var slotsHtml = sessionSlots.map(function(sesi, si) {
-        var headerHtml = multiSesi
-          ? '<div class="cd-sesi-header"><span class="cd-sesi-num">Sesi ' + (si + 1) + '</span>' +
-            '<span class="cd-sesi-range">' + esc(sesi.label) + '</span></div>'
-          : '<div class="cd-sesi-header cd-sesi-header--single">' +
-            '<span class="cd-sesi-range">' + esc(sesi.label) + '</span></div>';
+      /* ── Sesi per hari + jam per-jam di dalamnya ── */
+      var sesiList    = getDoctorSesiSlots(doc, selectedDayName);
+      var bookedSlots = getBookedSlots(doc.nama, targetDate);
 
-        var btnHtml = sesi.slots.map(function(t) {
-          var isBooked = bookedSlots.indexOf(t) >= 0;
-          var cls      = isBooked ? "booked" : "available";
-          var disabled = isBooked ? ' disabled aria-disabled="true"' : "";
-          var ariaLabel = isBooked ? t + " (penuh)" : t;
-          return '<button class="cd-time-slot ' + cls + '" type="button"' + disabled +
-                 ' aria-label="' + esc(ariaLabel) + '">' + esc(t) + '</button>';
+      var slotsHtml;
+      if (!sesiList.length) {
+        slotsHtml =
+          '<div class="cd-no-slots">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="#D1D5DB" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true">' +
+              '<circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/>' +
+            '</svg>' +
+            '<span>Belum ada jadwal jam untuk hari ini</span>' +
+          '</div>';
+      } else {
+        slotsHtml = sesiList.map(function(sesi) {
+          var jamBtns = sesi.slots.map(function(jam) {
+            var isPast   = isSlotPast(targetDate, jam);
+            var isBooked = bookedSlots.indexOf(jam) >= 0;
+            var disabled = (isPast || isBooked) ? ' disabled aria-disabled="true"' : "";
+            var cls      = isPast ? "past" : (isBooked ? "booked" : "available");
+            var ariaLbl  = isPast ? jam + " (sudah lewat)" : (isBooked ? jam + " (penuh)" : jam);
+            return '<button class="cd-time-slot ' + cls + '" type="button"' + disabled +
+                   ' aria-label="' + esc(ariaLbl) + '" data-sesi-value="' + esc(jam) + '">' +
+                   esc(jam) + '</button>';
+          }).join("");
+
+          return '<div class="cd-sesi-group">' +
+            '<div class="cd-sesi-group-header">' + esc(sesi.sesiLabel) + '</div>' +
+            '<div class="cd-sesi-slots">' + jamBtns + '</div>' +
+          '</div>';
         }).join("");
-
-        return '<div class="cd-sesi-block">' + headerHtml +
-               '<div class="cd-sesi-slots">' + btnHtml + '</div></div>';
-      }).join("");
+      }
 
       /* ── Photo ── */
       var photoStyle = doc.fotoDataUrl
@@ -468,9 +557,9 @@
         '</div>';
     }).join("");
 
-    /* Wire time slot selection */
+    /* Wire time slot selection — exclude booked dan past */
     section.querySelectorAll(".cd-doc-card").forEach(function(card) {
-      var slots = card.querySelectorAll(".cd-time-slot:not(.booked)");
+      var slots = card.querySelectorAll(".cd-time-slot:not(.booked):not(.past)");
       slots.forEach(function(slot) {
         slot.addEventListener("click", function() {
           slots.forEach(function(s) {
@@ -491,21 +580,11 @@
         var selectedSlot = card ? card.querySelector(".cd-time-slot.selected") : null;
 
         if (!selectedSlot) {
-          /* If no slot selected, try WhatsApp fallback */
-          var waNum = (clinic.waKlinik || "").replace(/\D/g, "");
-          if (waNum) {
-            var msg = encodeURIComponent(
-              "Halo, saya ingin memesan layanan di " + (clinic.namaKlinik || "klinik Anda") +
-              (doc.nama ? " dengan " + doc.nama : "") + "."
-            );
-            window.open("https://wa.me/62" + waNum.replace(/^0/, "") + "?text=" + msg, "_blank", "noopener");
-          } else {
-            showSuccessToast("Pilih waktu konsultasi terlebih dahulu.");
-          }
+          showSuccessToast("Pilih jam konsultasi terlebih dahulu.");
           return;
         }
 
-        var jam = selectedSlot.textContent.trim();
+        var jam = selectedSlot.getAttribute("data-sesi-value") || selectedSlot.textContent.trim();
         showBookingModal(clinic, doc, jam, activeDateISO);
       });
     });
@@ -552,10 +631,6 @@
     var style = document.createElement("style");
     style.id = "cd-booking-styles";
     style.textContent = [
-      /* Booked slot */
-      ".cd-time-slot.booked{background:#F3F4F6!important;color:#9CA3AF!important;",
-      "border-color:#E5E7EB!important;cursor:not-allowed!important;text-decoration:line-through;}",
-
       /* Modal backdrop */
       ".cd-booking-modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.5);",
       "z-index:200;display:flex;align-items:flex-end;justify-content:center;",
@@ -600,6 +675,10 @@
       "box-shadow:2px 2px 0 #000;cursor:pointer;transition:transform .1s,box-shadow .1s;}",
       ".cd-modal-btn-submit:hover{transform:translate(-1px,-1px);box-shadow:3px 3px 0 #000;}",
 
+      /* No slots message */
+      ".cd-no-slots{display:flex;align-items:center;gap:8px;padding:14px 16px;",
+      "background:#F9FAFB;border-radius:8px;color:#9CA3AF;font-size:13px;}",
+
       /* Toast */
       ".cd-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);",
       "background:#059669;color:#fff;font-family:'Poppins',sans-serif;font-size:14px;font-weight:500;",
@@ -608,6 +687,71 @@
       ".cd-toast--visible{transform:translateX(-50%) translateY(0);opacity:1;}",
     ].join("");
     document.head.appendChild(style);
+  }
+
+  /* ── Banner lanjutkan booking (jika ada pending) ── */
+  function showResumeBanner() {
+    var pending = null;
+    try {
+      pending = JSON.parse(localStorage.getItem("anabulku_pending_payment"));
+    } catch (e) { return; }
+    if (!pending || !pending.id) return;
+
+    /* Jangan tampilkan banner kalau booking pending bukan dari klinik ini */
+    var idx = getClinicIndex();
+    var clinic = loadClinic(idx);
+    if (clinic && pending.namaKlinik && pending.namaKlinik !== clinic.namaKlinik) return;
+
+    var banner = document.createElement("div");
+    banner.id = "cdResumeBanner";
+    banner.setAttribute("role", "alert");
+    banner.style.cssText = [
+      "position:fixed;bottom:20px;left:50%;transform:translateX(-50%);",
+      "width:calc(100% - 40px);max-width:353px;",
+      "background:#fff;border:1.5px solid #FF9800;border-radius:13px;",
+      "box-shadow:2px 2px 0 #000;",
+      "display:flex;align-items:center;gap:10px;",
+      "padding:12px 14px;z-index:150;",
+      "animation:slideUpBanner .3s cubic-bezier(.34,1.2,.64,1) both;"
+    ].join("");
+
+    banner.innerHTML =
+      '<div style="flex:1;min-width:0;">' +
+        '<p style="font-family:Poppins,sans-serif;font-size:11px;font-weight:700;color:#FF9800;margin:0 0 1px;text-transform:uppercase;letter-spacing:.05em;">Booking Belum Selesai</p>' +
+        '<p style="font-family:Poppins,sans-serif;font-size:12px;font-weight:500;color:#374151;margin:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' +
+          (pending.dokter ? pending.dokter + ' · ' : '') +
+          (pending.jam ? 'Pukul ' + pending.jam : '') +
+        '</p>' +
+      '</div>' +
+      '<button id="cdResumeContinue" type="button" style="' +
+        'flex-shrink:0;padding:8px 14px;' +
+        'background:linear-gradient(180deg,#ff9800 0%,#ffbc59 100%);' +
+        'border:none;border-radius:8px;box-shadow:1px 1px 0 #000;' +
+        'font-family:Poppins,sans-serif;font-size:12px;font-weight:700;color:#fff;cursor:pointer;' +
+      '">Lanjutkan</button>' +
+      '<button id="cdResumeDismiss" type="button" aria-label="Tutup" style="' +
+        'flex-shrink:0;width:26px;height:26px;border-radius:6px;border:none;' +
+        'background:#F3F4F6;color:#9CA3AF;font-size:12px;cursor:pointer;' +
+      '">✕</button>';
+
+    /* Inject keyframe jika belum ada */
+    if (!document.getElementById("cd-resume-anim")) {
+      var kf = document.createElement("style");
+      kf.id = "cd-resume-anim";
+      kf.textContent = "@keyframes slideUpBanner{from{transform:translateX(-50%) translateY(100px);opacity:0}to{transform:translateX(-50%) translateY(0);opacity:1}}";
+      document.head.appendChild(kf);
+    }
+
+    document.body.appendChild(banner);
+
+    document.getElementById("cdResumeContinue").addEventListener("click", function() {
+      window.location.href = "payment.html";
+    });
+
+    document.getElementById("cdResumeDismiss").addEventListener("click", function() {
+      try { localStorage.removeItem("anabulku_pending_payment"); } catch (e) {}
+      banner.remove();
+    });
   }
 
   /* ── Init ── */
@@ -626,6 +770,7 @@
     }
 
     renderClinic(clinic);
+    showResumeBanner();
   }
 
   if (document.readyState === "loading") {

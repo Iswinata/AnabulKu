@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#fcece3" />
+  <title>Pembayaran — AnabulKu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      height: 100%; height: 100dvh;
+      font-family: "Poppins", system-ui, sans-serif;
+      background: #e7dbd0;
+      -webkit-text-size-adjust: 100%;
+      -webkit-font-smoothing: antialiased;
+    }
+    body {
+      display: flex;
+      justify-content: center;
+    }
+    button { font-family: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+
+    /* ── Shell ── */
+    .app {
+      width: 100%; max-width: 393px;
+      height: 100dvh;
+      background: #fcece3;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 0 40px -10px rgba(0,0,0,.18);
+    }
+
+    /* ── Topbar ── */
+    .topbar {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 20px 12px;
+      background: #fcece3;
+    }
+    .btn-back {
+      display: grid;
+      place-items: center;
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      border: 1.5px solid #E5E7EB;
+      background: #fff;
+      box-shadow: 1px 1px 0 #000;
+      color: #374151;
+    }
+    .btn-back svg { width: 16px; height: 16px; }
+    .topbar-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: #1F2937;
+      letter-spacing: -.3px;
+    }
+
+    /* ── Scroll body ── */
+    .scroll-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 4px 20px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    /* ── Section title ── */
+    .sec-title {
+      font-size: 10.5px;
+      font-weight: 700;
+      color: #a36233;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      margin-bottom: -4px;
+    }
+
+    /* ── Order summary card ── */
+    .order-card {
+      background: linear-gradient(90deg, #ffd28f 0%, #ff9800 124.36%);
+      border-radius: 13px;
+      box-shadow: 2px 2px 0 #000;
+      padding: 14px 14px 16px;
+      position: relative;
+      overflow: hidden;
+    }
+    .order-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: url("Banner1.png") center / cover;
+      mix-blend-mode: soft-light;
+      opacity: 0.9;
+      pointer-events: none;
+    }
+    .order-card-inner { position: relative; z-index: 1; }
+
+    .order-klinik {
+      font-size: 12px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 2px;
+    }
+    .order-dokter {
+      font-size: 11px;
+      color: #ffeed5;
+      margin-bottom: 10px;
+    }
+    .order-rows {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .order-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11.5px;
+    }
+    .order-row-key { color: rgba(255,255,255,0.75); }
+    .order-row-val {
+      font-weight: 700;
+      color: #fff;
+    }
+    .order-row-val.chip {
+      background: rgba(255,255,255,0.2);
+      border-radius: 20px;
+      padding: 2px 9px;
+      font-size: 11px;
+    }
+    .order-divider {
+      height: 1px;
+      background: rgba(255,255,255,0.3);
+      margin: 8px 0;
+    }
+    .order-total-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .order-total-key {
+      font-size: 12px;
+      font-weight: 600;
+      color: #ffeed5;
+    }
+    .order-total-val {
+      font-size: 16px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    /* ── Info card (putih) ── */
+    .info-card {
+      background: #fff;
+      border-radius: 13px;
+      box-shadow: 2px 2px 0 #000;
+      border: 1.5px solid #E5E7EB;
+      overflow: hidden;
+    }
+    .info-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 14px;
+      border-bottom: 1px solid #F3F4F6;
+    }
+    .info-row:last-child { border-bottom: none; }
+    .info-icon {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      background: #FFF7ED;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      font-size: 15px;
+    }
+    .info-col { flex: 1; min-width: 0; }
+    .info-label {
+      font-size: 10px;
+      font-weight: 600;
+      color: #9CA3AF;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+    .info-val {
+      font-size: 13px;
+      font-weight: 700;
+      color: #1F2937;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    /* ── Payment method card ── */
+    .method-card {
+      background: #fff;
+      border-radius: 13px;
+      box-shadow: 2px 2px 0 #000;
+      border: 1.5px solid #E5E7EB;
+      overflow: hidden;
+    }
+    .method-option {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 13px 14px;
+      border-bottom: 1px solid #F3F4F6;
+      cursor: pointer;
+      transition: background .12s;
+      position: relative;
+    }
+    .method-option:last-child { border-bottom: none; }
+    .method-option:hover { background: #FFF7ED; }
+    .method-option.is-selected { background: #FFF7ED; }
+    .method-icon {
+      width: 38px; height: 38px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      font-size: 18px;
+      flex-shrink: 0;
+      border: 1.5px solid #E5E7EB;
+    }
+    .method-info { flex: 1; }
+    .method-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: #1F2937;
+    }
+    .method-desc {
+      font-size: 11px;
+      color: #9CA3AF;
+      margin-top: 1px;
+    }
+    .method-radio {
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      border: 2px solid #D1D5DB;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      transition: border-color .12s;
+    }
+    .method-option.is-selected .method-radio {
+      border-color: #FF9800;
+    }
+    .method-radio-dot {
+      width: 9px; height: 9px;
+      border-radius: 50%;
+      background: #FF9800;
+      display: none;
+    }
+    .method-option.is-selected .method-radio-dot { display: block; }
+
+    /* ── Status card ── */
+    .status-card {
+      background: #FFFBEB;
+      border: 1.5px solid #FDE68A;
+      border-radius: 12px;
+      padding: 12px 14px;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+    .status-icon { font-size: 18px; flex-shrink: 0; }
+    .status-text { font-size: 12px; color: #78350F; line-height: 1.5; }
+    .status-text strong { font-weight: 700; }
+
+    /* ── Footer action ── */
+    .footer-action {
+      flex-shrink: 0;
+      padding: 12px 20px 100px;
+      background: #fcece3;
+      border-top: 1px solid #e5d5c8;
+    }
+    .total-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .total-label { font-size: 12px; color: #6B7280; font-weight: 500; }
+    .total-amount { font-size: 18px; font-weight: 800; color: #FF9800; }
+
+    .btn-pay {
+      width: 100%;
+      height: 52px;
+      background: linear-gradient(180deg, #ff9800 0%, #ffbc59 100%);
+      border: none;
+      border-radius: 13px;
+      box-shadow: 2px 2px 0 #000;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: transform .1s, box-shadow .1s;
+    }
+    .btn-pay:hover { background: linear-gradient(180deg, #fb8c00 0%, #ffa726 100%); }
+    .btn-pay:active { transform: translate(1px,1px); box-shadow: 1px 1px 0 #000; }
+    .btn-pay:disabled { opacity: .5; cursor: not-allowed; transform: none !important; }
+
+    /* ── Success overlay ── */
+    .success-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.55);
+      z-index: 100;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    .success-overlay.is-open { display: flex; }
+    .success-sheet {
+      background: #fff;
+      border-radius: 20px 20px 0 0;
+      width: 100%;
+      max-width: 393px;
+      padding: 28px 24px 40px;
+      text-align: center;
+      animation: slideUp .3s cubic-bezier(.34,1.2,.64,1) both;
+    }
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to   { transform: translateY(0); }
+    }
+    .success-emoji {
+      width: 72px; height: 72px;
+      background: linear-gradient(180deg, #ff9800 0%, #ffbc59 100%);
+      border: 2px solid #000;
+      border-radius: 50%;
+      box-shadow: 2px 2px 0 #000;
+      display: grid;
+      place-items: center;
+      font-size: 32px;
+      margin: 0 auto 16px;
+    }
+    .success-title {
+      font-size: 20px;
+      font-weight: 800;
+      color: #1F2937;
+      margin-bottom: 6px;
+    }
+    .success-sub {
+      font-size: 13px;
+      color: #6B7280;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+    .success-ref {
+      display: inline-block;
+      background: #FFF7ED;
+      border: 1.5px solid #FED7AA;
+      border-radius: 8px;
+      padding: 6px 14px;
+      font-size: 12px;
+      color: #92400E;
+      font-weight: 600;
+      margin-bottom: 24px;
+    }
+    .btn-home {
+      width: 100%;
+      height: 50px;
+      background: linear-gradient(180deg, #ff9800 0%, #ffbc59 100%);
+      border: none;
+      border-radius: 12px;
+      box-shadow: 2px 2px 0 #000;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .btn-home:active { transform: translate(1px,1px); box-shadow: 1px 1px 0 #000; }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <!-- Topbar -->
+  <div class="topbar">
+    <button class="btn-back" id="btnBack" type="button" aria-label="Kembali">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true">
+        <path d="M19 12H5M12 5l-7 7 7 7"/>
+      </svg>
+    </button>
+    <span class="topbar-title">Konfirmasi Pembayaran</span>
+  </div>
+
+  <!-- Scroll body -->
+  <div class="scroll-body">
+
+    <!-- Order summary -->
+    <p class="sec-title">Ringkasan Booking</p>
+    <div class="order-card">
+      <div class="order-card-inner">
+        <p class="order-klinik" id="payKlinik">—</p>
+        <p class="order-dokter" id="payDokter">—</p>
+        <div class="order-rows">
+          <div class="order-row">
+            <span class="order-row-key">Tanggal</span>
+            <span class="order-row-val chip" id="payTanggal">—</span>
+          </div>
+          <div class="order-row">
+            <span class="order-row-key">Pukul</span>
+            <span class="order-row-val chip" id="payJam">—</span>
+          </div>
+          <div class="order-row">
+            <span class="order-row-key">Hewan</span>
+            <span class="order-row-val" id="payHewan">—</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pemilik info -->
+    <p class="sec-title">Data Pemilik</p>
+    <div class="info-card">
+      <div class="info-row">
+        <div class="info-icon">👤</div>
+        <div class="info-col">
+          <p class="info-label">Nama Pemilik</p>
+          <p class="info-val" id="payNama">—</p>
+        </div>
+      </div>
+      <div class="info-row">
+        <div class="info-icon">📱</div>
+        <div class="info-col">
+          <p class="info-label">No. WhatsApp</p>
+          <p class="info-val" id="payNoHP">—</p>
+        </div>
+      </div>
+      <div class="info-row">
+        <div class="info-icon">🐾</div>
+        <div class="info-col">
+          <p class="info-label">Jenis Hewan</p>
+          <p class="info-val" id="payJenisHewan">—</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Metode pembayaran -->
+    <p class="sec-title">Metode Pembayaran</p>
+    <div class="method-card" id="methodCard">
+      <div class="method-option is-selected" data-method="transfer">
+        <div class="method-icon">🏦</div>
+        <div class="method-info">
+          <p class="method-name">Transfer Bank</p>
+          <p class="method-desc">BCA · Mandiri · BNI · BRI</p>
+        </div>
+        <div class="method-radio"><div class="method-radio-dot"></div></div>
+      </div>
+      <div class="method-option" data-method="qris">
+        <div class="method-icon">📲</div>
+        <div class="method-info">
+          <p class="method-name">QRIS</p>
+          <p class="method-desc">Scan QR — semua e-wallet</p>
+        </div>
+        <div class="method-radio"><div class="method-radio-dot"></div></div>
+      </div>
+    </div>
+
+    <!-- Catatan -->
+    <div class="status-card">
+      <span class="status-icon">⚠️</span>
+      <p class="status-text">
+        <strong>Pembayaran bersifat konfirmasi.</strong> Klinik akan menghubungi kamu via WhatsApp untuk verifikasi sebelum jadwal dikonfirmasi.
+      </p>
+    </div>
+
+  </div><!-- /.scroll-body -->
+
+  <!-- Bottom navigation -->
+  <nav style="position:fixed;left:50%;transform:translateX(-50%);bottom:20px;z-index:50;width:min(100% - 32px,361px);height:64px;background:#fff;border:2px solid #000;box-shadow:2px 2px 0 #000;border-radius:30px;display:flex;align-items:center;justify-content:space-around;padding:0 10px;font-family:'Poppins',sans-serif;" aria-label="Navigasi utama">
+    <button onclick="location.href='home.html'" type="button" aria-label="Beranda" style="flex:1;height:54px;border:none;background:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22" aria-hidden="true">
+        <path d="M12 3 2.4 11.1a1 1 0 0 0 .65 1.76H4.5V20a1 1 0 0 0 1 1H9.5v-5.5h5V21H18.5a1 1 0 0 0 1-1v-7.14h1.45a1 1 0 0 0 .65-1.76L12 3z"/>
+      </svg>
+      <span style="font-size:9.5px;font-weight:600;color:#9CA3AF;line-height:1;">Beranda</span>
+    </button>
+    <button type="button" aria-label="Riwayat Booking" onclick="location.href='riwayat.html'" style="flex:1;height:54px;border:none;background:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#F97316" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22" aria-hidden="true">
+        <path d="M12 8v4l3 3"/>
+        <circle cx="12" cy="12" r="9"/>
+      </svg>
+      <span style="font-size:9.5px;font-weight:600;color:#F97316;line-height:1;">Riwayat</span>
+    </button>
+    <button type="button" aria-label="Favorit" style="flex:1;height:54px;border:none;background:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22" aria-hidden="true">
+        <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/>
+      </svg>
+      <span style="font-size:9.5px;font-weight:600;color:#9CA3AF;line-height:1;">Favorit</span>
+    </button>
+    <button type="button" aria-label="Profil" style="flex:1;height:54px;border:none;background:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22" aria-hidden="true">
+        <circle cx="12" cy="8" r="4"/>
+        <path d="M5 20a7 7 0 0 1 14 0"/>
+      </svg>
+      <span style="font-size:9.5px;font-weight:600;color:#9CA3AF;line-height:1;">Profil</span>
+    </button>
+  </nav>
+
+  <!-- Footer -->
+  <div class="footer-action">
+    <div class="total-row">
+      <span class="total-label">Total Estimasi</span>
+      <span class="total-amount" id="payTotal">—</span>
+    </div>
+    <button class="btn-pay" id="btnPay" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" width="18" height="18" aria-hidden="true">
+        <rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/>
+      </svg>
+      Bayar Sekarang
+    </button>
+  </div>
+
+</div><!-- /.app -->
+
+<!-- Success overlay -->
+<div class="success-overlay" id="successOverlay" role="dialog" aria-modal="true" aria-labelledby="successTitle">
+  <div class="success-sheet">
+    <div class="success-emoji">🎉</div>
+    <h2 class="success-title" id="successTitle">Booking Berhasil!</h2>
+    <p class="success-sub">Pembayaran kamu sudah tercatat. Klinik akan segera menghubungi kamu untuk konfirmasi jadwal.</p>
+    <div class="success-ref" id="successRef">—</div>
+    <button class="btn-home" id="btnHome" type="button">
+      Kembali ke Beranda
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" width="15" height="15" aria-hidden="true">
+        <path d="M5 12h14M12 5l7 7-7 7"/>
+      </svg>
+    </button>
+  </div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ── Baca pending booking dari localStorage ── */
+  var pending = null;
+  try {
+    pending = JSON.parse(localStorage.getItem("anabulku_pending_payment")) || null;
+  } catch (e) { pending = null; }
+
+  /* Kalau tidak ada pending, redirect ke home */
+  if (!pending) {
+    window.location.replace("home.html");
+    return;
+  }
+
+  /* ── Format tanggal lokal ── */
+  function formatTanggal(iso) {
+    if (!iso) return "—";
+    var d = new Date(iso + "T00:00");
+    return d.toLocaleDateString("id-ID", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+  }
+
+  /* ── Format harga ── */
+  function formatHarga(val) {
+    if (!val) return "Konfirmasi klinik";
+    var num = parseInt(String(val).replace(/\D/g, ""), 10);
+    if (isNaN(num) || num === 0) return "Konfirmasi klinik";
+    return "Rp " + num.toLocaleString("id-ID");
+  }
+
+  /* ── Isi data ke halaman ── */
+  function setText(id, val) {
+    var el = document.getElementById(id);
+    if (el) el.textContent = val || "—";
+  }
+
+  setText("payKlinik",    pending.namaKlinik);
+  setText("payDokter",    "dr. " + (pending.dokter || "—"));
+  setText("payTanggal",   formatTanggal(pending.tanggal));
+  setText("payJam",       pending.jam ? "Pukul " + pending.jam : "—");
+  setText("payHewan",     (pending.namaHewan || "—") + " · " + (pending.jenisHewan || ""));
+  setText("payNama",      pending.namaPemilik);
+  setText("payNoHP",      pending.noHP);
+  setText("payJenisHewan", pending.jenisHewan);
+  setText("payTotal",     formatHarga(pending.biaya));
+
+  /* ── Pilih metode pembayaran ── */
+  var selectedMethod = "transfer";
+  var options = document.querySelectorAll(".method-option");
+  options.forEach(function(opt) {
+    opt.addEventListener("click", function() {
+      options.forEach(function(o) { o.classList.remove("is-selected"); });
+      opt.classList.add("is-selected");
+      selectedMethod = opt.getAttribute("data-method");
+    });
+  });
+
+  /* ── Tombol Kembali ── */
+  document.getElementById("btnBack").addEventListener("click", function() {
+    history.back();
+  });
+
+  /* ── Tombol Bayar ── */
+  document.getElementById("btnPay").addEventListener("click", function() {
+    var btn = document.getElementById("btnPay");
+    btn.disabled = true;
+    btn.textContent = "Memproses…";
+
+    setTimeout(function() {
+      /* Update status booking di localStorage */
+      try {
+        var bookings = JSON.parse(localStorage.getItem("anabulku_bookings")) || [];
+        var idx = bookings.findIndex(function(b) { return b.id === pending.id; });
+        if (idx >= 0) {
+          bookings[idx].metodePembayaran = selectedMethod;
+          bookings[idx].statusPembayaran = selectedMethod === "tunai" ? "bayar_ditempat" : "menunggu_pembayaran";
+        }
+        localStorage.setItem("anabulku_bookings", JSON.stringify(bookings));
+        /* Hapus pending */
+        localStorage.removeItem("anabulku_pending_payment");
+      } catch (e) { /* silent */ }
+
+      /* Tampilkan success sheet */
+      var ref = "ANB-" + pending.id.slice(-6).toUpperCase();
+      document.getElementById("successRef").textContent = "Kode Booking: " + ref;
+      document.getElementById("successOverlay").classList.add("is-open");
+    }, 900);
+  });
+
+  /* ── Tombol Kembali ke Beranda ── */
+  document.getElementById("btnHome").addEventListener("click", function() {
+    window.location.replace("home.html");
+  });
+
+})();
+</script>
+</body>
+</html>

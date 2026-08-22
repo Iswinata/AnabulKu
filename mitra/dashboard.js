@@ -6,21 +6,26 @@
   'use strict';
 
   /* ── Session guard: redirect ke login jika belum login ── */
+  let MITRA_ID = '';
   (function checkSession() {
     try {
       const sess = JSON.parse(localStorage.getItem('mitraSession') || 'null');
       if (!sess || !sess.loggedIn) {
         window.location.replace('login.html');
+        return;
       }
+      MITRA_ID = sess.mitraId || '';
     } catch (_) {
       window.location.replace('login.html');
     }
   })();
 
-  /* ── Storage helpers ── */
+  /* ── Storage helpers — semua key dinominal per klinik (MITRA_ID) ── */
+  const NS = (key) => MITRA_ID ? `${key}_${MITRA_ID}` : key;
+
   const LS = {
-    get: (key, def) => { try { return JSON.parse(localStorage.getItem(key)) ?? def; } catch { return def; } },
-    set: (key, val) => localStorage.setItem(key, JSON.stringify(val)),
+    get: (key, def) => { try { return JSON.parse(localStorage.getItem(NS(key))) ?? def; } catch { return def; } },
+    set: (key, val) => localStorage.setItem(NS(key), JSON.stringify(val)),
   };
 
   /* ── State ── */
@@ -37,14 +42,18 @@
     syncToMitraKlinik();
   }
 
-  /* Sync perubahan dashboard kembali ke mitraKlinik[] agar terbaca app user */
+  /* Sync perubahan dashboard kembali ke mitraKlinik[] agar terbaca app user.
+     mitraKlinik adalah key GLOBAL (tidak di-namespace) — dibaca semua klinik */
   function syncToMitraKlinik() {
     try {
-      const list = LS.get('mitraKlinik', []);
+      /* Baca langsung dari localStorage tanpa namespace */
+      let list = [];
+      try { list = JSON.parse(localStorage.getItem('mitraKlinik') || '[]'); } catch (_) {}
       if (!Array.isArray(list) || !list.length) return;
 
-      /* Cari index klinik yang cocok berdasarkan nama atau email */
-      let idx = list.findIndex(c =>
+      /* Cari index klinik berdasarkan MITRA_ID dulu, lalu fallback nama */
+      let idx = MITRA_ID ? list.findIndex(c => c.id === MITRA_ID) : -1;
+      if (idx < 0) idx = list.findIndex(c =>
         c.namaKlinik && klinik.namaKlinik && c.namaKlinik === klinik.namaKlinik
       );
       if (idx < 0) idx = list.length - 1; /* fallback: klinik terakhir */
@@ -69,10 +78,12 @@
           nama:         d.nama,
           spesialisasi: d.spesialis || 'Dokter Umum',
           hp:           d.hp || '',
-          /* Keep hari as array so clinic-detail.js can filter by day name */
+          /* Format baru: jadwal lengkap dengan sessions per hari */
+          jadwal:       Array.isArray(d.jadwal) && d.jadwal.length ? d.jadwal : [],
+          /* Format lama: compat hari[] + jamMulai/jamSelesai */
           hari:         Array.isArray(d.hari) ? d.hari : (d.hari ? d.hari.split(/[,\s]+/).filter(Boolean) : []),
-          jamMulai:     d.jamMulai  || '08:00',
-          jamSelesai:   d.jamSelesai || '17:00',
+          jamMulai:     d.jamMulai  || '',
+          jamSelesai:   d.jamSelesai || '',
         })),
         /* Expose booking ringkas untuk ditampilkan app user (slot terisi) */
         bookings: bookings
@@ -85,7 +96,8 @@
           })),
       });
 
-      LS.set('mitraKlinik', list);
+      /* Tulis kembali ke key global (bukan namespace) */
+      localStorage.setItem('mitraKlinik', JSON.stringify(list));
     } catch (e) { /* silent */ }
   }
 
@@ -1051,12 +1063,14 @@
      INIT
   ================================================================ */
   function init() {
-    /* Ambil session login untuk identifikasi klinik yang benar */
-    const sess = LS.get('mitraSession', null);
+    /* Ambil session dan daftar klinik dari key GLOBAL (tidak di-namespace) */
+    let sess = null;
+    let reg  = [];
+    try { sess = JSON.parse(localStorage.getItem('mitraSession') || 'null'); } catch (_) {}
+    try { reg  = JSON.parse(localStorage.getItem('mitraKlinik')  || '[]');  } catch (_) {}
 
-    /* SELALU sync dari mitraKlinik[] saat init agar data pendaftaran selalu fresh.
-       Data pendaftaran (mitraKlinik) adalah source of truth untuk profil klinik. */
-    const reg = LS.get('mitraKlinik', []);
+    /* SELALU sync dari mitraKlinik[] saat init agar data pendaftaran selalu fresh. */
+    if (!Array.isArray(reg)) reg = [];
     if (Array.isArray(reg) && reg.length) {
       /* Cari klinik berdasarkan mitraId dari session, fallback ke email lalu namaKlinik */
       let match = null;

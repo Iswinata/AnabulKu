@@ -561,7 +561,7 @@ img { display: block; max-width: 100%; }
   bottom: 20px;
   z-index: 50;
   width: min(100% - 32px, 361px);
-  height: 58px;
+  height: 64px;
   background: var(--white);
   border: 2px solid var(--black);
   box-shadow: var(--shadow-hard);
@@ -569,19 +569,34 @@ img { display: block; max-width: 100%; }
   display: flex;
   align-items: center;
   justify-content: space-around;
-  padding: 0 20px;
+  padding: 0 10px;
 }
 
 .nav-btn {
-  width: 44px;
-  height: 44px;
+  flex: 1;
+  height: 54px;
   border-radius: 14px;
-  display: grid;
-  place-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
   transition: transform 0.1s ease;
 }
-.nav-btn svg { width: 24px; height: 24px; }
+.nav-btn svg { width: 22px; height: 22px; }
 .nav-btn:active { transform: scale(0.9); }
+
+.nav-label {
+  font-size: 9.5px;
+  font-weight: 600;
+  color: var(--gray-9c);
+  line-height: 1;
+  letter-spacing: 0.01em;
+}
+
+.nav-btn.active .nav-label {
+  color: #F97316;
+}
 
 /* ===================================================================
    Mitra banner (home.html → mitra/daftar.html)
