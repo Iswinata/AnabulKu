@@ -262,9 +262,10 @@ button { font-family: inherit; border: none; background: none; cursor: pointer; 
   font-size: 13px;
   transition: background 0.12s;
 }
-.btn-icon--edit  { background: #EFF6FF; color: #3B82F6; }
-.btn-icon--del   { background: #FEF2F2; color: #EF4444; }
-.btn-icon--check { background: #F0FDF4; color: #22C55E; }
+.btn-icon--edit    { background: #EFF6FF; color: #3B82F6; }
+.btn-icon--del     { background: #FEF2F2; color: #EF4444; }
+.btn-icon--confirm { background: #DBEAFE; color: #1D4ED8; }
+.btn-icon--check   { background: #F0FDF4; color: #22C55E; }
 .btn-icon:hover { opacity: 0.8; }
 
 /* ===================================================================

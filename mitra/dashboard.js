@@ -56,7 +56,7 @@
       if (idx < 0) idx = list.findIndex(c =>
         c.namaKlinik && klinik.namaKlinik && c.namaKlinik === klinik.namaKlinik
       );
-      if (idx < 0) idx = list.length - 1; /* fallback: klinik terakhir */
+      if (idx < 0) return; /* klinik tidak ditemukan — jangan timpa data klinik lain */
 
       /* Update field profil — JANGAN timpa adminStatus yang sudah di-set admin */
       list[idx] = Object.assign({}, list[idx], {
@@ -77,7 +77,9 @@
           id:           d.id,
           nama:         d.nama,
           spesialisasi: d.spesialis || 'Dokter Umum',
+          spesialis:    d.spesialis || 'Dokter Umum',
           hp:           d.hp || '',
+          fotoDataUrl:  d.fotoDataUrl || '',
           /* Format baru: jadwal lengkap dengan sessions per hari */
           jadwal:       Array.isArray(d.jadwal) && d.jadwal.length ? d.jadwal : [],
           /* Format lama: compat hari[] + jamMulai/jamSelesai */
@@ -85,14 +87,17 @@
           jamMulai:     d.jamMulai  || '',
           jamSelesai:   d.jamSelesai || '',
         })),
-        /* Expose booking ringkas untuk ditampilkan app user (slot terisi) */
-        bookings: bookings
+        /* Simpan bookings & pasiens lengkap untuk fallback restore saat login di browser baru */
+        bookings: bookings,
+        pasiens:  pasiens,
+        /* Expose slot terisi (format ringkas) untuk clinic-detail.js */
+        bookedSlots: bookings
           .filter(b => b.status === 'dikonfirmasi' || b.status === 'menunggu')
           .map(b => ({
-            tanggal:     b.tanggal,
-            jam:         b.jam,
-            dokter:      b.dokter,
-            status:      b.status,
+            tanggal: b.tanggal,
+            jam:     b.jam,
+            dokter:  b.dokter,
+            status:  b.status,
           })),
       });
 
@@ -126,7 +131,7 @@
     return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
 
-  /* Badge HTML */
+  /* Badge HTML — status klinik */
   function badgeHtml(status) {
     const map = {
       menunggu:    ['badge--menunggu',    'Menunggu'],
@@ -138,6 +143,60 @@
     return `<span class="badge ${cls}">${lbl}</span>`;
   }
 
+  /* Sync statusPembayaran & status dari key global (ditulis app user) ke namespace mitra.
+     Dipanggil setiap kali tabel booking di-render agar perubahan user (batal/bayar) langsung
+     terlihat di dashboard tanpa mitra perlu reload manual. */
+  function syncFromGlobalBookings() {
+    try {
+      let globalBks = JSON.parse(localStorage.getItem('anabulku_bookings') || '[]');
+      if (!Array.isArray(globalBks)) globalBks = [];
+
+      let mitraChanged  = false; /* perubahan di bookings namespace mitra */
+      let globalChanged = false; /* perubahan yang perlu ditulis kembali ke key global */
+
+      /* ① User → mitra: baca perubahan dari app user ke namespace mitra */
+      globalBks.forEach(function(gb) {
+        const idx = bookings.findIndex(b => b.id === gb.id);
+        if (idx < 0) return;
+        if (bookings[idx].statusPembayaran !== gb.statusPembayaran) {
+          bookings[idx].statusPembayaran = gb.statusPembayaran;
+          mitraChanged = true;
+        }
+        if (gb.status === 'dibatalkan' && bookings[idx].status !== 'dibatalkan') {
+          bookings[idx].status = 'dibatalkan';
+          mitraChanged = true;
+        }
+      });
+
+      /* ② Mitra → user: tulis status selesai/dikonfirmasi dari mitra ke key global
+         agar riwayat.html user langsung menampilkan status terbaru */
+      bookings.forEach(function(mb) {
+        const gIdx = globalBks.findIndex(g => g.id === mb.id);
+        if (gIdx < 0) return;
+        const statusesToSync = ['selesai', 'dikonfirmasi', 'dibatalkan'];
+        if (statusesToSync.includes(mb.status) && globalBks[gIdx].status !== mb.status) {
+          globalBks[gIdx].status = mb.status;
+          globalChanged = true;
+        }
+      });
+
+      if (mitraChanged) LS.set('anabulku_bookings', bookings);
+      if (globalChanged) localStorage.setItem('anabulku_bookings', JSON.stringify(globalBks));
+    } catch (_) { /* silent */ }
+  }
+
+  /* Badge HTML — status pembayaran */
+  function badgeBayarHtml(statusPembayaran) {
+    const map = {
+      menunggu_pembayaran: ['badge--menunggu',    'Belum Dibayar'],
+      bayar_ditempat:      ['badge--dikonfirmasi','Bayar di Tempat'],
+      lunas:               ['badge--selesai',     'Lunas'],
+      dibatalkan:          ['badge--dibatalkan',  'Dibatalkan'],
+    };
+    if (!statusPembayaran) return '<span class="badge badge--menunggu">Belum Ada</span>';
+    const [cls, lbl] = map[statusPembayaran] || ['badge--menunggu', statusPembayaran];
+    return `<span class="badge ${cls}">${lbl}</span>`;
+  }
   /* ── Toast ── */
   const toastEl = document.getElementById('toast');
   let toastTimer;
@@ -248,9 +307,15 @@
     const todaySelesai   = todayBookings.filter(b => b.status === 'selesai');
     const todayPendapatan = todaySelesai.reduce((s, b) => s + (parseInt(b.biaya, 10) || 0), 0);
 
+    /* Hitung total pasien unik dari semua booking selesai (bukan dari pasiens[] yang mungkin kosong) */
+    const uniquePasien = new Set(
+      bookings.filter(b => b.status === 'selesai')
+              .map(b => (b.namaPemilik + '||' + b.namaHewan).toLowerCase())
+    ).size;
+
     document.getElementById('statBookingHariIni').textContent = todayBookings.length;
     document.getElementById('statSelesai').textContent        = todaySelesai.length;
-    document.getElementById('statPasien').textContent         = pasiens.length;
+    document.getElementById('statPasien').textContent         = uniquePasien;
     document.getElementById('statPendapatan').textContent     = rupiah(todayPendapatan);
 
     /* Greeting — pakai nama klinik */
@@ -267,13 +332,14 @@
       });
     }
 
-    /* Booking list */
+    /* Booking list: hanya tampilkan yang belum datang (menunggu / dikonfirmasi) */
     const list = document.getElementById('overviewBookingList');
-    if (!todayBookings.length) {
-      list.innerHTML = '<p class="empty-state">Belum ada booking hari ini.</p>';
+    const jadwalBelumDatang = todayBookings.filter(b => b.status === 'menunggu' || b.status === 'dikonfirmasi');
+    if (!jadwalBelumDatang.length) {
+      list.innerHTML = '<p class="empty-state">' + (todayBookings.length ? 'Semua pasien hari ini sudah ditangani.' : 'Belum ada booking hari ini.') + '</p>';
       return;
     }
-    const sorted = [...todayBookings].sort((a, b) => a.jam.localeCompare(b.jam));
+    const sorted = [...jadwalBelumDatang].sort((a, b) => a.jam.localeCompare(b.jam));
     list.innerHTML = sorted.map(b => `
       <div class="booking-item">
         <span class="booking-item-time">${esc(b.jam)}</span>
@@ -293,10 +359,14 @@
   let bookingDate   = '';
 
   function renderBookingTable() {
+    syncFromGlobalBookings();
     updateNavBadge();
     let data = [...bookings].sort((a, b) => {
-      const da = (a.tanggal + a.jam).localeCompare(b.tanggal + b.jam);
-      return -da; /* newest first */
+      /* Sort berdasarkan createdAt (waktu booking dibuat) — terbaru di atas.
+         Fallback ke tanggal+jam jika createdAt tidak ada. */
+      const ca = a.createdAt || (a.tanggal + 'T' + (a.jam || '00:00'));
+      const cb = b.createdAt || (b.tanggal + 'T' + (b.jam || '00:00'));
+      return cb.localeCompare(ca); /* descending: terbaru di atas */
     });
 
     if (bookingFilter !== 'semua') data = data.filter(b => b.status === bookingFilter);
@@ -312,10 +382,29 @@
 
     const tbody = document.getElementById('bookingTbody');
     if (!data.length) {
-      tbody.innerHTML = '<tr><td colspan="9" class="empty-state">Tidak ada data booking.</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="10" class="empty-state">Tidak ada data booking.</td></tr>';
       return;
     }
-    tbody.innerHTML = data.map((b, i) => `
+    tbody.innerHTML = data.map((b, i) => {
+      /* Aksi kontekstual berdasarkan status booking */
+      let aksiHtml = '';
+      if (b.status === 'menunggu') {
+        aksiHtml =
+          `<button class="btn-icon btn-icon--confirm" title="Konfirmasi Booking" onclick="konfirmasiBooking('${b.id}')">✔</button>` +
+          `<button class="btn-icon btn-icon--edit"    title="Edit"               onclick="editBooking('${b.id}')">✎</button>` +
+          `<button class="btn-icon btn-icon--del"     title="Batalkan"           onclick="hapusBooking('${b.id}')">✕</button>`;
+      } else if (b.status === 'dikonfirmasi') {
+        aksiHtml =
+          `<button class="btn-icon btn-icon--check"   title="Tandai Selesai"     onclick="markSelesai('${b.id}')">✓</button>` +
+          `<button class="btn-icon btn-icon--edit"    title="Edit"               onclick="editBooking('${b.id}')">✎</button>` +
+          `<button class="btn-icon btn-icon--del"     title="Batalkan"           onclick="hapusBooking('${b.id}')">✕</button>`;
+      } else {
+        aksiHtml =
+          `<button class="btn-icon btn-icon--edit"    title="Edit"               onclick="editBooking('${b.id}')">✎</button>` +
+          `<button class="btn-icon btn-icon--del"     title="Hapus"              onclick="hapusBooking('${b.id}')">✕</button>`;
+      }
+
+      return `
       <tr>
         <td>${i + 1}</td>
         <td>${esc(fmtDate(b.tanggal))}<br><small style="color:#9CA3AF">${esc(b.jam)}</small></td>
@@ -327,15 +416,15 @@
         <td>${esc(b.jenisHewan)}</td>
         <td>${esc(b.dokter) || '—'}</td>
         <td>${rupiah(b.biaya)}</td>
+        <td>${badgeBayarHtml(b.statusPembayaran)}</td>
         <td>${badgeHtml(b.status)}</td>
         <td>
           <div class="action-btns">
-            <button class="btn-icon btn-icon--check" title="Tandai Selesai" onclick="markSelesai('${b.id}')">✓</button>
-            <button class="btn-icon btn-icon--edit"  title="Edit"  onclick="editBooking('${b.id}')">✎</button>
-            <button class="btn-icon btn-icon--del"   title="Hapus" onclick="hapusBooking('${b.id}')">✕</button>
+            ${aksiHtml}
           </div>
         </td>
-      </tr>`).join('');
+      </tr>`;
+    }).join('');
   }
 
   /* Filter tabs */
@@ -361,10 +450,67 @@
   });
 
   /* Global handlers for table buttons */
+  window.konfirmasiBooking = function(id) {
+    const b = bookings.find(x => x.id === id);
+    if (!b) return;
+    b.status = 'dikonfirmasi';
+    b.konfirmasiAt = new Date().toISOString();
+    save();
+    renderBookingTable();
+    updateNavBadge();
+    showToast('Booking dikonfirmasi.');
+
+    /* ── Tulis notifikasi ke user ── */
+    try {
+      const namaKlinik = klinik.namaKlinik || 'Klinik';
+      const tgl = b.tanggal
+        ? new Date(b.tanggal + 'T00:00').toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })
+        : '';
+      const notifList = JSON.parse(localStorage.getItem('anabulku_notifications') || '[]');
+      notifList.unshift({
+        id:    Date.now().toString(36) + Math.random().toString(36).slice(2, 7),
+        type:  'success',
+        title: 'Booking Dikonfirmasi ✔',
+        body:  namaKlinik + ' telah mengkonfirmasi booking ' + (b.namaHewan || '') + '. Silakan datang pada ' + tgl + ' pukul ' + (b.jam || '') + '. Kami menunggu kedatangan Anda!',
+        time:  new Date().toISOString(),
+        read:  false,
+        link:  'riwayat.html',
+      });
+      /* Batasi max 50 notifikasi */
+      localStorage.setItem('anabulku_notifications', JSON.stringify(notifList.slice(0, 50)));
+    } catch (_) { /* silent */ }
+  };
+
   window.markSelesai = function(id) {
     const b = bookings.find(x => x.id === id);
     if (!b) return;
     b.status = 'selesai';
+
+    /* Auto-add / update entri pasien saat booking selesai */
+    const key = (b.namaPemilik + '||' + b.namaHewan).toLowerCase();
+    const existing = pasiens.find(p =>
+      (p.namaPemilik + '||' + p.namaHewan).toLowerCase() === key
+    );
+    if (!existing) {
+      pasiens.unshift({
+        id:               uid(),
+        namaHewan:        b.namaHewan    || '',
+        jenisHewan:       b.jenisHewan   || '',
+        ras:              b.ras          || '',
+        umur:             b.umur         || '',
+        namaPemilik:      b.namaPemilik  || '',
+        noHP:             b.noHP         || '',
+        kunjunganTerakhir: b.tanggal     || todayStr(),
+        riwayat:          b.keluhan      || '',
+        createdAt:        new Date().toISOString(),
+      });
+    } else {
+      /* Update tanggal kunjungan terakhir jika lebih baru */
+      if (b.tanggal && b.tanggal > (existing.kunjunganTerakhir || '')) {
+        existing.kunjunganTerakhir = b.tanggal;
+      }
+    }
+
     save();
     renderBookingTable();
     renderOverview();
@@ -506,9 +652,39 @@
      PASIEN
   ================================================================ */
   function renderPasienTable() {
-    let data = [...pasiens].sort((a, b) =>
-      (b.kunjunganTerakhir || '').localeCompare(a.kunjunganTerakhir || '')
-    );
+    /* Bangun daftar dari booking selesai — tidak bergantung pada pasiens[] yang mungkin kosong.
+       Gabungkan dengan data pasiens[] jika ada entri yang cocok (untuk ras, umur, riwayat, dll). */
+    const bookingSelesai = bookings.filter(b => b.status === 'selesai');
+
+    /* Deduplicate berdasarkan namaPemilik+namaHewan, ambil kunjungan terbaru */
+    const map = new Map();
+    bookingSelesai.forEach(b => {
+      const key = (b.namaPemilik + '||' + b.namaHewan).toLowerCase();
+      const existing = map.get(key);
+      if (!existing || b.tanggal > (existing.tanggal || '')) {
+        map.set(key, b);
+      }
+    });
+
+    /* Merge dengan pasiens[] untuk data tambahan (ras, umur, riwayat) */
+    let data = Array.from(map.values()).map(b => {
+      const key = (b.namaPemilik + '||' + b.namaHewan).toLowerCase();
+      const extra = pasiens.find(p => (p.namaPemilik + '||' + p.namaHewan).toLowerCase() === key) || {};
+      return {
+        id:                extra.id               || b.id,
+        namaHewan:         b.namaHewan            || '',
+        jenisHewan:        b.jenisHewan           || '',
+        ras:               extra.ras              || b.ras || '',
+        umur:              extra.umur             || b.umur || '',
+        namaPemilik:       b.namaPemilik          || '',
+        noHP:              b.noHP                 || extra.noHP || '',
+        kunjunganTerakhir: b.tanggal              || '',
+        riwayat:           extra.riwayat          || b.keluhan || '',
+      };
+    });
+
+    data.sort((a, b) => (b.kunjunganTerakhir || '').localeCompare(a.kunjunganTerakhir || ''));
+
     const q = document.getElementById('pasienSearch').value.trim().toLowerCase();
     if (q) data = data.filter(p =>
       p.namaHewan.toLowerCase().includes(q) ||
@@ -517,7 +693,7 @@
 
     const tbody = document.getElementById('pasienTbody');
     if (!data.length) {
-      tbody.innerHTML = '<tr><td colspan="9" class="empty-state">Tidak ada data pasien.</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="9" class="empty-state">Belum ada pasien yang sudah selesai berkunjung.</td></tr>';
       return;
     }
     tbody.innerHTML = data.map((p, i) => `
@@ -1120,6 +1296,35 @@
           _mitraId:      match.id            || '',
         });
         LS.set('anabulku_klinik', klinik);
+
+        /* Jika namespace storage kosong, restore dari mitraKlinik[] sebagai fallback
+           (misalnya saat login di browser baru atau setelah clear namespace storage) */
+        if (!dokters.length && Array.isArray(match.dokters) && match.dokters.length) {
+          dokters = match.dokters.map(d => ({
+            id:         d.id         || (Date.now().toString(36) + Math.random().toString(36).slice(2, 7)),
+            nama:       d.nama       || '',
+            spesialis:  d.spesialis  || d.spesialisasi || 'Dokter Umum',
+            hp:         d.hp         || '',
+            fotoDataUrl:d.fotoDataUrl|| '',
+            jadwal:     Array.isArray(d.jadwal)  ? d.jadwal  : [],
+            hari:       Array.isArray(d.hari)    ? d.hari    : [],
+            jamMulai:   d.jamMulai   || '',
+            jamSelesai: d.jamSelesai || '',
+          }));
+          LS.set('anabulku_dokters', dokters);
+        }
+
+        /* Restore bookings dari mitraKlinik[].bookings jika namespace kosong */
+        if (!bookings.length && Array.isArray(match.bookings) && match.bookings.length) {
+          bookings = match.bookings;
+          LS.set('anabulku_bookings', bookings);
+        }
+
+        /* Restore pasiens dari mitraKlinik[].pasiens jika namespace kosong */
+        if (!pasiens.length && Array.isArray(match.pasiens) && match.pasiens.length) {
+          pasiens = match.pasiens;
+          LS.set('anabulku_pasiens', pasiens);
+        }
       }
     }
 

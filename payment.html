@@ -618,7 +618,13 @@
         var idx = bookings.findIndex(function(b) { return b.id === pending.id; });
         if (idx >= 0) {
           bookings[idx].metodePembayaran = selectedMethod;
-          bookings[idx].statusPembayaran = selectedMethod === "tunai" ? "bayar_ditempat" : "menunggu_pembayaran";
+          /* transfer / qris = user sudah konfirmasi bayar → lunas
+             tunai / bayar_ditempat = bayar saat datang */
+          if (selectedMethod === "tunai" || selectedMethod === "bayar_ditempat") {
+            bookings[idx].statusPembayaran = "bayar_ditempat";
+          } else {
+            bookings[idx].statusPembayaran = "lunas";
+          }
         }
         localStorage.setItem("anabulku_bookings", JSON.stringify(bookings));
         /* Hapus pending */
