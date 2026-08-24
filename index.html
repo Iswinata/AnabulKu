@@ -4,18 +4,7 @@
   <meta charset="UTF-8" />
   <title>AnabulKu</title>
   <script>
-    (function () {
-      try {
-        var session = JSON.parse(localStorage.getItem('anabulku_user_session'));
-        if (session && session.loggedIn) {
-          window.location.replace('home.html');
-        } else {
-          window.location.replace('login.html');
-        }
-      } catch (e) {
-        window.location.replace('login.html');
-      }
-    })();
+    window.location.replace('splash.html');
   </script>
 </head>
 <body></body>
