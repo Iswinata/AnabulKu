@@ -534,7 +534,7 @@
               <circle cx="12" cy="8" r="4"/><path d="M6 20v-2a6 6 0 0 1 12 0v2"/>
             </svg>
             <input class="field-input no-right-pad" type="text" id="inputUsername"
-              placeholder="Pilih username unik" autocomplete="username" />
+              placeholder="Username kamu" autocomplete="username" />
           </div>
           <p class="field-hint">Huruf, angka, underscore. Min. 4 karakter.</p>
         </div>
@@ -793,7 +793,7 @@
     const email    = document.getElementById('inputRegEmail').value.trim();
     const pass     = document.getElementById('inputRegPass').value;
     const confirm  = confirmPassInput.value;
-    if (!username || !/^[a-zA-Z0-9_]{4,}$/.test(username)) { markErr('inputUsername'); return; }
+    if (!username || username.length < 1) { markErr('inputUsername'); return; }
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { markErr('inputRegEmail'); return; }
     if (!pass || pass.length < 8) { markErr('inputRegPass'); return; }
     if (!confirm || confirm !== pass) {
