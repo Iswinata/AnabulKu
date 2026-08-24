@@ -40,6 +40,16 @@
     .profile-email { font-size: 11px; color: #b45309; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .profile-member { font-size: 13px; font-weight: 800; color: #92400e; margin-top: 6px; }
     .profile-since { font-size: 10.5px; font-weight: 500; color: #b45309; margin-top: 2px; }
+    .app-version {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 8px 0 4px;
+    }
+    .app-version-ico { font-size: 32px; line-height: 1; }
+    .app-version-name { font-size: 13px; font-weight: 700; color: #92400e; }
+    .app-version-num { font-size: 11px; color: #b45309; font-weight: 400; }
     .sect-lbl { font-size: 12.7847px; font-weight: 600; color: #ac6600; line-height: 20px; padding: 0 2px; }
     .menu-group { background: #fff; border-radius: 14px; border: 1.5px solid #f0e6dc; box-shadow: 2px 2px 0 #000; overflow: hidden; }
     .mi { display: flex; align-items: center; gap: 12px; padding: 13px 16px; border-bottom: 1px solid #faf3ee; width: 100%; text-align: left; transition: background .12s; }
@@ -95,6 +105,11 @@
         <div class="mi-body"><div class="mi-title">Keluar dari Akun</div></div>
         <div class="mi-arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></div>
       </button>
+    </div>
+    <div class="app-version" aria-label="Versi aplikasi">
+      <span class="app-version-ico">🐱</span>
+      <span class="app-version-name">AnabulKu</span>
+      <span class="app-version-num">Versi 1.0.0</span>
     </div>
   </div>
   <nav class="bottomnav" aria-label="Navigasi utama">
