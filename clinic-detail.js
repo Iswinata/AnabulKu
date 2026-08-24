@@ -24,7 +24,31 @@
     return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
   }
 
-  /* ── Get clinic index from URL ── */
+  /* ── Guest login modal ── */
+  function showGuestLoginModal() {
+    var existing = document.getElementById("cdGuestModal");
+    if (existing) existing.remove();
+
+    var backdrop = document.createElement("div");
+    backdrop.id = "cdGuestModal";
+    backdrop.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:flex-end;justify-content:center;z-index:9999;";
+
+    var sheet = document.createElement("div");
+    sheet.style.cssText = "background:#fff;width:100%;max-width:393px;border-radius:20px 20px 0 0;padding:28px 24px 32px;display:flex;flex-direction:column;align-items:center;gap:10px;box-shadow:0 -4px 24px rgba(0,0,0,.12);animation:modalSlideUp .25s ease both;";
+    sheet.innerHTML =
+      '<div style="font-size:44px;line-height:1;margin-bottom:4px;">🔒</div>' +
+      '<div style="font-size:17px;font-weight:700;color:#1F2937;text-align:center;">Login Diperlukan</div>' +
+      '<p style="font-size:13px;color:#6B7280;text-align:center;line-height:1.55;margin-bottom:6px;">Pilih layanan hanya tersedia untuk member AnabulKu. Login atau daftar gratis sekarang!</p>' +
+      '<button id="cdGuestLogin" style="width:100%;padding:13px;border-radius:12px;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;border:2px solid #000;background:linear-gradient(180deg,#FF9800,#FFD21F);color:#fff;box-shadow:2px 2px 0 #000;">Masuk</button>' +
+      '<button id="cdGuestRegister" style="width:100%;padding:13px;border-radius:12px;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;border:2px solid #000;background:#fff;color:#1F2937;box-shadow:2px 2px 0 #000;margin-top:2px;">Daftar Gratis</button>';
+
+    backdrop.appendChild(sheet);
+    document.body.appendChild(backdrop);
+
+    document.getElementById("cdGuestLogin").addEventListener("click", function() { window.location.href = "login.html"; });
+    document.getElementById("cdGuestRegister").addEventListener("click", function() { window.location.href = "register.html"; });
+    backdrop.addEventListener("click", function(e) { if (e.target === backdrop) backdrop.remove(); });
+  }
   function getClinicIndex() {
     var params = new URLSearchParams(window.location.search);
     var id = parseInt(params.get("id"), 10);
@@ -284,6 +308,14 @@
   var modalEl = null;
 
   function showBookingModal(clinic, doc, jam, tanggal) {
+    /* Cek guest — tampilkan modal login jika belum login */
+    var sess = {};
+    try { sess = JSON.parse(localStorage.getItem("anabulku_user_session")) || {}; } catch(e) {}
+    if (!sess.loggedIn) {
+      showGuestLoginModal();
+      return;
+    }
+
     /* Remove existing modal if any */
     if (modalEl) modalEl.remove();
 

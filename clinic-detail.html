@@ -114,16 +114,15 @@
 
   <script>
   (function () {
-    try {
-      var session = JSON.parse(localStorage.getItem('anabulku_user_session')) || {};
-      if (!session.loggedIn) { window.location.replace('login.html'); return; }
-      var username = session.username || session.nama || 'Pengguna';
-      var inisial  = username.slice(0, 2).toUpperCase();
-      var avatarEl   = document.getElementById('userAvatar');
-      var greetingEl = document.getElementById('userGreeting');
-      if (avatarEl)   avatarEl.textContent   = inisial;
-      if (greetingEl) greetingEl.textContent = username;
-    } catch (e) { window.location.replace('login.html'); }
+    var session = {};
+    try { session = JSON.parse(localStorage.getItem('anabulku_user_session')) || {}; } catch(e) {}
+    var isGuest = !session.loggedIn;
+    var username = isGuest ? 'Meng' : (session.username || session.nama || 'Pengguna');
+    var inisial  = isGuest ? '👤' : username.slice(0, 2).toUpperCase();
+    var avatarEl   = document.getElementById('userAvatar');
+    var greetingEl = document.getElementById('userGreeting');
+    if (avatarEl)   avatarEl.textContent   = inisial;
+    if (greetingEl) greetingEl.textContent = username;
   })();
   </script>
   <script src="notif.js"></script>

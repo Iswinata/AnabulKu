@@ -212,11 +212,8 @@
       if (e.target === this) this.setAttribute('hidden', '');
     });
 
-    /* Intercept kategori klinik & grooming jika guest */
+    /* Intercept grooming saja jika guest — kategori klinik bebas diakses */
     if (isGuest) {
-      document.querySelectorAll('.cat[data-category]').forEach(btn => {
-        btn.addEventListener('click', e => { e.stopImmediatePropagation(); showLoginModal(); }, true);
-      });
       document.querySelectorAll('.g-card').forEach(card => {
         card.style.cursor = 'pointer';
         card.addEventListener('click', () => showLoginModal());
