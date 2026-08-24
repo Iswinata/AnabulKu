@@ -28,17 +28,16 @@
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body {
-      height: 100%; height: 100dvh;
-      overflow: hidden;
+    html {
       -webkit-text-size-adjust: 100%;
     }
-
     body {
       font-family: "Poppins", system-ui, sans-serif;
       background: #e7dbd0;
       display: flex;
       justify-content: center;
+      min-height: 100vh;
+      min-height: 100dvh;
       -webkit-font-smoothing: antialiased;
     }
 
@@ -48,11 +47,11 @@
     /* ── shell ── */
     .app {
       width: 100%; max-width: 393px;
-      height: 100vh; height: 100dvh;
+      min-height: 100vh; min-height: 100dvh;
       background: var(--frame-bg);
-      padding: 0 20px 14px;
+      padding: 0 20px 24px;
       display: flex; flex-direction: column;
-      overflow: hidden;
+      overflow-y: auto;
       box-shadow: 0 0 40px -10px rgba(0,0,0,.18);
     }
 
@@ -478,7 +477,7 @@
   </div>
 
   <!-- Register body -->
-  <div id="regBody" style="display:flex;flex-direction:column;flex:1;min-height:0;">
+  <div id="regBody" style="display:flex;flex-direction:column;flex:1;">
 
     <!-- ── Step 1: Data Diri ── -->
     <div class="step-panel is-active" id="step1">
