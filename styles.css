@@ -778,6 +778,51 @@ img { display: block; max-width: 100%; }
 }
 .notif-panel-mark-all:hover { background: #FFF7ED; }
 
+
+/* ================================================================
+   Card active state — semua halaman (profil, riwayat, favorit)
+   Saat ditekan: translate + gradient oranye seperti kategori klinik
+================================================================ */
+
+/* fav-card (favorit.html) */
+.fav-card {
+  transition: transform .1s ease, box-shadow .1s ease, background .1s ease;
+}
+.fav-card:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 #000;
+  background: linear-gradient(180deg, #fff7ed 0%, #ffedd5 100%);
+}
+
+/* booking card (riwayat.html) */
+.booking-card {
+  transition: transform .1s ease, box-shadow .1s ease;
+}
+.booking-card:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 #000;
+}
+
+/* profil: profile-card, stat-card, menu item (.mi) */
+.profile-card,
+.stat-card {
+  transition: transform .1s ease, box-shadow .1s ease, background .1s ease;
+}
+.profile-card:active,
+.stat-card:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 #000;
+  background: linear-gradient(180deg, #fff7ed 0%, #ffedd5 100%);
+}
+
+.mi {
+  transition: background .12s, transform .1s ease;
+}
+.mi:active {
+  transform: translate(1px, 1px);
+  background: linear-gradient(180deg, #fff7ed 0%, #ffedd5 100%);
+}
+
 .notif-panel-body {
   overflow-y: auto;
   max-height: 380px;

@@ -423,6 +423,7 @@
           loggedIn: true, nama: user.nama, email: user.email,
           username: user.username, noHp: user.noHp || '',
           kota: user.kota || '', role: user.role || 'user',
+          createdAt: user.createdAt || null,
         });
         window.location.href = 'home.html';
       } else {

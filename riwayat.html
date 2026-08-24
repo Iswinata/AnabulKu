@@ -72,10 +72,10 @@
       line-height: 1.3;
     }
     .header-sub {
-      font-size: 11px;
+      font-size: 12px;
       color: #9CA3AF;
       font-weight: 400;
-      line-height: 1.3;
+      line-height: 1.4;
       margin-top: 1px;
     }
 
@@ -109,10 +109,10 @@
       line-height: 1;
     }
     .filter-chip.active {
-      background: linear-gradient(135deg, #FF9800, #FF5722);
-      border-color: transparent;
+      background: linear-gradient(180deg, #FF9800 0%, #FFD21F 100%);
+      border-color: #FF9800;
       color: #fff;
-      box-shadow: 2px 2px 0 rgba(0,0,0,.15);
+      box-shadow: 2px 2px 0 #000;
     }
 
     /* ═══════════════════════════════
@@ -136,6 +136,12 @@
       border-radius: 18px;
       box-shadow: 0 2px 12px rgba(0,0,0,.08), 0 1px 3px rgba(0,0,0,.05);
       overflow: hidden;
+      transition: transform .1s ease, box-shadow .1s ease, background .1s ease;
+    }
+    .booking-card:active {
+      transform: translate(1px, 1px);
+      box-shadow: 1px 1px 0 #000;
+      background: linear-gradient(180deg, #fff7ed 0%, #ffedd5 100%);
     }
 
     /* Status strip — thin top bar */
@@ -290,28 +296,31 @@
     }
     .empty-illo {
       width: 80px; height: 80px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #ffe0b2, #ffcc80);
+      border-radius: 0;
+      background: none;
       display: grid;
       place-items: center;
-      font-size: 36px;
+      font-size: 52px;
       margin-bottom: 6px;
-      box-shadow: 0 4px 16px rgba(255,152,0,.2);
+      box-shadow: none;
     }
     .empty-title { font-size: 17px; font-weight: 700; color: #374151; }
     .empty-sub   { font-size: 13px; color: #9CA3AF; line-height: 1.6; }
     .btn-explore {
       margin-top: 8px;
-      padding: 12px 32px;
-      border-radius: 14px;
-      background: linear-gradient(135deg, #FF9800, #FF6F00);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 22px;
+      border-radius: 10px;
+      background: linear-gradient(90deg, #FF9800, #FFC46D);
       color: #fff;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 700;
-      box-shadow: 0 4px 14px rgba(255,152,0,.35);
-      transition: opacity .15s, transform .1s;
+      box-shadow: 2px 2px 0 #000;
+      transition: transform .1s, box-shadow .1s;
     }
-    .btn-explore:active { opacity: .85; transform: scale(.97); }
+    .btn-explore:active { transform: translate(1px,1px); box-shadow: 1px 1px 0 #000; }
 
     /* Tombol hapus semua */
     .btn-clear {
@@ -335,14 +344,14 @@
   <!-- ═════ Header ═════ -->
   <header class="header">
     <div class="header-top">
-      <button class="btn-back" type="button" aria-label="Kembali" onclick="history.back()">
+      <button class="btn-back" type="button" aria-label="Kembali ke Beranda" onclick="location.href='home.html'">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M19 12H5M12 5l-7 7 7 7"/>
         </svg>
       </button>
       <div class="header-text" style="flex:1;min-width:0;">
         <div class="header-title">Riwayat Booking</div>
-        <div class="header-sub">Semua catatan janji doktermu ada di sini</div>
+        <div class="header-sub">Semua catatan janji doktermu.</div>
       </div>
       <button class="btn-clear" type="button" id="btnClearAll" aria-label="Hapus semua riwayat" title="Hapus Semua">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
