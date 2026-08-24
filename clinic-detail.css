@@ -209,6 +209,25 @@
   border-radius: 10px;
   background: #fff center / cover no-repeat;
   box-shadow: 0 2px 6px rgba(0,0,0,0.16);
+  overflow: hidden;
+  border: 1.5px solid rgba(255,255,255,0.6);
+  position: relative;
+}
+
+/* Fallback state — tidak ada foto dokter */
+.cd-doc-photo--empty {
+  background: #fff8f0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+/* Icon lokasi sebagai placeholder foto dokter */
+.cd-doc-photo-icon {
+  display: block;
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
 }
 
 /* Right text area */

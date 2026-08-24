@@ -979,3 +979,89 @@ button { font-family: inherit; border: none; background: none; cursor: pointer; 
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; animation: none !important; }
 }
+
+/* ===================================================================
+   UPLOAD FOTO DOKTER
+=================================================================== */
+.dokter-foto-upload {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 14px;
+  background: #F9FAFB;
+  border: 1.5px dashed #D1D5DB;
+  border-radius: 10px;
+}
+
+.dokter-foto-preview {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: #E5E7EB;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+}
+
+.dokter-foto-right {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+}
+
+.btn-upload-foto {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  background: linear-gradient(90deg, #FF9800, #FFC46D);
+  color: #fff;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 8px;
+  box-shadow: 1px 1px 0 #000;
+  cursor: pointer;
+  width: fit-content;
+  transition: transform .1s, box-shadow .1s;
+}
+.btn-upload-foto:hover { transform: translate(-1px,-1px); box-shadow: 2px 2px 0 #000; }
+
+.btn-hapus-foto {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 12px;
+  background: #FEF2F2;
+  color: #DC2626;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 6px;
+  border: 1px solid #FECACA;
+  cursor: pointer;
+  width: fit-content;
+  transition: background .15s;
+}
+.btn-hapus-foto:hover { background: #FEE2E2; }
+
+.foto-hint {
+  font-size: 11px;
+  color: #9CA3AF;
+  line-height: 1.4;
+}
+
+/* Dokter card: tampilkan foto */
+.dokter-avatar-img {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #FFE0B2;
+  flex-shrink: 0;
+}

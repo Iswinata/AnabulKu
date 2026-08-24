@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#FCECE3" />
+  <title>Favorit — AnabulKu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      font-family: "Poppins", system-ui, sans-serif;
+      background: #e7dbd0;
+      -webkit-text-size-adjust: 100%;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100dvh;
+    }
+    body { display: flex; justify-content: center; }
+    button { font-family: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; border: none; background: none; }
+    a { text-decoration: none; color: inherit; -webkit-tap-highlight-color: transparent; }
+
+    .app {
+      position: relative; width: 100%; max-width: 393px; min-height: 100dvh;
+      background: #f5ebe0; box-shadow: 0 0 40px -10px rgba(0,0,0,.2);
+      display: flex; flex-direction: column; padding: 0;
+    }
+
+    /* Header */
+    .header { background: #fcece3; padding: 20px 22px 14px; flex-shrink: 0; }
+    .header-top { display: flex; align-items: center; gap: 12px; }
+    .btn-back {
+      display: grid; place-items: center; width: 40px; height: 40px;
+      border-radius: 12px; border: 1px solid #e5e7eb; background: #fff;
+      box-shadow: 0px 1px 2px rgba(0,0,0,.05); color: #4b5563;
+      flex-shrink: 0; transition: transform .12s;
+    }
+    .btn-back:active { transform: scale(.94); }
+    .btn-back svg { width: 20px; height: 20px; }
+    .header-text { min-width: 0; }
+    .header-title { font-size: 14px; font-weight: 700; color: #1F2937; line-height: 1.3; }
+    .header-sub { font-size: 11px; color: #9CA3AF; font-weight: 400; line-height: 1.3; margin-top: 1px; }
+
+    /* Filter tabs */
+    .filter-wrap {
+      background: #fcece3;
+      padding: 10px 20px 14px;
+      flex-shrink: 0;
+      border-bottom: 1px solid #f0e0d4;
+    }
+    .filter-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+    .filter-chip {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      padding: 8px 4px 7px;
+      border-radius: 12px;
+      border: 1.5px solid #e5d8ce;
+      background: #fff;
+      font-size: 10px;
+      font-weight: 600;
+      color: #6B7280;
+      transition: all .15s;
+      white-space: nowrap;
+      line-height: 1;
+      cursor: pointer;
+    }
+    .filter-chip-icon {
+      font-size: 20px;
+      line-height: 1;
+    }
+    .filter-chip.active {
+      background: linear-gradient(135deg, #FF9800, #FF5722);
+      border-color: transparent;
+      color: #fff;
+      box-shadow: 2px 2px 0 rgba(0,0,0,.15);
+    }
+    .filter-chip.active .filter-chip-icon {
+      filter: drop-shadow(0 0 2px rgba(255,152,0,.4));
+    }
+
+
+    /* Content */
+    .content { flex: 1; overflow-y: auto; padding: 16px 20px 0; -webkit-overflow-scrolling: touch; }
+    .fav-count { font-size: 12px; color: #9CA3AF; font-weight: 500; margin-bottom: 12px; }
+    .fav-count span { color: #FF9800; font-weight: 700; }
+    .fav-list { display: flex; flex-direction: column; gap: 12px; }
+
+    /* Klinik card */
+    .fav-card {
+      position: relative; display: flex; align-items: center; gap: 12px;
+      background: #fff; border-radius: 14px; border: 1.5px solid #f0e6dc;
+      box-shadow: 2px 2px 0 #000; padding: 12px;
+      transition: transform .1s, box-shadow .1s; overflow: hidden;
+    }
+    .fav-card:active { transform: translate(1px,1px); box-shadow: 1px 1px 0 #000; }
+    .fav-photo {
+      flex-shrink: 0; width: 64px; height: 64px; border-radius: 10px;
+      background: linear-gradient(135deg,#ffedd5,#fed7aa);
+      background-size: cover; background-position: center;
+      border: 1.5px solid #fde8c8;
+      display: flex; align-items: center; justify-content: center;
+      color: #f97316; font-size: 24px;
+    }
+    .fav-info { flex: 1; min-width: 0; }
+    .fav-name {
+      font-size: 13px; font-weight: 700; color: #1F2937; line-height: 1.3;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .fav-addr {
+      font-size: 11px; color: #9CA3AF; line-height: 1.4; margin-top: 2px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .fav-chips { display: flex; gap: 6px; margin-top: 6px; flex-wrap: wrap; }
+    .fav-chip {
+      display: inline-flex; align-items: center; gap: 3px;
+      padding: 3px 8px; border-radius: 99px; font-size: 10px; font-weight: 600;
+      background: #FFF7ED; border: 1px solid #FED7AA; color: #C2410C;
+    }
+    .fav-chip svg { width: 10px; height: 10px; flex-shrink: 0; }
+    .fav-detail-btn {
+      display: inline-flex; align-items: center; gap: 4px;
+      margin-top: 7px; font-size: 11px; font-weight: 600; color: #FF9800;
+    }
+    .fav-detail-btn svg { width: 12px; height: 12px; }
+    .fav-remove {
+      flex-shrink: 0; display: grid; place-items: center;
+      width: 34px; height: 34px; border-radius: 50%;
+      background: #FFF1F2; border: 1.5px solid #FECDD3; color: #ef4444;
+      transition: transform .12s, background .12s; z-index: 1;
+      align-self: flex-start; margin-top: 2px;
+    }
+    .fav-remove:active { transform: scale(.9); background: #fee2e2; }
+    .fav-remove svg { width: 16px; height: 16px; }
+
+    /* Empty state */
+    .fav-empty {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 12px; padding: 56px 16px 32px; text-align: center;
+    }
+    .fav-empty-icon {
+      width: 72px; height: 72px; border-radius: 50%;
+      background: linear-gradient(135deg,#fff7ed,#ffedd5);
+      border: 2px solid #fed7aa; display: grid; place-items: center; font-size: 32px;
+    }
+    .fav-empty-title { font-size: 15px; font-weight: 700; color: #374151; }
+    .fav-empty-sub { font-size: 12px; color: #9CA3AF; line-height: 1.6; max-width: 260px; }
+    .fav-empty-cta {
+      margin-top: 4px; display: inline-flex; align-items: center; gap: 6px;
+      padding: 10px 22px; background: linear-gradient(90deg,#FF9800,#FFC46D);
+      color: #fff; font-size: 13px; font-weight: 700; border-radius: 10px;
+      box-shadow: 2px 2px 0 #000; transition: transform .1s, box-shadow .1s;
+    }
+    .fav-empty-cta:active { transform: translate(1px,1px); box-shadow: 1px 1px 0 #000; }
+
+    @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ===== Header ===== -->
+  <div class="header">
+    <div class="header-top">
+      <button class="btn-back" type="button" aria-label="Kembali" onclick="history.back()">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12.5 16.5 6 10l6.5-6.5"/>
+        </svg>
+      </button>
+      <div class="header-text">
+        <div class="header-title">Klinik Favorit</div>
+        <div class="header-sub">Klinik yang kamu simpan</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Filter bar ===== -->
+  <div class="filter-wrap">
+    <div class="filter-bar" role="tablist" aria-label="Filter kategori" id="filterBar">
+      <button class="filter-chip active" role="tab" aria-selected="true"  data-filter="semua"   type="button">
+        <span class="filter-chip-icon">🐾</span>
+        <span>Semua</span>
+      </button>
+      <button class="filter-chip" role="tab" aria-selected="false" data-filter="kucing"  type="button">
+        <span class="filter-chip-icon">🐱</span>
+        <span>Kucing</span>
+      </button>
+      <button class="filter-chip" role="tab" aria-selected="false" data-filter="anjing"  type="button">
+        <span class="filter-chip-icon">🐶</span>
+        <span>Anjing</span>
+      </button>
+      <button class="filter-chip" role="tab" aria-selected="false" data-filter="reptile" type="button">
+        <span class="filter-chip-icon">🦎</span>
+        <span>Reptile</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ===== Content ===== -->
+  <div class="content" id="favContent">
+    <!-- diisi oleh JS -->
+  </div>
+
+  <div class="nav-spacer" aria-hidden="true"></div>
+
+  <!-- ===== Bottom nav ===== -->
+  <nav class="bottomnav" aria-label="Navigasi utama">
+    <button class="nav-btn" type="button" aria-label="Beranda" onclick="location.href='home.html'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M12 3 2.4 11.1a1 1 0 0 0 .65 1.76H4.5V20a1 1 0 0 0 1 1H9.5v-5.5h5V21H18.5a1 1 0 0 0 1-1v-7.14h1.45a1 1 0 0 0 .65-1.76L12 3z"/>
+      </svg>
+      <span class="nav-label">Beranda</span>
+    </button>
+    <button class="nav-btn" type="button" aria-label="Riwayat" onclick="location.href='riwayat.html'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="9"/>
+      </svg>
+      <span class="nav-label">Riwayat</span>
+    </button>
+    <button class="nav-btn active" type="button" aria-label="Favorit" aria-current="page" onclick="location.href='favorit.html'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#F97316" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/>
+      </svg>
+      <span class="nav-label">Favorit</span>
+    </button>
+    <button class="nav-btn" type="button" aria-label="Profil" onclick="location.href='profil.html'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="12" cy="8" r="4"/><path d="M5 20a7 7 0 0 1 14 0"/>
+      </svg>
+      <span class="nav-label">Profil</span>
+    </button>
+  </nav>
+
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var LS_FAV = 'anabulku_favorit', LS_KLINIK = 'mitraKlinik';
+  function getFavIds() { try { return JSON.parse(localStorage.getItem(LS_FAV)) || []; } catch(e) { return []; } }
+  function saveFavIds(ids) { try { localStorage.setItem(LS_FAV, JSON.stringify(ids)); } catch(e) {} }
+  function getAllClinics() { try { return JSON.parse(localStorage.getItem(LS_KLINIK)) || []; } catch(e) { return []; } }
+  function esc(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+  }
+  var FILTER = {
+    kucing:  /(kucing|cat|feline|kitten)/i,
+    anjing:  /(anjing|dog|canine|puppy)/i,
+    reptile: /(reptil|reptile|eksotik|exotic|turtle|ular|iguana|gecko)/i
+  };
+  function matchCategory(c, filter) {
+    if (filter === 'semua') return true;
+    var rx = FILTER[filter]; if (!rx) return true;
+    if (Array.isArray(c.hewanDilayani) && c.hewanDilayani.length > 0)
+      return c.hewanDilayani.some(function(h){ return rx.test(h); });
+    var hewan = (c.hewanDilayani || '').toLowerCase();
+    if (hewan === 'semua') return true;
+    var tipe = Array.isArray(c.tipeKlinik) ? c.tipeKlinik.join(' ') : (c.tipeKlinik || '');
+    return rx.test(hewan) || rx.test(tipe) || rx.test(c.namaKlinik || '');
+  }
+  function cardHtml(c, idx) {
+    var href = 'clinic-detail.html?id=' + idx;
+    var photoStyle = '', photoIcon = '<span style="font-size:26px" aria-hidden="true">🏥</span>';
+    if (c.fotoDataUrl || c.logoDataUrl) {
+      photoStyle = 'background-image:url(' + esc(c.fotoDataUrl || c.logoDataUrl) + ');background-size:cover;background-position:center;';
+      photoIcon = '';
+    }
+    var alamat = esc(c.formattedAddress || c.alamat || [c.kota, c.provinsi].filter(Boolean).join(', ') || '');
+    var rawRating = (c.googleRating != null && c.googleRating !== '') ? c.googleRating : c.rating;
+    var rating = rawRating != null ? parseFloat(rawRating).toFixed(1) : '5.0';
+    var layanan = Array.isArray(c.layanan) ? c.layanan : (c.layanan ? [c.layanan] : []);
+    var badges = layanan.slice(0,2).map(function(l){ return '<span class="fav-chip">' + esc(l) + '</span>'; }).join('');
+    return '<div class="fav-card" data-idx="' + idx + '">' +
+      '<a href="' + esc(href) + '" class="fav-photo" style="' + photoStyle + '" aria-label="Foto ' + esc(c.namaKlinik||'Klinik') + '">' + photoIcon + '</a>' +
+      '<div class="fav-info">' +
+        '<a href="' + esc(href) + '"><div class="fav-name">' + esc(c.namaKlinik || 'Klinik') + '</div></a>' +
+        (alamat ? '<div class="fav-addr">' + alamat + '</div>' : '') +
+        '<div class="fav-chips"><span class="fav-chip"><svg viewBox="0 0 16 16" fill="#FF9800" style="width:10px;height:10px" aria-hidden="true"><path d="M8 1l1.9 3.9 4.3.6-3.1 3 .7 4.3L8 10.7l-3.8 2.1.7-4.3L1.8 5.5l4.3-.6L8 1z"/></svg>' + rating + '</span>' + badges + '</div>' +
+        '<a href="' + esc(href) + '" class="fav-detail-btn">Lihat Detail <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg></a>' +
+      '</div>' +
+      '<button class="fav-remove" type="button" data-remove="' + idx + '" aria-label="Hapus dari favorit">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+          '<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/>' +
+        '</svg></button>' +
+    '</div>';
+  }
+
+  var currentFilter = 'semua';
+
+  function render() {
+    var container  = document.getElementById('favContent');
+    var favIds     = getFavIds();
+    var allClinics = getAllClinics();
+    var favItems   = [];
+    favIds.forEach(function(id) {
+      var idx = parseInt(id, 10);
+      if (!isNaN(idx) && allClinics[idx]) favItems.push({ clinic: allClinics[idx], idx: idx });
+    });
+    var filtered = favItems.filter(function(item) { return matchCategory(item.clinic, currentFilter); });
+
+    if (favIds.length === 0) {
+      container.innerHTML =
+        '<div class="fav-empty">' +
+          '<div class="fav-empty-icon">💛</div>' +
+          '<div class="fav-empty-title">Belum ada favorit</div>' +
+          '<p class="fav-empty-sub">Tap ikon hati di kartu klinik untuk menyimpan klinik favorit kamu.</p>' +
+          '<a href="home.html" class="fav-empty-cta">Jelajahi Klinik</a>' +
+        '</div>';
+      return;
+    }
+    if (filtered.length === 0) {
+      container.innerHTML =
+        '<div class="fav-count">Menampilkan <span>0</span> dari ' + favIds.length + ' favorit</div>' +
+        '<div class="fav-empty" style="padding-top:32px">' +
+          '<div class="fav-empty-icon" style="font-size:28px">🔍</div>' +
+          '<div class="fav-empty-title">Tidak ada di kategori ini</div>' +
+          '<p class="fav-empty-sub">Belum ada klinik favorit untuk kategori yang dipilih.</p>' +
+        '</div>';
+      return;
+    }
+    container.innerHTML =
+      '<div class="fav-count">Menampilkan <span>' + filtered.length + '</span> klinik favorit</div>' +
+      '<div class="fav-list">' + filtered.map(function(item){ return cardHtml(item.clinic, item.idx); }).join('') + '</div>' +
+      '<div style="height:12px"></div>';
+
+    container.querySelectorAll('[data-remove]').forEach(function(btn) {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault(); e.stopPropagation();
+        var idx  = parseInt(btn.getAttribute('data-remove'), 10);
+        var card = btn.closest('.fav-card');
+        saveFavIds(getFavIds().filter(function(id){ return parseInt(id,10) !== idx; }));
+        if (card) {
+          card.style.transition = 'opacity .2s, transform .2s';
+          card.style.opacity = '0';
+          card.style.transform = 'translateX(30px)';
+          setTimeout(render, 220);
+        } else { render(); }
+      });
+    });
+  }
+
+  document.getElementById('filterBar').addEventListener('click', function(e) {
+    var btn = e.target.closest('.filter-chip'); if (!btn) return;
+    document.querySelectorAll('.filter-chip').forEach(function(b){
+      b.classList.remove('active'); b.setAttribute('aria-selected','false');
+    });
+    btn.classList.add('active'); btn.setAttribute('aria-selected','true');
+    currentFilter = btn.getAttribute('data-filter');
+    render();
+  });
+
+  try {
+    var session = JSON.parse(localStorage.getItem('anabulku_user_session')) || {};
+    if (!session.loggedIn) { window.location.replace('login.html'); }
+  } catch(e) { window.location.replace('login.html'); }
+
+  render();
+  window.addEventListener('pageshow', function(e){ if (e.persisted) render(); });
+})();
+</script>
+</body>
+</html>
+

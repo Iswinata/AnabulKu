@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html, body {
@@ -32,6 +33,7 @@
       box-shadow: 0 0 40px -10px rgba(0,0,0,.2);
       display: flex;
       flex-direction: column;
+      padding: 0;
     }
 
     /* ═══════════════════════════════
@@ -107,8 +109,8 @@
       line-height: 1;
     }
     .filter-chip.active {
-      background: #FF9800;
-      border-color: #FF9800;
+      background: linear-gradient(135deg, #FF9800, #FF5722);
+      border-color: transparent;
       color: #fff;
       box-shadow: 2px 2px 0 rgba(0,0,0,.15);
     }
@@ -311,47 +313,6 @@
     }
     .btn-explore:active { opacity: .85; transform: scale(.97); }
 
-    /* ═══════════════════════════════
-       Bottom nav
-    ═══════════════════════════════ */
-    .bottomnav {
-      position: fixed;
-      left: 50%;
-      transform: translateX(-50%);
-      bottom: 20px;
-      z-index: 50;
-      width: min(100% - 32px, 361px);
-      height: 64px;
-      background: #fff;
-      border: 2px solid #000;
-      box-shadow: 2px 2px 0 #000;
-      border-radius: 30px;
-      display: flex;
-      align-items: center;
-      justify-content: space-around;
-      padding: 0 10px;
-    }
-    .nav-btn {
-      flex: 1;
-      height: 54px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 2px;
-      border-radius: 14px;
-      transition: transform .1s;
-    }
-    .nav-btn svg { width: 22px; height: 22px; }
-    .nav-btn:active { transform: scale(.88); }
-    .nav-label {
-      font-size: 9.5px;
-      font-weight: 600;
-      color: #9CA3AF;
-      line-height: 1;
-    }
-    .nav-btn.active .nav-label { color: #F97316; }
-
     /* Tombol hapus semua */
     .btn-clear {
       display: grid;
@@ -426,13 +387,13 @@
       <span id="pendingBadge" hidden style="position:absolute;top:4px;right:10px;min-width:16px;height:16px;padding:0 4px;border-radius:99px;background:#EF4444;color:#fff;font-size:9px;font-weight:700;display:none;align-items:center;justify-content:center;line-height:1;">0</span>
       <span class="nav-label">Riwayat</span>
     </button>
-    <button class="nav-btn" type="button" aria-label="Favorit">
+    <button class="nav-btn" type="button" aria-label="Favorit" onclick="location.href='favorit.html'">
       <svg viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/>
       </svg>
       <span class="nav-label">Favorit</span>
     </button>
-    <button class="nav-btn" type="button" aria-label="Profil">
+    <button class="nav-btn" type="button" aria-label="Profil" onclick="location.href='profil.html'">
       <svg viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <circle cx="12" cy="8" r="4"/>
         <path d="M5 20a7 7 0 0 1 14 0"/>
@@ -504,6 +465,48 @@
     /* Fallback ke status klinik */
     return STATUS[(b.status||"").toLowerCase()] || { label: b.status||"—", strip:"s-pending", pill:"s-pending" };
   }
+
+  /* ── Auto-cancel booking yang deadlinenya sudah lewat ── */
+  function cancelExpiredBookings() {
+    try {
+      var now = Date.now();
+      var changed = false;
+
+      /* Cek pending payment */
+      var pend = JSON.parse(localStorage.getItem("anabulku_pending_payment")) || null;
+      if (pend && pend.paymentDeadline) {
+        if (new Date(pend.paymentDeadline).getTime() <= now) {
+          var bks = JSON.parse(localStorage.getItem("anabulku_bookings")) || [];
+          var pi = bks.findIndex(function(b) { return b.id === pend.id; });
+          if (pi >= 0) {
+            bks[pi].status = "dibatalkan";
+            bks[pi].statusPembayaran = "dibatalkan";
+            bks[pi].cancelledReason = "timeout";
+            changed = true;
+          }
+          localStorage.removeItem("anabulku_pending_payment");
+          if (changed) localStorage.setItem("anabulku_bookings", JSON.stringify(bks));
+        }
+      }
+
+      /* Cek semua booking yang masih "menunggu" dan punya paymentDeadline */
+      var bksAll = JSON.parse(localStorage.getItem("anabulku_bookings")) || [];
+      var anyExpired = false;
+      bksAll.forEach(function(b) {
+        if (b.paymentDeadline && b.status === "menunggu" && !b.statusPembayaran) {
+          if (new Date(b.paymentDeadline).getTime() <= now) {
+            b.status = "dibatalkan";
+            b.statusPembayaran = "dibatalkan";
+            b.cancelledReason = "timeout";
+            anyExpired = true;
+          }
+        }
+      });
+      if (anyExpired) localStorage.setItem("anabulku_bookings", JSON.stringify(bksAll));
+    } catch(e) { /* silent */ }
+  }
+
+  cancelExpiredBookings();
 
   /* ── Load data ── */
   /* Baca pending payment sekali, simpan di variabel module-level agar renderCard bisa akses */
@@ -682,7 +685,36 @@
 
     // Wire actions
     list.querySelectorAll("[data-action='lanjutkan']").forEach(function(btn) {
-      btn.addEventListener("click", function(){ location.href = "payment.html"; });
+      btn.addEventListener("click", function() {
+        var id = btn.getAttribute("data-id");
+        /* Pastikan data pending tersedia sebelum masuk ke payment.html */
+        try {
+          var existing = JSON.parse(localStorage.getItem("anabulku_pending_payment")) || null;
+          /* Kalau pending sudah ada dan id-nya sama, langsung redirect */
+          if (!existing || existing.id !== id) {
+            /* Cari data booking dari anabulku_bookings, lalu set sebagai pending */
+            var bks = JSON.parse(localStorage.getItem("anabulku_bookings")) || [];
+            var booking = bks.find(function(b) { return b.id === id; });
+            if (booking) {
+              /* Pastikan namaKlinik tersedia — cari dari mitraKlinik jika belum ada */
+              if (!booking.namaKlinik) {
+                try {
+                  var klinikList = JSON.parse(localStorage.getItem("mitraKlinik")) || [];
+                  /* Cari klinik berdasarkan nama dokter */
+                  var klinikMatch = klinikList.find(function(k) {
+                    return Array.isArray(k.dokters) && k.dokters.some(function(d) {
+                      return d.nama === booking.dokter;
+                    });
+                  });
+                  if (klinikMatch) booking = Object.assign({}, booking, { namaKlinik: klinikMatch.namaKlinik });
+                } catch(e2) {}
+              }
+              localStorage.setItem("anabulku_pending_payment", JSON.stringify(booking));
+            }
+          }
+        } catch(e) {}
+        location.href = "payment.html";
+      });
     });
     list.querySelectorAll("[data-action='cancel-pending']").forEach(function(btn) {
       btn.addEventListener("click", function() {

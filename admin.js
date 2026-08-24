@@ -517,9 +517,12 @@
 
   function renderBookingTable() {
     updateBadges();
-    let data = [...getBookings()].sort((a,b) =>
-      ((b.tanggal||'')+(b.jam||'')).localeCompare((a.tanggal||'')+(a.jam||''))
-    );
+    let data = [...getBookings()].sort((a,b) => {
+      /* Urutkan berdasarkan waktu dibuat (createdAt), fallback ke tanggal+jam */
+      const ta = a.createdAt || a.tanggal || '';
+      const tb = b.createdAt || b.tanggal || '';
+      return tb.localeCompare(ta);
+    });
 
     if (bookingFilter !== 'semua') data = data.filter(b => b.status === bookingFilter);
     if (bookingDate) data = data.filter(b => b.tanggal === bookingDate);

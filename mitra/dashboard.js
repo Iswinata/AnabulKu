@@ -51,12 +51,33 @@
       try { list = JSON.parse(localStorage.getItem('mitraKlinik') || '[]'); } catch (_) {}
       if (!Array.isArray(list) || !list.length) return;
 
-      /* Cari index klinik berdasarkan MITRA_ID dulu, lalu fallback nama */
+      /* Cari index klinik: utamakan MITRA_ID, fallback ke namaKlinik atau emailAkun */
       let idx = MITRA_ID ? list.findIndex(c => c.id === MITRA_ID) : -1;
-      if (idx < 0) idx = list.findIndex(c =>
-        c.namaKlinik && klinik.namaKlinik && c.namaKlinik === klinik.namaKlinik
+      if (idx < 0 && klinik._mitraId) idx = list.findIndex(c => c.id === klinik._mitraId);
+      if (idx < 0 && klinik.namaKlinik) idx = list.findIndex(c =>
+        c.namaKlinik && c.namaKlinik === klinik.namaKlinik
       );
+      if (idx < 0 && klinik.emailAkun) idx = list.findIndex(c =>
+        c.emailAkun && c.emailAkun === klinik.emailAkun
+      );
+      /* Fallback terakhir: cari berdasarkan session email */
+      if (idx < 0) {
+        try {
+          const sess = JSON.parse(localStorage.getItem('mitraSession') || 'null');
+          if (sess && sess.email) {
+            idx = list.findIndex(c => c.emailAkun && c.emailAkun.toLowerCase() === sess.email.toLowerCase());
+          }
+        } catch (_) {}
+      }
       if (idx < 0) return; /* klinik tidak ditemukan — jangan timpa data klinik lain */
+
+      /* Pastikan id tersimpan di klinik state agar sync berikutnya lebih cepat */
+      if (list[idx].id && !MITRA_ID) {
+        try {
+          const sess = JSON.parse(localStorage.getItem('mitraSession') || 'null');
+          if (sess) { sess.mitraId = list[idx].id; localStorage.setItem('mitraSession', JSON.stringify(sess)); }
+        } catch (_) {}
+      }
 
       /* Update field profil — JANGAN timpa adminStatus yang sudah di-set admin */
       list[idx] = Object.assign({}, list[idx], {
@@ -990,12 +1011,23 @@
   const modalDokter      = document.getElementById('modalDokter');
   const modalDokterTitle = document.getElementById('modalDokterTitle');
 
+  /* ── State foto sementara di modal ── */
+  let _dokterFotoDataUrl = '';
+
   function openModalDokter(data) {
     const isEdit = !!data;
     modalDokterTitle.textContent = isEdit ? 'Edit Dokter' : 'Tambah Dokter';
     document.getElementById('dokterEditId').value = data?.id || '';
     document.getElementById('dNama').value        = data?.nama || '';
     document.getElementById('dSpesialis').value   = data?.spesialis || '';
+
+    /* Reset foto */
+    _dokterFotoDataUrl = data?.fotoDataUrl || '';
+    applyFotoPreview(_dokterFotoDataUrl);
+
+    /* Reset file input agar onChange terpicu lagi jika file sama */
+    const fotoInput = document.getElementById('dFotoInput');
+    if (fotoInput) fotoInput.value = '';
 
     /* Init toggle listener (clone dulu untuk hapus listener lama) */
     initDokterJadwalToggles();
@@ -1014,6 +1046,49 @@
     modalDokter.hidden = false;
     document.getElementById('dNama').focus();
   }
+
+  /* Terapkan data URL ke preview element */
+  function applyFotoPreview(dataUrl) {
+    const preview  = document.getElementById('dokterFotoPreview');
+    const hapusBtn = document.getElementById('btnHapusFoto');
+    if (!preview) return;
+    if (dataUrl) {
+      preview.style.backgroundImage = 'url(' + dataUrl + ')';
+      /* Sembunyikan ikon placeholder saat ada foto */
+      const svg = preview.querySelector('svg');
+      if (svg) svg.style.display = 'none';
+      if (hapusBtn) hapusBtn.hidden = false;
+    } else {
+      preview.style.backgroundImage = '';
+      const svg = preview.querySelector('svg');
+      if (svg) svg.style.display = '';
+      if (hapusBtn) hapusBtn.hidden = true;
+    }
+  }
+
+  /* Wire file input → FileReader */
+  document.getElementById('dFotoInput').addEventListener('change', function() {
+    const file = this.files[0];
+    if (!file) return;
+    if (file.size > 2 * 1024 * 1024) {
+      showToast('Ukuran foto maksimal 2 MB.', 'error');
+      this.value = '';
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      _dokterFotoDataUrl = e.target.result;
+      applyFotoPreview(_dokterFotoDataUrl);
+    };
+    reader.readAsDataURL(file);
+  });
+
+  /* Hapus foto */
+  document.getElementById('btnHapusFoto').addEventListener('click', function() {
+    _dokterFotoDataUrl = '';
+    applyFotoPreview('');
+    document.getElementById('dFotoInput').value = '';
+  });
 
   function closeModalDokter() { modalDokter.hidden = true; }
 
@@ -1036,9 +1111,10 @@
 
     const editId = document.getElementById('dokterEditId').value;
     const obj = {
-      id:         editId || uid(),
+      id:          editId || uid(),
       nama,
-      spesialis:  document.getElementById('dSpesialis').value.trim(),
+      spesialis:   document.getElementById('dSpesialis').value.trim(),
+      fotoDataUrl: _dokterFotoDataUrl || '',
       jadwal,        /* format baru: [{hari, mulai, selesai}] */
       hari,          /* format lama: compat */
       jamMulai,      /* format lama: compat */
@@ -1338,6 +1414,8 @@
 
     updateSidebarClinic();
     updateNavBadge();
+    /* Sync dokter ke mitraKlinik segera setelah init agar user app bisa membacanya */
+    syncToMitraKlinik();
     goPage('overview');
   }
 

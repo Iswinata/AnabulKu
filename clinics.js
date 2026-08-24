@@ -16,6 +16,19 @@
 
   function $(sel, root) { return (root || document).querySelector(sel); }
 
+  /* ── Favorit helpers ── */
+  var LS_FAV = 'anabulku_favorit';
+  function getFavIds() {
+    try { return JSON.parse(localStorage.getItem(LS_FAV)) || []; } catch(e) { return []; }
+  }
+  function toggleFav(idx) {
+    var ids = getFavIds();
+    var pos = ids.indexOf(idx);
+    if (pos === -1) { ids.push(idx); } else { ids.splice(pos, 1); }
+    try { localStorage.setItem(LS_FAV, JSON.stringify(ids)); } catch(e) {}
+    return ids.indexOf(idx) !== -1;
+  }
+
   function esc(str) {
     return String(str == null ? "" : str)
       .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
@@ -124,19 +137,37 @@
         '</span>';
     }
 
+    var isFav = getFavIds().indexOf(idx) !== -1;
+    var favFill   = isFav ? 'url(#favGrad)' : 'none';
+    var favStroke = isFav ? '#c0392b' : '#9ca3af';
+    var favLabel  = isFav ? 'Hapus dari favorit' : 'Tambah ke favorit';
+
     return '' +
-      '<a class="clinic-card" href="' + esc(href) + '">' +
-        '<span class="clinic-texture" aria-hidden="true"></span>' +
-        '<span class="clinic-photo"' + photoStyle + ' aria-hidden="true"></span>' +
-        '<span class="clinic-body">' +
-          '<span class="clinic-name">' + esc(c.namaKlinik || "Klinik Hewan") + '</span>' +
-          (alamat ? '<span class="clinic-addr">' + alamat + '</span>' : '') +
-          '<span class="clinic-meta">' +
-            ratingChip +
-            (distChip ? distChip : '') +
+      '<svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">' +
+        '<defs><linearGradient id="favGrad" x1="0%" y1="0%" x2="100%" y2="100%">' +
+          '<stop offset="0%" stop-color="#FF5252"/>' +
+          '<stop offset="100%" stop-color="#C62828"/>' +
+        '</linearGradient></defs>' +
+      '</svg>' +
+      '<div class="clinic-card-wrap">' +
+        '<a class="clinic-card" href="' + esc(href) + '">' +
+          '<span class="clinic-texture" aria-hidden="true"></span>' +
+          '<span class="clinic-photo"' + photoStyle + ' aria-hidden="true"></span>' +
+          '<span class="clinic-body">' +
+            '<span class="clinic-name">' + esc(c.namaKlinik || "Klinik Hewan") + '</span>' +
+            (alamat ? '<span class="clinic-addr">' + alamat + '</span>' : '') +
+            '<span class="clinic-meta">' +
+              ratingChip +
+              (distChip ? distChip : '') +
+            '</span>' +
           '</span>' +
-        '</span>' +
-      '</a>';
+        '</a>' +
+        '<button class="clinic-fav-btn' + (isFav ? ' is-fav' : '') + '" type="button" data-fav-idx="' + idx + '" aria-label="' + favLabel + '" aria-pressed="' + isFav + '">' +
+          '<svg viewBox="0 0 24 24" fill="' + favFill + '" stroke="' + favStroke + '" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+            '<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/>' +
+          '</svg>' +
+        '</button>' +
+      '</div>';
   }
 
   function emptyHtml() {
@@ -265,10 +296,41 @@
          If geolocation hasn't resolved yet, re-render once it does. */
       function renderCards(loc) {
         listEl.innerHTML = filteredWithIdx.map(function(entry) {
-          /* Pass the original full-array index so clinic-detail.js loads the right clinic */
           return cardHtml(entry.clinic, entry.idx, loc);
         }).join("");
         noteEl.textContent = filteredWithIdx.length + " klinik mitra terdaftar";
+
+        /* Bind tombol favorit */
+        listEl.querySelectorAll('[data-fav-idx]').forEach(function(btn) {
+          btn.addEventListener('click', function(e) {
+            e.preventDefault(); e.stopPropagation();
+            var idx   = parseInt(btn.getAttribute('data-fav-idx'), 10);
+            var isNow = toggleFav(idx);
+            var svg   = btn.querySelector('svg');
+            if (svg) {
+              svg.setAttribute('fill',   isNow ? 'url(#favGrad)' : 'none');
+              svg.setAttribute('stroke', isNow ? '#c0392b' : '#9ca3af');
+            }
+            /* Inject gradient def sekali saja */
+            if (isNow && !document.getElementById('favGradDef')) {
+              var svgDef = document.createElementNS('http://www.w3.org/2000/svg','svg');
+              svgDef.setAttribute('id','favGradDef');
+              svgDef.style.cssText = 'position:absolute;width:0;height:0;overflow:hidden;';
+              svgDef.innerHTML =
+                '<defs><linearGradient id="favGrad" x1="0%" y1="0%" x2="100%" y2="100%">' +
+                  '<stop offset="0%" stop-color="#FF5252"/>' +
+                  '<stop offset="100%" stop-color="#C62828"/>' +
+                '</linearGradient></defs>';
+              document.body.appendChild(svgDef);
+            }
+            btn.setAttribute('aria-pressed', String(isNow));
+            btn.setAttribute('aria-label', isNow ? 'Hapus dari favorit' : 'Tambah ke favorit');
+            btn.classList.toggle('is-fav', isNow);
+            /* Animasi pop */
+            btn.style.transform = 'scale(1.3)';
+            setTimeout(function(){ btn.style.transform = ''; }, 180);
+          });
+        });
       }
 
       if (userLocation) {

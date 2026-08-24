@@ -40,7 +40,26 @@
       var raw = localStorage.getItem("mitraKlinik");
       var list = raw ? JSON.parse(raw) : [];
       var c = list[idx] || null;
-      if (c) activeMitraId = c.id || "";
+      if (!c) return null;
+      activeMitraId = c.id || "";
+
+      /* Jika dokters kosong di mitraKlinik, coba baca langsung dari namespace storage
+         (anabulku_dokters_<mitraId>) — kasus: mitra baru tambah dokter tapi belum sync */
+      if ((!Array.isArray(c.dokters) || !c.dokters.length) && activeMitraId) {
+        try {
+          var nsRaw = localStorage.getItem("anabulku_dokters_" + activeMitraId);
+          if (nsRaw) {
+            var nsDokters = JSON.parse(nsRaw);
+            if (Array.isArray(nsDokters) && nsDokters.length) {
+              c = Object.assign({}, c, { dokters: nsDokters });
+              /* Tulis balik ke mitraKlinik agar sync untuk pembacaan berikutnya */
+              list[idx] = c;
+              try { localStorage.setItem("mitraKlinik", JSON.stringify(list)); } catch (e2) { /* silent */ }
+            }
+          }
+        } catch (eFallback) { /* silent */ }
+      }
+
       return c;
     } catch (e) { return null; }
   }
@@ -350,22 +369,22 @@
       }
 
       var booking = {
-        id:          uid(),
-        tanggal:     tanggal,
-        jam:         jam,
-        namaPemilik: namaPemilik,
-        noHP:        noHP,
-        namaHewan:   namaHewan,
-        jenisHewan:  jenisHewan,
-        ras:         "",
-        umur:        "",
-        dokter:      doc.nama,
-        keluhan:     keluhan,
-        biaya:       clinic.hargaMulai || "",
-        status:      "menunggu",
-        sumber:      "app_user",
-        namaKlinik:  clinic.namaKlinik || "",
-        createdAt:   new Date().toISOString(),
+        id:              uid(),
+        tanggal:         tanggal,
+        jam:             jam,
+        namaPemilik:     namaPemilik,
+        noHP:            noHP,
+        namaHewan:       namaHewan,
+        jenisHewan:      jenisHewan,
+        ras:             "",
+        umur:            "",
+        dokter:          doc.nama,
+        keluhan:         keluhan,
+        biaya:           clinic.hargaMulai || "",
+        status:          "menunggu",
+        sumber:          "app_user",
+        namaKlinik:      clinic.namaKlinik || "",
+        createdAt:       new Date().toISOString(),
       };
 
       saveBooking(booking);
@@ -531,14 +550,17 @@
       }
 
       /* ── Photo ── */
-      var photoStyle = doc.fotoDataUrl
-        ? ' style="background-image:url(' + esc(doc.fotoDataUrl) + ');"'
-        : "";
+      var hasFoto = !!doc.fotoDataUrl;
+      var photoInner = hasFoto
+        ? '<div class="cd-doc-photo" style="background-image:url(' + esc(doc.fotoDataUrl) + ');background-size:cover;background-position:center;background-repeat:no-repeat;" aria-hidden="true"></div>'
+        : '<div class="cd-doc-photo cd-doc-photo--empty" aria-hidden="true">' +
+            '<img src="lokasi%20icon.png" class="cd-doc-photo-icon" alt="" aria-hidden="true" />' +
+          '</div>';
 
       return '' +
         '<div class="cd-doc-card" role="article" aria-label="' + esc(doc.nama || "Dokter") + '" data-doc-nama="' + esc(doc.nama) + '">' +
           '<div class="cd-doc-inner">' +
-            '<div class="cd-doc-photo"' + photoStyle + ' aria-hidden="true"></div>' +
+            photoInner +
             '<div class="cd-doc-info">' +
               '<p class="cd-doc-name">' + esc(doc.nama || "Dokter Hewan") + '</p>' +
               '<p class="cd-doc-spec">' + esc(doc.spesialisasi || doc.spesialis || clinic.tipeKlinik || "Dokter Hewan") + '</p>' +
@@ -557,17 +579,25 @@
         '</div>';
     }).join("");
 
-    /* Wire time slot selection — exclude booked dan past */
+    /* Wire time slot selection — single-select global, exclude booked dan past */
+    var allSlots = section.querySelectorAll(".cd-time-slot:not(.booked):not(.past)");
     section.querySelectorAll(".cd-doc-card").forEach(function(card) {
       var slots = card.querySelectorAll(".cd-time-slot:not(.booked):not(.past)");
       slots.forEach(function(slot) {
         slot.addEventListener("click", function() {
-          slots.forEach(function(s) {
-            s.classList.remove("selected");
-            s.classList.add("available");
-          });
-          slot.classList.remove("available");
-          slot.classList.add("selected");
+          if (slot.classList.contains("selected")) {
+            /* Klik ulang slot yang sama → batalkan pilihan */
+            slot.classList.remove("selected");
+            slot.classList.add("available");
+          } else {
+            /* Hapus selected dari SEMUA slot di semua kartu dokter */
+            allSlots.forEach(function(s) {
+              s.classList.remove("selected");
+              s.classList.add("available");
+            });
+            slot.classList.remove("available");
+            slot.classList.add("selected");
+          }
         });
       });
     });
@@ -715,6 +745,35 @@
       "animation:slideUpBanner .3s cubic-bezier(.34,1.2,.64,1) both;"
     ].join("");
 
+    /* Hitung sisa waktu untuk ditampilkan */
+    var deadlineMs = pending.paymentDeadline
+      ? new Date(pending.paymentDeadline).getTime()
+      : null;
+    var remainingMs = deadlineMs ? Math.max(0, deadlineMs - Date.now()) : null;
+
+    /* Jika deadline sudah lewat, batalkan otomatis dan jangan tampilkan banner */
+    if (deadlineMs && remainingMs <= 0) {
+      try {
+        var bksExp = JSON.parse(localStorage.getItem("anabulku_bookings")) || [];
+        var expIdx = bksExp.findIndex(function(b) { return b.id === pending.id; });
+        if (expIdx >= 0) {
+          bksExp[expIdx].status = "dibatalkan";
+          bksExp[expIdx].statusPembayaran = "dibatalkan";
+          bksExp[expIdx].cancelledReason = "timeout";
+          localStorage.setItem("anabulku_bookings", JSON.stringify(bksExp));
+        }
+        localStorage.removeItem("anabulku_pending_payment");
+      } catch (eExp) { /* silent */ }
+      return;
+    }
+
+    /* Format sisa waktu MM:SS */
+    function fmtCountdown(ms) {
+      var m = Math.floor(ms / 60000);
+      var s = Math.floor((ms % 60000) / 1000);
+      return String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0");
+    }
+
     banner.innerHTML =
       '<div style="flex:1;min-width:0;">' +
         '<p style="font-family:Poppins,sans-serif;font-size:11px;font-weight:700;color:#FF9800;margin:0 0 1px;text-transform:uppercase;letter-spacing:.05em;">Booking Belum Selesai</p>' +
@@ -722,6 +781,7 @@
           (pending.dokter ? pending.dokter + ' · ' : '') +
           (pending.jam ? 'Pukul ' + pending.jam : '') +
         '</p>' +
+        (deadlineMs ? '<p id="cdBannerCountdown" style="font-family:Poppins,sans-serif;font-size:11px;font-weight:700;color:#EF4444;margin:2px 0 0;">⏱ ' + fmtCountdown(remainingMs) + '</p>' : '') +
       '</div>' +
       '<button id="cdResumeContinue" type="button" style="' +
         'flex-shrink:0;padding:8px 14px;' +
@@ -743,6 +803,31 @@
     }
 
     document.body.appendChild(banner);
+
+    /* Countdown tick di banner */
+    if (deadlineMs) {
+      var bannerInterval = setInterval(function() {
+        var left = Math.max(0, deadlineMs - Date.now());
+        var countEl = document.getElementById("cdBannerCountdown");
+        if (countEl) countEl.textContent = "⏱ " + fmtCountdown(left);
+        if (left <= 0) {
+          clearInterval(bannerInterval);
+          /* Auto-cancel dan hapus banner */
+          try {
+            var bks2 = JSON.parse(localStorage.getItem("anabulku_bookings")) || [];
+            var i2 = bks2.findIndex(function(b) { return b.id === pending.id; });
+            if (i2 >= 0) {
+              bks2[i2].status = "dibatalkan";
+              bks2[i2].statusPembayaran = "dibatalkan";
+              bks2[i2].cancelledReason = "timeout";
+              localStorage.setItem("anabulku_bookings", JSON.stringify(bks2));
+            }
+            localStorage.removeItem("anabulku_pending_payment");
+          } catch (e2) { /* silent */ }
+          if (banner.parentNode) banner.remove();
+        }
+      }, 1000);
+    }
 
     document.getElementById("cdResumeContinue").addEventListener("click", function() {
       window.location.href = "payment.html";

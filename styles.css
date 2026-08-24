@@ -710,6 +710,54 @@ img { display: block; max-width: 100%; }
   flex: none;
 }
 
+
+/* ================================================================
+   CLINIC CARD — FAVORIT BUTTON
+================================================================ */
+
+/* Wrapper agar tombol hati bisa diposisikan di luar <a> */
+.clinic-card-wrap {
+  position: relative;
+  display: block;
+}
+
+/* Tombol hati di pojok kanan atas card */
+.clinic-fav-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1.5px solid #f3e8e8;
+  display: grid;
+  place-items: center;
+  box-shadow: 1px 1px 0 #000;
+  transition: transform .15s, background .15s;
+  -webkit-tap-highlight-color: transparent;
+  padding: 0;
+}
+
+.clinic-fav-btn svg {
+  width: 16px;
+  height: 16px;
+  transition: fill .15s, stroke .15s;
+}
+
+.clinic-fav-btn:active {
+  transform: scale(0.88);
+  background: #fff0f0;
+}
+
+.clinic-fav-btn[aria-pressed="true"],
+.clinic-fav-btn.is-fav {
+  background: #fff0f0;
+  border-color: #fecdd3;
+}
+
+
 .notif-panel-title {
   font-size: 15px;
   font-weight: 700;

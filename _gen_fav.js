@@ -1,0 +1,61 @@
+const fs = require('fs');
+const p = 'e:/New Project/';
+
+const fav_css = `<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
+  <meta name="theme-color" content="#FCECE3"/>
+  <title>Favorit \u2014 AnabulKu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html,body{font-family:"Poppins",system-ui,sans-serif;background:#e7dbd0;min-height:100dvh;-webkit-text-size-adjust:100%;-webkit-font-smoothing:antialiased}
+    body{display:flex;justify-content:center}
+    button{font-family:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;border:none;background:none}
+    .app{position:relative;width:100%;max-width:393px;min-height:100dvh;background:#f5ebe0;box-shadow:0 0 40px -10px rgba(0,0,0,.2);display:flex;flex-direction:column}
+    .header{background:#fcece3;padding:20px 22px 16px;flex-shrink:0}
+    .header-top{display:flex;align-items:center;gap:12px}
+    .btn-back{display:grid;place-items:center;width:40px;height:40px;border-radius:12px;border:1px solid #e5e7eb;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.05);color:#4b5563;flex-shrink:0;transition:transform .12s}
+    .btn-back:active{transform:scale(.94)}
+    .btn-back svg{width:20px;height:20px}
+    .header-title{font-size:16px;font-weight:800;color:#1F2937;letter-spacing:-.3px}
+    .header-sub{font-size:11px;color:#9CA3AF;margin-top:1px}
+    .content{flex:1;overflow-y:auto;padding:16px 20px 100px;display:flex;flex-direction:column;gap:12px}
+    .empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:80px 32px;text-align:center}
+    .empty-icon{width:80px;height:80px;background:#FFF7ED;border:2px solid #FFDEAE;border-radius:50%;display:grid;place-items:center;font-size:36px}
+    .empty-title{font-size:16px;font-weight:800;color:#1F2937}
+    .empty-sub{font-size:13px;color:#9CA3AF;line-height:1.6}
+    .btn-explore{height:44px;padding:0 24px;background:linear-gradient(180deg,#ff9800,#ffbc59);border-radius:12px;box-shadow:2px 2px 0 #000;color:#fff;font-size:13px;font-weight:700}
+    .btn-explore:active{transform:translate(1px,1px);box-shadow:1px 1px 0 #000}
+    .klinik-card{background:#fff;border-radius:16px;border:1.5px solid #E5E7EB;box-shadow:2px 2px 0 rgba(0,0,0,.08);overflow:hidden}
+    .klinik-card-top{display:flex;align-items:center;gap:12px;padding:14px 14px 10px}
+    .klinik-photo{width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,#ffb066,#f97316);flex-shrink:0;display:grid;place-items:center;font-size:24px;border:1.5px solid #E5E7EB;overflow:hidden}
+    .klinik-photo img{width:100%;height:100%;object-fit:cover}
+    .klinik-info{flex:1;min-width:0}
+    .klinik-name{font-size:14px;font-weight:800;color:#111827;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .klinik-meta{font-size:11px;color:#9CA3AF;margin-top:2px}
+    .klinik-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+    .klinik-tag{font-size:10px;font-weight:600;color:#F97316;background:#FFF7ED;border:1px solid #FFDEAE;border-radius:20px;padding:2px 8px}
+    .btn-unfav{width:36px;height:36px;border-radius:10px;border:1.5px solid #FEE2E2;background:#FFF5F5;display:grid;place-items:center;flex-shrink:0;transition:transform .12s}
+    .btn-unfav:active{transform:scale(.9)}
+    .btn-unfav svg{width:18px;height:18px}
+    .klinik-card-footer{display:flex;border-top:1px solid #F3F4F6}
+    .btn-detail{flex:1;height:40px;font-size:12px;font-weight:700;color:#FF9800;border-right:1px solid #F3F4F6}
+    .btn-detail:active{background:#FFF7ED}
+    .btn-booking{flex:1;height:40px;font-size:12px;font-weight:700;color:#fff;background:linear-gradient(180deg,#ff9800,#ffbc59)}
+    .btn-booking:active{opacity:.85}
+    .bottomnav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:393px;height:64px;background:#fff;border-top:1.5px solid #F3F4F6;display:flex;align-items:center;justify-content:space-around;z-index:100;padding-bottom:env(safe-area-inset-bottom)}
+    .nav-btn{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 16px;border-radius:12px;transition:transform .12s}
+    .nav-btn:active{transform:scale(.9)}
+    .nav-btn svg{width:24px;height:24px}
+    .nav-label{font-size:10px;font-weight:600;color:#9CA3AF}
+    .nav-btn.active .nav-label{color:#F97316}
+  </style>
+</head>`;
+
+fs.writeFileSync(p+'_fav_part1.txt', fav_css, 'utf8');
+console.log('part1 ok');

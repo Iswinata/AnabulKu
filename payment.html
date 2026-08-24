@@ -258,6 +258,72 @@
     }
     .method-option.is-selected .method-radio-dot { display: block; }
 
+    /* ── Countdown timer card ── */
+    .countdown-card {
+      background: #fff;
+      border-radius: 13px;
+      box-shadow: 2px 2px 0 #000;
+      border: 1.5px solid #E5E7EB;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: border-color .3s, background .3s;
+    }
+    .countdown-card.is-urgent {
+      background: #FEF2F2;
+      border-color: #FCA5A5;
+    }
+    .countdown-icon {
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      background: #FFF7ED;
+      display: grid;
+      place-items: center;
+      font-size: 18px;
+      flex-shrink: 0;
+      transition: background .3s;
+    }
+    .countdown-card.is-urgent .countdown-icon {
+      background: #FEE2E2;
+    }
+    .countdown-info { flex: 1; }
+    .countdown-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: #9CA3AF;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      margin-bottom: 2px;
+    }
+    .countdown-card.is-urgent .countdown-label {
+      color: #DC2626;
+    }
+    #countdownTimer {
+      font-size: 22px;
+      font-weight: 800;
+      color: #FF9800;
+      letter-spacing: .02em;
+      font-variant-numeric: tabular-nums;
+      line-height: 1.1;
+    }
+    #countdownTimer.is-urgent {
+      color: #DC2626;
+      animation: pulse-red .7s ease-in-out infinite alternate;
+    }
+    .countdown-sub {
+      font-size: 10.5px;
+      color: #9CA3AF;
+      margin-top: 2px;
+    }
+    .countdown-card.is-urgent .countdown-sub {
+      color: #EF4444;
+    }
+    @keyframes pulse-red {
+      from { opacity: 1; }
+      to   { opacity: .55; }
+    }
+
     /* ── Status card ── */
     .status-card {
       background: #FFFBEB;
@@ -271,6 +337,71 @@
     .status-icon { font-size: 18px; flex-shrink: 0; }
     .status-text { font-size: 12px; color: #78350F; line-height: 1.5; }
     .status-text strong { font-weight: 700; }
+
+    /* ── Expired overlay ── */
+    .expired-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.6);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .expired-overlay.is-open { display: flex; }
+    .expired-sheet {
+      background: #fff;
+      border-radius: 20px;
+      width: 100%;
+      max-width: 340px;
+      padding: 28px 24px 32px;
+      text-align: center;
+      animation: scaleIn .25s cubic-bezier(.34,1.2,.64,1) both;
+    }
+    @keyframes scaleIn {
+      from { transform: scale(.85); opacity: 0; }
+      to   { transform: scale(1);   opacity: 1; }
+    }
+    .expired-emoji {
+      width: 68px; height: 68px;
+      background: #FEE2E2;
+      border: 2px solid #FCA5A5;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 30px;
+      margin: 0 auto 14px;
+    }
+    .expired-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: #111827;
+      margin-bottom: 8px;
+    }
+    .expired-sub {
+      font-size: 13px;
+      color: #6B7280;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+    .btn-expired-home {
+      width: 100%;
+      height: 48px;
+      background: linear-gradient(180deg, #EF4444 0%, #F87171 100%);
+      border: none;
+      border-radius: 12px;
+      box-shadow: 2px 2px 0 #000;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+    .btn-expired-home:active { transform: translate(1px,1px); box-shadow: 1px 1px 0 #000; }
 
     /* ── Footer action ── */
     .footer-action {
@@ -382,6 +513,205 @@
       gap: 8px;
     }
     .btn-home:active { transform: translate(1px,1px); box-shadow: 1px 1px 0 #000; }
+
+    /* ── Leave confirmation overlay ── */
+    .leave-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.55);
+      z-index: 300;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    .leave-overlay.is-open { display: flex; }
+    .leave-sheet {
+      background: #fff;
+      border-radius: 20px 20px 0 0;
+      width: 100%;
+      max-width: 393px;
+      padding: 28px 24px 40px;
+      text-align: center;
+      animation: slideUp .25s cubic-bezier(.34,1.2,.64,1) both;
+    }
+    @keyframes slideUp {
+      from { transform: translateY(100%); opacity: 0; }
+      to   { transform: translateY(0);    opacity: 1; }
+    }
+    .leave-icon {
+      width: 64px; height: 64px;
+      background: #FEF3C7;
+      border: 2px solid #FCD34D;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 28px;
+      margin: 0 auto 14px;
+    }
+    .leave-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: #111827;
+      margin-bottom: 8px;
+    }
+    .leave-sub {
+      font-size: 13px;
+      color: #6B7280;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+    .btn-leave-cancel {
+      width: 100%;
+      height: 48px;
+      background: linear-gradient(180deg, #EF4444 0%, #F87171 100%);
+      border: none;
+      border-radius: 12px;
+      box-shadow: 2px 2px 0 #000;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .btn-leave-cancel:active { transform: translate(1px,1px); box-shadow: 1px 1px 0 #000; }
+    .btn-leave-stay {
+      width: 100%;
+      height: 48px;
+      background: linear-gradient(180deg, #ff9800 0%, #ffbc59 100%);
+      border: none;
+      border-radius: 12px;
+      box-shadow: 2px 2px 0 #000;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .btn-leave-stay:active { transform: translate(1px,1px); box-shadow: 1px 1px 0 #000; }
+
+    /* ── VA overlay ── */
+    .va-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.55);
+      z-index: 250;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    .va-overlay.is-open { display: flex; }
+    .va-sheet {
+      background: #fff;
+      border-radius: 20px 20px 0 0;
+      width: 100%;
+      max-width: 393px;
+      padding: 28px 24px 44px;
+      animation: slideUp .25s cubic-bezier(.34,1.2,.64,1) both;
+    }
+    .va-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .va-bank-icon {
+      width: 48px; height: 48px;
+      border-radius: 12px;
+      background: #FFF7ED;
+      border: 1.5px solid #FDE68A;
+      display: grid;
+      place-items: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+    .va-bank-name {
+      font-size: 16px;
+      font-weight: 800;
+      color: #111827;
+    }
+    .va-bank-sub {
+      font-size: 12px;
+      color: #9CA3AF;
+      margin-top: 2px;
+    }
+    .va-label {
+      font-size: 10.5px;
+      font-weight: 700;
+      color: #9CA3AF;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      margin-bottom: 6px;
+    }
+    .va-number-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #F9FAFB;
+      border: 1.5px solid #E5E7EB;
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-bottom: 16px;
+    }
+    .va-number {
+      flex: 1;
+      font-size: 22px;
+      font-weight: 800;
+      color: #FF9800;
+      letter-spacing: .08em;
+      font-variant-numeric: tabular-nums;
+    }
+    .btn-copy {
+      height: 36px;
+      padding: 0 14px;
+      background: #fff;
+      border: 1.5px solid #E5E7EB;
+      border-radius: 8px;
+      box-shadow: 1px 1px 0 #000;
+      font-size: 12px;
+      font-weight: 700;
+      color: #374151;
+      white-space: nowrap;
+    }
+    .btn-copy:active { transform: translate(1px,1px); box-shadow: none; }
+    .btn-copy.copied { background: #ECFDF5; border-color: #6EE7B7; color: #059669; }
+    .va-info-rows {
+      background: #F9FAFB;
+      border: 1.5px solid #E5E7EB;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+    .va-info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 14px;
+      border-bottom: 1px solid #F3F4F6;
+      font-size: 12px;
+    }
+    .va-info-row:last-child { border-bottom: none; }
+    .va-info-key { color: #9CA3AF; font-weight: 500; }
+    .va-info-val { color: #111827; font-weight: 700; text-align: right; }
+    .va-note {
+      font-size: 11.5px;
+      color: #78350F;
+      background: #FFFBEB;
+      border: 1.5px solid #FDE68A;
+      border-radius: 10px;
+      padding: 10px 12px;
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+    .btn-paid {
+      width: 100%;
+      height: 52px;
+      background: linear-gradient(180deg, #22c55e 0%, #4ade80 100%);
+      border: none;
+      border-radius: 14px;
+      box-shadow: 2px 2px 0 #000;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: -.2px;
+    }
+    .btn-paid:active { transform: translate(1px,1px); box-shadow: 1px 1px 0 #000; }
   </style>
 </head>
 <body>
@@ -480,6 +810,55 @@
 
   </div><!-- /.scroll-body -->
 
+  <!-- ── VA overlay ── -->
+  <div class="va-overlay" id="vaOverlay" role="dialog" aria-modal="true" aria-labelledby="vaBankName">
+    <div class="va-sheet">
+      <div class="va-header">
+        <div class="va-bank-icon" id="vaBankIcon">🏦</div>
+        <div>
+          <p class="va-bank-name" id="vaBankName">Virtual Account</p>
+          <p class="va-bank-sub" id="vaBankSub">Transfer ke nomor berikut</p>
+        </div>
+      </div>
+      <p class="va-label">Nomor Virtual Account</p>
+      <div class="va-number-row">
+        <span class="va-number" id="vaNumber">—</span>
+        <button class="btn-copy" id="btnCopyVA" type="button">Salin</button>
+      </div>
+      <div class="va-info-rows">
+        <div class="va-info-row">
+          <span class="va-info-key">Nama Klinik</span>
+          <span class="va-info-val" id="vaKlinik">—</span>
+        </div>
+        <div class="va-info-row">
+          <span class="va-info-key">Dokter</span>
+          <span class="va-info-val" id="vaDokter">—</span>
+        </div>
+        <div class="va-info-row">
+          <span class="va-info-key">Jadwal</span>
+          <span class="va-info-val" id="vaJadwal">—</span>
+        </div>
+        <div class="va-info-row">
+          <span class="va-info-key">Total Bayar</span>
+          <span class="va-info-val" id="vaTotal" style="color:#FF9800;">—</span>
+        </div>
+      </div>
+      <p class="va-note">⚠️ Salin nomor VA di atas lalu lakukan transfer. Transaksi kamu akan berstatus <strong>pending</strong> hingga pembayaran diverifikasi oleh klinik dalam 10 menit.</p>
+      <button class="btn-paid" id="btnPaid" type="button">🐱🐶 OK</button>
+    </div>
+  </div>
+
+  <!-- ── Overlay konfirmasi keluar ── -->
+  <div class="leave-overlay" id="leaveOverlay" role="dialog" aria-modal="true" aria-labelledby="leaveTitle">
+    <div class="leave-sheet">
+      <div class="leave-icon">🚪</div>
+      <p class="leave-title" id="leaveTitle">Tinggalkan Halaman?</p>
+      <p class="leave-sub">Booking kamu belum dibayar. Yakin ingin meninggalkan halaman ini?</p>
+      <button class="btn-leave-cancel" id="btnLeaveCancel" type="button">Batalkan Booking</button>
+      <button class="btn-leave-stay" id="btnLeaveStay" type="button">Lanjutkan Pembayaran</button>
+    </div>
+  </div>
+
   <!-- Bottom navigation -->
   <nav style="position:fixed;left:50%;transform:translateX(-50%);bottom:20px;z-index:50;width:min(100% - 32px,361px);height:64px;background:#fff;border:2px solid #000;box-shadow:2px 2px 0 #000;border-radius:30px;display:flex;align-items:center;justify-content:space-around;padding:0 10px;font-family:'Poppins',sans-serif;" aria-label="Navigasi utama">
     <button onclick="location.href='home.html'" type="button" aria-label="Beranda" style="flex:1;height:54px;border:none;background:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;">
@@ -525,6 +904,18 @@
   </div>
 
 </div><!-- /.app -->
+
+<!-- Expired overlay -->
+<div class="expired-overlay" id="expiredOverlay" role="alertdialog" aria-modal="true" aria-labelledby="expiredTitle">
+  <div class="expired-sheet">
+    <div class="expired-emoji">⏰</div>
+    <h2 class="expired-title" id="expiredTitle">Waktu Habis!</h2>
+    <p class="expired-sub">Batas waktu pembayaran telah habis. Booking kamu otomatis dibatalkan. Silakan buat booking baru.</p>
+    <button class="btn-expired-home" id="btnExpiredHome" type="button">
+      Kembali ke Beranda
+    </button>
+  </div>
+</div>
 
 <!-- Success overlay -->
 <div class="success-overlay" id="successOverlay" role="dialog" aria-modal="true" aria-labelledby="successTitle">
@@ -600,45 +991,189 @@
     });
   });
 
+  var paymentDone = false;
+
+  /* ── Batalkan booking (dipanggil saat user konfirmasi keluar) ── */
+  function cancelBooking() {
+    try {
+      var bookings = JSON.parse(localStorage.getItem("anabulku_bookings")) || [];
+      var idx = bookings.findIndex(function(b) { return b.id === pending.id; });
+      if (idx >= 0) {
+        bookings[idx].status = "dibatalkan";
+        bookings[idx].statusPembayaran = "dibatalkan";
+        bookings[idx].cancelledReason = "user_leave";
+      }
+      localStorage.setItem("anabulku_bookings", JSON.stringify(bookings));
+
+      /* Juga update di namespace klinik jika ada */
+      if (pending.namaKlinik) {
+        try {
+          var klinikList = JSON.parse(localStorage.getItem("mitraKlinik")) || [];
+          klinikList.forEach(function(k) {
+            if (k.namaKlinik === pending.namaKlinik && k.id) {
+              var key = "anabulku_bookings_" + k.id;
+              var bksKlinik = JSON.parse(localStorage.getItem(key)) || [];
+              var ki = bksKlinik.findIndex(function(b) { return b.id === pending.id; });
+              if (ki >= 0) {
+                bksKlinik[ki].status = "dibatalkan";
+                bksKlinik[ki].statusPembayaran = "dibatalkan";
+                bksKlinik[ki].cancelledReason = "user_leave";
+                localStorage.setItem(key, JSON.stringify(bksKlinik));
+              }
+            }
+          });
+        } catch (e2) { /* silent */ }
+      }
+
+      /* Hapus pending */
+      localStorage.removeItem("anabulku_pending_payment");
+    } catch (e) { /* silent */ }
+  }
+
+  /* ── Leave overlay ── */
+  var leaveOverlay  = document.getElementById("leaveOverlay");
+  var pendingNavUrl = null; /* URL tujuan setelah konfirmasi */
+
+  function showLeaveOverlay(url) {
+    pendingNavUrl = url || null;
+    leaveOverlay.classList.add("is-open");
+  }
+
+  /* Batalkan booking → navigasi keluar */
+  document.getElementById("btnLeaveCancel").addEventListener("click", function() {
+    cancelBooking();
+    leaveOverlay.classList.remove("is-open");
+    if (pendingNavUrl) {
+      window.location.href = pendingNavUrl;
+    } else {
+      history.back();
+    }
+  });
+
+  /* Lanjutkan pembayaran → tutup overlay */
+  document.getElementById("btnLeaveStay").addEventListener("click", function() {
+    leaveOverlay.classList.remove("is-open");
+    pendingNavUrl = null;
+  });
+
   /* ── Tombol Kembali ── */
   document.getElementById("btnBack").addEventListener("click", function() {
-    history.back();
+    if (!paymentDone) {
+      var url = (document.referrer && document.referrer.includes("riwayat.html"))
+        ? "riwayat.html"
+        : null;
+      showLeaveOverlay(url);
+    } else {
+      history.back();
+    }
   });
 
-  /* ── Tombol Bayar ── */
-  document.getElementById("btnPay").addEventListener("click", function() {
-    var btn = document.getElementById("btnPay");
-    btn.disabled = true;
-    btn.textContent = "Memproses…";
+  /* ── Tombol Kembali ke Beranda (expired) ── */
+  document.getElementById("btnExpiredHome").addEventListener("click", function() {
+    window.location.replace("home.html");
+  });
 
+  /* ── Data VA per metode pembayaran ── */
+  var VA_DATA = {
+    bca:     { icon: "🔵", name: "BCA Virtual Account",     sub: "Transfer via ATM / m-BCA",      prefix: "70720" },
+    bni:     { icon: "🟠", name: "BNI Virtual Account",     sub: "Transfer via ATM / BNI Mobile",  prefix: "98814" },
+    bri:     { icon: "🔵", name: "BRI Virtual Account",     sub: "Transfer via ATM / BRImo",       prefix: "26215" },
+    mandiri: { icon: "🟡", name: "Mandiri Virtual Account", sub: "Transfer via ATM / Livin",       prefix: "70012" },
+    transfer: { icon: "🏦", name: "Transfer Bank",          sub: "Transfer ke nomor berikut",      prefix: "88800" },
+  };
+
+  /* Generate VA number deterministik dari booking id */
+  function generateVA(method, bookingId) {
+    var data   = VA_DATA[method] || VA_DATA["transfer"];
+    var suffix = bookingId ? bookingId.replace(/[^0-9]/g, "").slice(-8).padStart(8, "0") : "00000000";
+    return data.prefix + suffix;
+  }
+
+  /* Format rupiah */
+  function formatRupiah(val) {
+    var num = parseInt(String(val).replace(/\D/g, ""), 10);
+    if (!num || isNaN(num)) return "Hubungi klinik";
+    return "Rp " + num.toLocaleString("id-ID");
+  }
+
+  /* ── Tampilkan VA overlay ── */
+  function showVAOverlay() {
+    var data = VA_DATA[selectedMethod] || VA_DATA["transfer"];
+    var vaNum = generateVA(selectedMethod, pending.id);
+
+    document.getElementById("vaBankIcon").textContent  = data.icon;
+    document.getElementById("vaBankName").textContent  = data.name;
+    document.getElementById("vaBankSub").textContent   = data.sub;
+    document.getElementById("vaNumber").textContent    = vaNum;
+    document.getElementById("vaKlinik").textContent    = pending.namaKlinik  || "—";
+    document.getElementById("vaDokter").textContent    = pending.dokter      || "—";
+    document.getElementById("vaJadwal").textContent    =
+      (pending.tanggal || "—") + (pending.jam ? " · " + pending.jam : "");
+    document.getElementById("vaTotal").textContent     = formatRupiah(pending.biaya);
+
+    document.getElementById("vaOverlay").classList.add("is-open");
+  }
+
+  /* ── Salin VA number ── */
+  document.getElementById("btnCopyVA").addEventListener("click", function() {
+    var btn   = document.getElementById("btnCopyVA");
+    var vaNum = document.getElementById("vaNumber").textContent;
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(vaNum).catch(function() {});
+    } else {
+      var ta = document.createElement("textarea");
+      ta.value = vaNum;
+      ta.style.position = "fixed";
+      ta.style.opacity  = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand("copy"); } catch (e) {}
+      document.body.removeChild(ta);
+    }
+    btn.textContent = "Tersalin ✓";
+    btn.classList.add("copied");
     setTimeout(function() {
-      /* Update status booking di localStorage */
-      try {
-        var bookings = JSON.parse(localStorage.getItem("anabulku_bookings")) || [];
-        var idx = bookings.findIndex(function(b) { return b.id === pending.id; });
-        if (idx >= 0) {
-          bookings[idx].metodePembayaran = selectedMethod;
-          /* transfer / qris = user sudah konfirmasi bayar → lunas
-             tunai / bayar_ditempat = bayar saat datang */
-          if (selectedMethod === "tunai" || selectedMethod === "bayar_ditempat") {
-            bookings[idx].statusPembayaran = "bayar_ditempat";
-          } else {
-            bookings[idx].statusPembayaran = "lunas";
-          }
-        }
-        localStorage.setItem("anabulku_bookings", JSON.stringify(bookings));
-        /* Hapus pending */
-        localStorage.removeItem("anabulku_pending_payment");
-      } catch (e) { /* silent */ }
-
-      /* Tampilkan success sheet */
-      var ref = "ANB-" + pending.id.slice(-6).toUpperCase();
-      document.getElementById("successRef").textContent = "Kode Booking: " + ref;
-      document.getElementById("successOverlay").classList.add("is-open");
-    }, 900);
+      btn.textContent = "Salin";
+      btn.classList.remove("copied");
+    }, 2000);
   });
 
-  /* ── Tombol Kembali ke Beranda ── */
+  /* ── Tombol Bayar Sekarang → tampil VA overlay ── */
+  document.getElementById("btnPay").addEventListener("click", function() {
+    if (selectedMethod === "tunai" || selectedMethod === "bayar_ditempat") {
+      /* Metode tunai — langsung proses tanpa VA */
+      var btn = document.getElementById("btnPay");
+      btn.disabled    = true;
+      btn.textContent = "Memproses…";
+      paymentDone = true;
+      setTimeout(function() {
+        try {
+          var bookings = JSON.parse(localStorage.getItem("anabulku_bookings")) || [];
+          var idx = bookings.findIndex(function(b) { return b.id === pending.id; });
+          if (idx >= 0) {
+            bookings[idx].metodePembayaran = selectedMethod;
+            bookings[idx].statusPembayaran = "bayar_ditempat";
+            delete bookings[idx].paymentDeadline;
+          }
+          localStorage.setItem("anabulku_bookings", JSON.stringify(bookings));
+          localStorage.removeItem("anabulku_pending_payment");
+        } catch (e) { /* silent */ }
+        var ref = "ANB-" + pending.id.slice(-6).toUpperCase();
+        document.getElementById("successRef").textContent = "Kode Booking: " + ref;
+        document.getElementById("successOverlay").classList.add("is-open");
+      }, 900);
+    } else {
+      /* Metode transfer / VA → tampilkan VA overlay */
+      showVAOverlay();
+    }
+  });
+
+  /* ── Tombol OK — hanya tutup VA overlay ── */
+  document.getElementById("btnPaid").addEventListener("click", function() {
+    document.getElementById("vaOverlay").classList.remove("is-open");
+  });
+
+  /* ── Tombol Kembali ke Beranda (success) ── */
   document.getElementById("btnHome").addEventListener("click", function() {
     window.location.replace("home.html");
   });
