@@ -419,7 +419,18 @@
   /* ── Auth guard ── */
   var session = {};
   try { session = JSON.parse(localStorage.getItem("anabulku_user_session")) || {}; } catch(e) {}
-  if (!session.loggedIn) { window.location.replace("login.html"); return; }
+  var isGuest = !session.loggedIn;
+
+  if (isGuest) {
+    var listEl = document.getElementById("bookingList");
+    if (listEl) listEl.innerHTML = '<div style="display:flex;flex-direction:column;align-items:center;gap:12px;padding:48px 24px;text-align:center;">' +
+      '<div style="font-size:48px;">🔒</div>' +
+      '<div style="font-size:15px;font-weight:700;color:#1F2937;">Login untuk melihat riwayat</div>' +
+      '<div style="font-size:13px;color:#6B7280;line-height:1.5;">Riwayat booking kamu akan tersimpan setelah login.</div>' +
+      '<button onclick="location.href=\'login.html\'" style="margin-top:8px;padding:12px 28px;border-radius:12px;border:2px solid #000;background:linear-gradient(180deg,#FF9800,#FFD21F);font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;box-shadow:2px 2px 0 #000;color:#fff;">Masuk Sekarang</button>' +
+      '</div>';
+    return;
+  }
 
   var username = session.username || session.nama || "Pengguna";
   var inisial  = username.slice(0,2).toUpperCase();

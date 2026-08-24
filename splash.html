@@ -183,24 +183,14 @@
   (function () {
     'use strict';
 
-    /* Cek session — redirect ke home jika sudah login, ke login jika belum */
-    function getNext() {
-      try {
-        var s = JSON.parse(localStorage.getItem('anabulku_user_session')) || {};
-        return s.loggedIn ? 'home.html' : 'login.html';
-      } catch (e) {
-        return 'login.html';
-      }
-    }
-
-    /* Total durasi animasi ~2.6 dtk, redirect setelah itu */
+    /* Selalu ke home — guest mode dihandle di home.html */
     var SPLASH_DURATION = 2800;
 
     setTimeout(function () {
       var el = document.getElementById('splash');
       el.classList.add('fade-out');
       setTimeout(function () {
-        window.location.replace(getNext());
+        window.location.replace('home.html');
       }, 450);
     }, SPLASH_DURATION);
   })();

@@ -115,6 +115,18 @@
 
     <div class="nav-spacer" aria-hidden="true"></div>
 
+    <!-- ===== Modal Guest ===== -->
+    <div id="guestModal" class="guest-modal-backdrop" hidden role="dialog" aria-modal="true" aria-labelledby="guestModalTitle">
+      <div class="guest-modal">
+        <button class="guest-modal-close" id="guestModalClose" aria-label="Tutup">&times;</button>
+        <div class="guest-modal-icon">🔒</div>
+        <h2 class="guest-modal-title" id="guestModalTitle">Login Diperlukan</h2>
+        <p class="guest-modal-desc">Fitur ini hanya tersedia untuk member AnabulKu. Login atau daftar gratis sekarang!</p>
+        <button class="guest-modal-btn guest-modal-btn--primary" id="guestModalLogin">Masuk</button>
+        <button class="guest-modal-btn guest-modal-btn--secondary" id="guestModalRegister">Daftar Gratis</button>
+      </div>
+    </div>
+
     <!-- ===== Bottom navigation ===== -->
     <nav class="bottomnav" aria-label="Navigasi utama">
       <button class="nav-btn active" type="button" aria-label="Beranda" aria-current="page" id="navHome">
@@ -157,27 +169,59 @@
       get: (k, d) => { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } },
     };
 
-    /* Auth guard — redirect ke login jika belum login */
     const session = LS.get('anabulku_user_session', {});
-    if (!session || !session.loggedIn) {
-      window.location.replace('login.html');
-    }
+    const isGuest = !session || !session.loggedIn;
 
-    /* Tampilkan username dari session */
-    const username = session.username || session.nama || 'Pengguna';
-    const inisial  = username.slice(0, 2).toUpperCase();
-
+    /* Topbar — tampilkan nama atau "Tamu" */
+    const username = isGuest ? 'Meng' : (session.username || session.nama || 'Pengguna');
+    const inisial  = isGuest ? '👤' : username.slice(0, 2).toUpperCase();
     const avatarEl   = document.getElementById('userAvatar');
     const greetingEl = document.getElementById('userGreeting');
     if (avatarEl)   avatarEl.textContent   = inisial;
     if (greetingEl) greetingEl.textContent = username;
 
-    /* Logout */
-    document.getElementById('btnLogout').addEventListener('click', () => {
-      localStorage.removeItem('anabulku_user_session');
-      localStorage.removeItem('anabulku_user_remember');
-      window.location.replace('login.html');
+    /* Tombol logout — sembunyikan jika guest */
+    const btnLogout = document.getElementById('btnLogout');
+    if (btnLogout) {
+      if (isGuest) {
+        btnLogout.style.display = 'none';
+      } else {
+        btnLogout.addEventListener('click', () => {
+          localStorage.removeItem('anabulku_user_session');
+          localStorage.removeItem('anabulku_user_remember');
+          window.location.replace('home.html');
+        });
+      }
+    }
+
+    /* ── Modal login untuk guest ── */
+    function showLoginModal() {
+      document.getElementById('guestModal').removeAttribute('hidden');
+    }
+    document.getElementById('guestModalClose').addEventListener('click', () => {
+      document.getElementById('guestModal').setAttribute('hidden', '');
     });
+    document.getElementById('guestModalLogin').addEventListener('click', () => {
+      window.location.href = 'login.html';
+    });
+    document.getElementById('guestModalRegister').addEventListener('click', () => {
+      window.location.href = 'register.html';
+    });
+    /* Tutup modal saat klik backdrop */
+    document.getElementById('guestModal').addEventListener('click', function(e) {
+      if (e.target === this) this.setAttribute('hidden', '');
+    });
+
+    /* Intercept kategori klinik & grooming jika guest */
+    if (isGuest) {
+      document.querySelectorAll('.cat[data-category]').forEach(btn => {
+        btn.addEventListener('click', e => { e.stopImmediatePropagation(); showLoginModal(); }, true);
+      });
+      document.querySelectorAll('.g-card').forEach(card => {
+        card.style.cursor = 'pointer';
+        card.addEventListener('click', () => showLoginModal());
+      });
+    }
   })();
   </script>
 </body>
