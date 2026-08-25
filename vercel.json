@@ -2,7 +2,7 @@
   "version": 2,
   "functions": {
     "api/send-otp.js": {
-      "runtime": "node@18"
+      "runtime": "nodejs18.x"
     }
   }
 }
