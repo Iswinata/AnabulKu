@@ -100,16 +100,23 @@
     <section class="section" aria-labelledby="grooming-title">
       <h2 class="section-title" id="grooming-title">Kategori Grooming</h2>
       <div class="grooming-grid">
-        <article class="g-card">
+        <button class="g-card" type="button" data-grooming="kucing" aria-label="Grooming Kucing">
           <h3 class="g-title">Grooming Kucing</h3>
           <img class="g-img g-img-cat" src="kucing.png" alt="Kucing memakai kacamata" />
-        </article>
-        <article class="g-card">
+        </button>
+        <button class="g-card" type="button" data-grooming="anjing" aria-label="Grooming Anjing">
           <h3 class="g-title">Grooming Anjing</h3>
           <img class="g-img g-img-dog" src="anjingroom.png" alt="Anjing memakai kacamata" />
+        </button>
+      </div>
 
-        </article>
-
+      <!-- Hasil grooming — ditampilkan saat card diklik -->
+      <div id="grooming-results" hidden aria-live="polite">
+        <div class="grooming-results-header">
+          <h3 class="grooming-results-title" id="grooming-results-title"></h3>
+          <span class="grooming-results-note" id="grooming-note"></span>
+        </div>
+        <div id="grooming-list"></div>
       </div>
     </section>
 
@@ -212,12 +219,9 @@
       if (e.target === this) this.setAttribute('hidden', '');
     });
 
-    /* Intercept grooming saja jika guest — kategori klinik bebas diakses */
-    if (isGuest) {
-      document.querySelectorAll('.g-card').forEach(card => {
-        card.style.cursor = 'pointer';
-        card.addEventListener('click', () => showLoginModal());
-      });
+    /* Grooming dan klinik sama-sama bebas diakses — intercept booking ada di clinic-detail.html */
+    if (typeof window._anabulkuInitGrooming === 'function') {
+      window._anabulkuInitGrooming();
     }
   })();
   </script>

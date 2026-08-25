@@ -361,4 +361,189 @@
     init();
   }
 
+  /* =================================================================
+     Grooming Controller — helper vars & functions
+  ================================================================= */
+
+  var GROOMING_LABELS = { kucing: "Grooming Kucing", anjing: "Grooming Anjing" };
+  var GROOMING_FILTER = {
+    kucing: /(kucing|cat|feline|kitten)/i,
+    anjing: /(anjing|dog|canine|puppy)/i
+  };
+
+  function groomingEmptyHtml() {
+    return '<div class="clinic-empty">' +
+      '<svg viewBox="0 0 24 24" fill="none" stroke="#D1D5DB" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="48" height="48" aria-hidden="true">' +
+        '<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>' +
+        '<polyline points="9 22 9 12 15 12 15 22"/>' +
+      '</svg>' +
+      '<p>Belum ada grooming terdaftar untuk kategori ini.</p>' +
+    '</div>';
+  }
+
+  function groomingCardHtml(clinic, idx, userLoc) {
+    var href = "clinic-detail.html?id=" + idx;
+
+    var photoStyle = "";
+    if (clinic.fotoDataUrl) {
+      photoStyle = ' style="background-image:url(' + esc(clinic.fotoDataUrl) + ');"';
+    } else if (clinic.logoDataUrl) {
+      photoStyle = ' style="background-image:url(' + esc(clinic.logoDataUrl) + ');"';
+    }
+
+    var alamat = esc(clinic.formattedAddress || clinic.alamat || [clinic.kota, clinic.provinsi].filter(Boolean).join(", ") || "");
+
+    var rawRating = clinic.googleRating != null && clinic.googleRating !== "" ? clinic.googleRating
+                  : clinic.rating != null ? clinic.rating : null;
+    var rating = rawRating != null ? parseFloat(rawRating).toFixed(1) : "5.0";
+    var ratingChip =
+      '<span class="clinic-chip clinic-chip--rating" aria-label="Rating ' + esc(rating) + '">' +
+        '<svg class="clinic-ico" viewBox="0 0 24 24" fill="#FF9800" aria-hidden="true">' +
+          '<path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>' +
+        '</svg>' +
+        '<span class="clinic-val">' + esc(rating) + '</span>' +
+      '</span>';
+
+    var distChip = "";
+    var cLat = parseFloat(clinic.lat);
+    var cLng = parseFloat(clinic.lng);
+    if (userLoc && !isNaN(cLat) && !isNaN(cLng)) {
+      var R = 6371;
+      var dLat = (cLat - userLoc.lat) * Math.PI / 180;
+      var dLng = (cLng - userLoc.lng) * Math.PI / 180;
+      var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+              Math.cos(userLoc.lat * Math.PI / 180) * Math.cos(cLat * Math.PI / 180) *
+              Math.sin(dLng/2) * Math.sin(dLng/2);
+      var km = R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      var distLabel = km < 1 ? Math.round(km * 1000) + " m" : km.toFixed(1) + " km";
+      distChip =
+        '<span class="clinic-chip clinic-chip--dist" aria-label="Jarak ' + esc(distLabel) + '">' +
+          '<svg class="clinic-ico" viewBox="0 0 24 24" fill="none" stroke="#FF9800" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+            '<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>' +
+          '</svg>' +
+          '<span class="clinic-val">' + esc(distLabel) + '</span>' +
+        '</span>';
+    }
+
+    var isFav     = getFavIds().indexOf(idx) !== -1;
+    var favFill   = isFav ? 'url(#favGrad)' : 'none';
+    var favStroke = isFav ? '#c0392b' : '#9ca3af';
+    var favLabel  = isFav ? 'Hapus dari favorit' : 'Tambah ke favorit';
+
+    return '' +
+      '<svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">' +
+        '<defs><linearGradient id="favGrad" x1="0%" y1="0%" x2="100%" y2="100%">' +
+          '<stop offset="0%" stop-color="#FF5252"/>' +
+          '<stop offset="100%" stop-color="#C62828"/>' +
+        '</linearGradient></defs>' +
+      '</svg>' +
+      '<div class="clinic-card-wrap">' +
+        '<a class="clinic-card" href="' + esc(href) + '">' +
+          '<span class="clinic-texture" aria-hidden="true"></span>' +
+          '<span class="clinic-photo"' + photoStyle + ' aria-hidden="true"></span>' +
+          '<span class="clinic-body">' +
+            '<span class="clinic-name">' + esc(clinic.namaKlinik || "Grooming Hewan") + '</span>' +
+            (alamat ? '<span class="clinic-addr">' + alamat + '</span>' : '') +
+            '<span class="clinic-meta">' +
+              ratingChip +
+              (distChip ? distChip : '') +
+            '</span>' +
+          '</span>' +
+        '</a>' +
+        '<button class="clinic-fav-btn' + (isFav ? ' is-fav' : '') + '" type="button" data-fav-idx="' + idx + '" aria-label="' + favLabel + '" aria-pressed="' + isFav + '">' +
+          '<svg viewBox="0 0 24 24" fill="' + favFill + '" stroke="' + favStroke + '" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+            '<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/>' +
+          '</svg>' +
+        '</button>' +
+      '</div>';
+  }
+
+  function initGrooming() {
+    var section = document.getElementById("grooming-results");
+    if (!section) return;
+    var titleEl = document.getElementById("grooming-results-title");
+    var listEl  = document.getElementById("grooming-list");
+    var noteEl  = document.getElementById("grooming-note");
+    var gCards  = document.querySelectorAll(".g-card[data-grooming]");
+    var activeGrooming = null;
+
+    function showGrooming(category, btn) {
+      if (activeGrooming === category) {
+        section.hidden = true;
+        activeGrooming = null;
+        gCards.forEach(function(c) { c.classList.remove("is-active"); });
+        return;
+      }
+      activeGrooming = category;
+      gCards.forEach(function(c) { c.classList.remove("is-active"); });
+      if (btn) btn.classList.add("is-active");
+      section.hidden = false;
+      if (titleEl) titleEl.textContent = GROOMING_LABELS[category] || "Grooming";
+      section.scrollIntoView({ behavior: "smooth", block: "nearest" });
+
+      var fullList = getMitraClinics();
+      var approved = [];
+      for (var j = 0; j < fullList.length; j++) {
+        var m = fullList[j];
+        if (m.adminStatus !== 'aktif') continue;
+        var tipe = Array.isArray(m.tipeKlinik) ? m.tipeKlinik : [];
+        if (tipe.indexOf('grooming_hewan') === -1) continue;
+        approved.push({ clinic: m, idx: j });
+      }
+
+      var rx = GROOMING_FILTER[category];
+      var filtered = approved.filter(function(entry) {
+        var c = entry.clinic;
+        if (Array.isArray(c.hewanDilayani) && c.hewanDilayani.length) {
+          return c.hewanDilayani.some(function(h) { return rx.test(h); });
+        }
+        var hewan = (c.hewanDilayani || '').toLowerCase();
+        if (hewan === 'semua') return true;
+        return rx.test(hewan) || rx.test(c.namaKlinik || '');
+      });
+
+      if (!filtered.length) {
+        if (listEl) listEl.innerHTML = groomingEmptyHtml();
+        if (noteEl) noteEl.textContent = "";
+        return;
+      }
+
+      if (listEl) {
+        var renderGroomingCards = function(userLoc) {
+          listEl.innerHTML = filtered.map(function(entry) {
+            return groomingCardHtml(entry.clinic, entry.idx, userLoc);
+          }).join("");
+          if (noteEl) noteEl.textContent = filtered.length + " mitra grooming terdaftar";
+
+          listEl.querySelectorAll('[data-fav-idx]').forEach(function(fbtn) {
+            fbtn.addEventListener('click', function(e) {
+              e.preventDefault(); e.stopPropagation();
+              var fi    = parseInt(fbtn.getAttribute('data-fav-idx'), 10);
+              var isNow = toggleFav(fi);
+              var svg   = fbtn.querySelector('svg');
+              if (svg) {
+                svg.setAttribute('fill',   isNow ? 'url(#favGrad)' : 'none');
+                svg.setAttribute('stroke', isNow ? '#c0392b' : '#9ca3af');
+              }
+            });
+          });
+        };
+
+        renderGroomingCards(null);
+        getUserLocation().then(function(loc) {
+          if (loc && activeGrooming === category) renderGroomingCards(loc);
+        });
+      }
+    }
+
+    gCards.forEach(function(card) {
+      card.addEventListener("click", function(ev) {
+        ev.preventDefault();
+        showGrooming(card.getAttribute("data-grooming"), card);
+      });
+    });
+  }
+
+  window._anabulkuInitGrooming = initGrooming;
+
 })();

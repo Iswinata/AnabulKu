@@ -478,6 +478,44 @@ img { display: block; max-width: 100%; }
 }
 
 
+/* ---------- button.g-card — reset agar tampil sama seperti article ---------- */
+button.g-card {
+  display: block;
+  width: 100%;
+  text-align: left;
+  border: none;
+  padding: 0;
+  font: inherit;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button.g-card.is-active {
+  outline: none;
+}
+
+/* ---------- Grooming Results Panel ---------- */
+#grooming-results {
+  margin-top: 16px;
+}
+
+.grooming-results-header {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.grooming-results-title {
+  font-size: 12.7847px;
+  font-weight: 600;
+  color: #ac6600;
+}
+
+.grooming-results-note {
+  font-size: 12px;
+  color: var(--gray-6b);
+}
+
 /* ---------- Kategori Grooming ----------
    Figma: two 165x264 cards at x 22 / 206 (gap 19) within the 349 content.
    Gradient #FF9800 → #FFDCA8, radius 13, hard shadow. */
@@ -491,11 +529,17 @@ img { display: block; max-width: 100%; }
   position: relative;
   container-type: inline-size;   /* title scales with the card, not the window */
   border-radius: 13px;
-  background: linear-gradient(180deg, #ff9800 0%, #ffdca8 100%);  /* spec */
+  background: linear-gradient(180deg, #F8BB62 0%, #FFDCA8 100%);  /* default: unselected */
   box-shadow: var(--shadow-hard);
   overflow: hidden;
   aspect-ratio: 165 / 264;
   isolation: isolate;
+  transition: background 0.2s ease;
+}
+
+/* Card aktif (dipencet) — kembali ke gradient original */
+.g-card.is-active {
+  background: linear-gradient(180deg, #FF9800 0%, #FFDCA8 100%);
 }
 
 /* Banner2 paw texture fills the card */
