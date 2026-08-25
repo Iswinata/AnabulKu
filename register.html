@@ -829,13 +829,10 @@
     boxes.forEach(b => { b.value = ''; b.classList.remove('is-error'); });
     document.getElementById('otpError').style.display = 'none';
 
-    /* Kirim OTP ke WhatsApp via Fonnte */
-    const FONNTE_TOKEN = 'Ztf8Xsa6T8tugGrEsJn8daA';
-
-    fetch('https://api.fonnte.com/send', {
+    /* Kirim OTP ke WhatsApp via proxy /api/send-otp (menghindari CORS) */
+    fetch('/api/send-otp', {
       method: 'POST',
       headers: {
-        'Authorization': FONNTE_TOKEN,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
