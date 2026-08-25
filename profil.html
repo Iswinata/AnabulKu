@@ -34,7 +34,17 @@
       gap: 14px;
       transition: transform 0.1s ease;
     }
-    .av { width: 58px; height: 58px; border-radius: 9999px; flex-shrink: 0; background: #fff; overflow: hidden; box-shadow: 0 3px 10px rgba(255,87,34,.3); border: 2px solid #fed7aa; }
+    .av {
+      width: 58px; height: 58px; border-radius: 9999px; flex-shrink: 0;
+      background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+      overflow: hidden;
+      box-shadow: 0 3px 10px rgba(255,87,34,.35);
+      border: 2px solid #fed7aa;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; font-weight: 800; color: #fff;
+      letter-spacing: -0.5px;
+      user-select: none;
+    }
     .av img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .profile-info { flex: 1; min-width: 0; }
     .profile-name { font-size: 15px; font-weight: 700; color: #92400e; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -51,7 +61,7 @@
     .app-version-ico { font-size: 32px; line-height: 1; }
     .app-version-name { font-size: 13px; font-weight: 700; color: #92400e; }
     .app-version-num { font-size: 11px; color: #b45309; font-weight: 400; }
-    .sect-lbl { font-size: 12.7847px; font-weight: 600; color: #ac6600; line-height: 20px; padding: 0 2px; }
+    .sect-lbl { font-size: 12.7847px; font-weight: 600; color: #ac6600; line-height: 20px; padding: 0 2px; margin-top: 20px; margin-bottom: 8px; display: block; }
     .menu-group { background: #fff; border-radius: 14px; border: 1.5px solid #f0e6dc; box-shadow: 2px 2px 0 #000; overflow: hidden; }
     .mi { display: flex; align-items: center; gap: 12px; padding: 13px 16px; border-bottom: 1px solid #faf3ee; width: 100%; text-align: left; transition: background .12s; }
     .mi:last-child { border-bottom: none; }
@@ -99,7 +109,7 @@
     <!-- ===== Tampilan Member ===== -->
     <div id="profileMember">
       <div class="profile-card" id="profileLoggedIn">
-        <div class="av" id="avatarEl"><img src="kuguest.jpg" alt="Foto profil" /></div>
+        <div class="av" id="avatarEl"></div>
         <div class="profile-info">
           <div class="profile-name" id="nameEl">Nama Pengguna</div>
           <div class="profile-email" id="emailEl">email@contoh.com</div>
@@ -172,7 +182,7 @@
   /* ── Tampilan Member ── */
   var un  = s.username || s.nama || "Pengguna";
   var em  = s.email || "-";
-  var ini = un.trim().split(" ").map(function(w){ return w[0]; }).slice(0,2).join("").toUpperCase() || "AN";
+  var ini = (s.username || s.nama || "A").trim().charAt(0).toUpperCase();
   document.getElementById("avatarEl").textContent = ini;
   document.getElementById("nameEl").textContent   = un;
   document.getElementById("emailEl").textContent  = em;

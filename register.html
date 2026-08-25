@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <style>
     :root {
       --frame-bg:  #fcece3;
@@ -431,6 +432,71 @@
     }
     .otp-resend-btn:disabled { opacity: .5; cursor: not-allowed; }
 
+    /* ── OTP Block ── */
+    .otp-block {
+      background: var(--white);
+      border: 1.5px solid var(--black);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      padding: 16px 14px 14px;
+      margin-bottom: 14px;
+    }
+    .otp-header {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 12px;
+    }
+    .otp-icon-wrap {
+      width: 40px; height: 40px; flex-shrink: 0;
+      background: #fff4e5;
+      border: 1.5px solid var(--orange-l);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--orange-d);
+    }
+    .otp-title {
+      font-size: 13px; font-weight: 700; color: var(--ink);
+      line-height: 1.3;
+    }
+    .otp-sub {
+      font-size: 11px; color: var(--ink-3); margin-top: 2px;
+      word-break: break-all;
+    }
+    .otp-inputs {
+      display: flex; justify-content: center; gap: 8px;
+      margin-bottom: 10px;
+    }
+    .otp-digit {
+      width: 42px; height: 50px;
+      border: 1.5px solid var(--gray-d1);
+      border-radius: 10px;
+      font-size: 20px; font-weight: 700; font-family: inherit;
+      text-align: center; color: var(--ink);
+      background: var(--frame-bg);
+      transition: border-color .15s, box-shadow .15s;
+      outline: none;
+    }
+    .otp-digit:focus {
+      border-color: var(--orange);
+      box-shadow: 0 0 0 3px rgba(255,152,0,.18);
+    }
+    .otp-digit.is-error { border-color: var(--red); }
+    .otp-digit.is-ok    { border-color: var(--green); }
+    .otp-err {
+      font-size: 11.5px; color: var(--red);
+      text-align: center; margin-bottom: 8px;
+    }
+    .otp-resend-row {
+      display: flex; align-items: center; justify-content: space-between;
+      font-size: 11.5px; color: var(--ink-3);
+    }
+    .otp-resend-btn {
+      font-size: 11.5px; font-weight: 700;
+      color: var(--orange-d); text-decoration: underline;
+      cursor: pointer; background: none; border: none;
+      font-family: inherit; padding: 0;
+    }
+    .otp-resend-btn:disabled { opacity: .45; cursor: not-allowed; text-decoration: none; }
+
     @media (max-width: 340px) { .app { padding-left: 14px; padding-right: 14px; } }
     @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
   </style>
@@ -624,7 +690,21 @@
           <span class="summary-val" id="summKota">—</span>
         </div>
       </div>
-      <!-- OTP verification block dihapus -->
+      <!-- Konfirmasi Akun notice -->
+      <div class="otp-block" id="konfirmasiNotice">
+        <div class="otp-header">
+          <div class="otp-icon-wrap" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="22" height="22">
+              <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+          </div>
+          <div>
+            <p class="otp-title">Konfirmasi Akun</p>
+            <p class="otp-sub">Akun kamu akan dikonfirmasi oleh tim AnabulKu melalui nomor HP yang terdaftar. Pastikan nomormu aktif dan dapat dihubungi.</p>
+          </div>
+        </div>
+      </div>
+
       <label class="tos-wrap">
         <input type="checkbox" id="chkTos" />
         <span class="tos-text">
@@ -640,7 +720,7 @@
           Kembali
         </button>
         <button class="btn-next" id="btnRegister" style="flex:1;margin-bottom:0">
-          <span id="regBtnText">Buat Akun</span>
+          <span id="regBtnText">Konfirmasi Akun</span>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true" width="15" height="15">
             <polyline points="20 6 9 17 4 12"/>
           </svg>
@@ -800,30 +880,33 @@
   document.getElementById('btnBack1').addEventListener('click', () => goStep(1));
   document.getElementById('btnBack2').addEventListener('click', () => goStep(2));
 
-  /* Step 3 — Langsung simpan akun tanpa OTP */
+  /* Step 3 — Konfirmasi Akun (pending review oleh admin) */
   document.getElementById('btnRegister').addEventListener('click', () => {
     const tos    = document.getElementById('chkTos').checked;
     const btn    = document.getElementById('btnRegister');
     const btnTxt = document.getElementById('regBtnText');
-    if (!tos) return;
+    if (!tos) { document.getElementById('chkTos').focus(); return; }
 
     btnTxt.textContent = 'Memproses…';
     btn.disabled = true;
+
     setTimeout(() => {
       const pass = document.getElementById('inputRegPass').value;
       const newUser = {
-        nama:      document.getElementById('inputNama').value.trim(),
-        noHp:      document.getElementById('inputNoHp').value.trim(),
-        kota:      document.getElementById('inputKota').value.trim(),
-        username:  document.getElementById('inputUsername').value.trim(),
-        email:     document.getElementById('inputRegEmail').value.trim(),
-        password:  pass,
-        role:      'user',
-        createdAt: new Date().toISOString(),
+        nama:          document.getElementById('inputNama').value.trim(),
+        noHp:          document.getElementById('inputNoHp').value.trim(),
+        kota:          document.getElementById('inputKota').value.trim(),
+        username:      document.getElementById('inputUsername').value.trim(),
+        email:         document.getElementById('inputRegEmail').value.trim(),
+        password:      pass,
+        role:          'user',
+        accountStatus: 'pending',
+        createdAt:     new Date().toISOString(),
       };
       const users = LS.get('anabulku_users', []);
       users.push(newUser);
       LS.set('anabulku_users', users);
+      localStorage.setItem('anabulku_notifications', JSON.stringify([]));
       document.getElementById('regBody').style.display = 'none';
       document.querySelector('.steps-wrap').style.display = 'none';
       document.querySelector('.page-header').style.display = 'none';

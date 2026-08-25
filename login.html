@@ -427,6 +427,7 @@
           kota: user.kota || '', role: user.role || 'user',
           createdAt: user.createdAt || null,
         });
+        localStorage.setItem('anabulku_notifications', JSON.stringify([]));
         window.location.href = 'home.html';
       } else {
         markErr('fIdentifier'); markErr('fPass');

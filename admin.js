@@ -724,6 +724,20 @@
     return diffDays > INACTIVE_DAYS;
   }
 
+  function confirmUser(email) {
+    const users  = getUsers();
+    const target = users.find(u => u.email === email);
+    const nama   = target ? (target.nama || target.username || email) : email;
+    if (!confirm(`Konfirmasi akun "${nama}"?\nAkun akan diaktifkan dan pengguna dapat login.`)) return;
+    const updated = users.map(u =>
+      u.email === email ? { ...u, accountStatus: 'aktif', confirmedAt: new Date().toISOString() } : u
+    );
+    saveUsers(updated);
+    renderPenggunaTable();
+    showToast(`Akun ${nama} berhasil dikonfirmasi.`, 'success');
+  }
+  window.confirmUser = confirmUser;
+
   function deleteUser(email) {
     const users  = getUsers();
     const target = users.find(u => u.email === email);
@@ -752,7 +766,7 @@
         );
       }
       if (!data.length) {
-        tbody.innerHTML = '<tr><td colspan="9" class="empty-state">Belum ada pengguna terdaftar.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="10" class="empty-state">Belum ada pengguna terdaftar.</td></tr>';
         return;
       }
       const kliniks = getKliniks();
@@ -764,7 +778,18 @@
         const badge      = inaktif
           ? '<span style="display:inline-block;font-size:10px;background:#FEE2E2;color:#DC2626;border-radius:4px;padding:1px 6px;margin-left:4px">Tidak Aktif</span>'
           : '';
+        const isPending  = !u.accountStatus || u.accountStatus === 'pending';
+        const statusBadge = isPending
+          ? '<span style="display:inline-block;font-size:11px;background:#FEF9C3;color:#B45309;border:1px solid #FDE68A;border-radius:4px;padding:2px 8px;white-space:nowrap">⏳ Menunggu</span>'
+          : '<span style="display:inline-block;font-size:11px;background:#DCFCE7;color:#16A34A;border:1px solid #BBF7D0;border-radius:4px;padding:2px 8px;white-space:nowrap">✓ Aktif</span>';
         const emailKey = esc(u.email || '');
+        const confirmBtn = isPending
+          ? `<button
+               style="background:#DCFCE7;color:#16A34A;border:1px solid #BBF7D0;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:12px;display:inline-flex;align-items:center;gap:4px"
+               title="Konfirmasi akun" onclick="confirmUser('${emailKey}')">
+               ✓ Konfirmasi
+             </button>`
+          : '';
         return `<tr style="${rowStyle}">
           <td>${i+1}</td>
           <td><strong>${esc(u.nama || '—')}</strong>${badge}</td>
@@ -773,14 +798,17 @@
           <td style="font-size:12px">${esc(u.noHp || '—')}</td>
           <td style="font-size:12px">${esc(u.kota || '—')}</td>
           <td style="font-size:12px;white-space:nowrap">${fmtDate(u.createdAt)}</td>
+          <td>${statusBadge}</td>
           <td>${klinikNama}</td>
           <td>
-            <button
-              style="background:#FEE2E2;color:#DC2626;border:none;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:12px;display:inline-flex;align-items:center;gap:4px"
-              title="Hapus akun" onclick="deleteUser('${emailKey}')">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="13" height="13" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
-              Hapus
-            </button>
+            <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+              ${confirmBtn}
+              <button
+                style="background:#FEE2E2;color:#DC2626;border:none;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:12px;display:inline-flex;align-items:center;gap:4px"
+                title="Hapus akun" onclick="deleteUser('${emailKey}')">
+                🗑 Hapus
+              </button>
+            </div>
           </td>
         </tr>`;
       }).join('');
