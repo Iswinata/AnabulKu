@@ -624,23 +624,7 @@
           <span class="summary-val" id="summKota">—</span>
         </div>
       </div>
-      <!-- OTP verification block -->
-      <div class="otp-block" id="otpBlock">
-        <p class="otp-desc">Kode OTP 6 digit telah dikirim ke WhatsApp kamu.<br><span id="otpTargetWa" style="font-weight:600;color:var(--orange-d);"></span></p>
-        <div class="otp-inputs" id="otpInputs" role="group" aria-label="Masukkan kode OTP">
-          <input class="otp-box" type="text" inputmode="numeric" maxlength="1" aria-label="Digit 1" />
-          <input class="otp-box" type="text" inputmode="numeric" maxlength="1" aria-label="Digit 2" />
-          <input class="otp-box" type="text" inputmode="numeric" maxlength="1" aria-label="Digit 3" />
-          <input class="otp-box" type="text" inputmode="numeric" maxlength="1" aria-label="Digit 4" />
-          <input class="otp-box" type="text" inputmode="numeric" maxlength="1" aria-label="Digit 5" />
-          <input class="otp-box" type="text" inputmode="numeric" maxlength="1" aria-label="Digit 6" />
-        </div>
-        <p class="otp-error" id="otpError" style="display:none;">Kode OTP salah. Silakan coba lagi.</p>
-        <div class="otp-resend">
-          <span id="otpCountdownWrap">Kirim ulang dalam <strong id="otpCountdown">60</strong>s</span>
-          <button type="button" class="otp-resend-btn" id="btnResendOtp" style="display:none;">Kirim Ulang OTP</button>
-        </div>
-      </div>
+      <!-- OTP verification block dihapus -->
       <label class="tos-wrap">
         <input type="checkbox" id="chkTos" />
         <span class="tos-text">
@@ -810,120 +794,19 @@
     document.getElementById('summEmail').textContent    = email;
     document.getElementById('summKota').textContent     = document.getElementById('inputKota').value.trim() || '—';
     const noHp     = document.getElementById('inputNoHp').value.trim();
-    const waNumber = noHp.startsWith('0') ? '62' + noHp.slice(1) : noHp;
-    document.getElementById('otpTargetWa').textContent = waNumber;
-    generateAndSendOtp(waNumber);
     goStep(3);
   });
 
   document.getElementById('btnBack1').addEventListener('click', () => goStep(1));
   document.getElementById('btnBack2').addEventListener('click', () => goStep(2));
 
-  /* ── OTP Logic ── */
-  let currentOtp = '';
-  let otpTimer   = null;
-
-  function generateAndSendOtp(waNumber) {
-    currentOtp = '111111'; /* TESTING: hardcode OTP */
-    console.log('[AnabulKu] OTP saat ini:', currentOtp);
-    const boxes = document.querySelectorAll('.otp-box');
-    boxes.forEach(b => { b.value = ''; b.classList.remove('is-error'); });
-    document.getElementById('otpError').style.display = 'none';
-
-    /* Kirim OTP ke WhatsApp via proxy /api/send-otp (menghindari CORS) */
-    fetch('/api/send-otp', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        target:  waNumber,
-        message: `Kode OTP AnabulKu kamu adalah: *${currentOtp}*\n\nJangan berikan kode ini kepada siapapun. Berlaku 5 menit.`,
-      }),
-    })
-    .then(res => res.json())
-    .then(data => {
-      if (!data.status) {
-        console.warn('[AnabulKu] Fonnte gagal kirim OTP:', data.reason || data);
-        /* Tetap lanjutkan, tampilkan fallback di console */
-        console.info('[AnabulKu] Fallback OTP:', currentOtp);
-      }
-    })
-    .catch(err => {
-      console.warn('[AnabulKu] Error kirim OTP:', err);
-      console.info('[AnabulKu] Fallback OTP:', currentOtp);
-    });
-
-    startOtpCountdown();
-  }
-
-  function startOtpCountdown() {
-    clearInterval(otpTimer);
-    let sisa = 60;
-    document.getElementById('otpCountdown').textContent = sisa;
-    document.getElementById('otpCountdownWrap').style.display = '';
-    document.getElementById('btnResendOtp').style.display = 'none';
-    otpTimer = setInterval(() => {
-      sisa--;
-      document.getElementById('otpCountdown').textContent = sisa;
-      if (sisa <= 0) {
-        clearInterval(otpTimer);
-        document.getElementById('otpCountdownWrap').style.display = 'none';
-        document.getElementById('btnResendOtp').style.display = '';
-      }
-    }, 1000);
-  }
-
-  /* Auto-focus & navigasi antar kotak OTP */
-  (function initOtpBoxes() {
-    const boxes = document.querySelectorAll('.otp-box');
-    boxes.forEach((box, idx) => {
-      box.addEventListener('keydown', e => {
-        if (e.key === 'Backspace' && !box.value && idx > 0) boxes[idx - 1].focus();
-      });
-      box.addEventListener('input', () => {
-        box.value = box.value.replace(/[^0-9]/g, '').slice(-1);
-        box.classList.remove('is-error');
-        document.getElementById('otpError').style.display = 'none';
-        if (box.value && idx < boxes.length - 1) boxes[idx + 1].focus();
-      });
-      box.addEventListener('paste', e => {
-        e.preventDefault();
-        const pasted = (e.clipboardData || window.clipboardData)
-          .getData('text').replace(/[^0-9]/g, '').slice(0, 6);
-        pasted.split('').forEach((ch, i) => { if (boxes[idx + i]) boxes[idx + i].value = ch; });
-        boxes[Math.min(idx + pasted.length, boxes.length - 1)].focus();
-      });
-    });
-  })();
-
-  document.getElementById('btnResendOtp').addEventListener('click', generateAndSendOtp);
-
-  /* Step 3 — Verifikasi OTP lalu simpan akun */
+  /* Step 3 — Langsung simpan akun tanpa OTP */
   document.getElementById('btnRegister').addEventListener('click', () => {
     const tos    = document.getElementById('chkTos').checked;
     const btn    = document.getElementById('btnRegister');
     const btnTxt = document.getElementById('regBtnText');
     if (!tos) return;
 
-    const boxes    = document.querySelectorAll('.otp-box');
-    const otpInput = Array.from(boxes).map(b => b.value).join('');
-    if (otpInput.length < 6) {
-      boxes.forEach(b => { if (!b.value) b.classList.add('is-error'); });
-      const errEl = document.getElementById('otpError');
-      errEl.textContent = 'Mohon isi semua digit kode OTP.';
-      errEl.style.display = '';
-      return;
-    }
-    if (otpInput !== currentOtp) {
-      boxes.forEach(b => b.classList.add('is-error'));
-      const errEl = document.getElementById('otpError');
-      errEl.textContent = 'Kode OTP salah. Silakan coba lagi.';
-      errEl.style.display = '';
-      return;
-    }
-
-    clearInterval(otpTimer);
     btnTxt.textContent = 'Memproses…';
     btn.disabled = true;
     setTimeout(() => {
