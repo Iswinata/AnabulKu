@@ -536,7 +536,7 @@
             <input class="field-input no-right-pad" type="text" id="inputUsername"
               placeholder="Username kamu" autocomplete="username" />
           </div>
-          <p class="field-hint">Huruf, angka, underscore. Min. 4 karakter.</p>
+          <p class="field-hint">Min. 4 karakter.</p>
         </div>
         <div class="field">
           <label class="field-label" for="inputRegEmail">Email</label>
@@ -793,7 +793,7 @@
     const email    = document.getElementById('inputRegEmail').value.trim();
     const pass     = document.getElementById('inputRegPass').value;
     const confirm  = confirmPassInput.value;
-    if (!username || username.length < 1) { markErr('inputUsername'); return; }
+    if (!username || username.length < 4) { markErr('inputUsername'); return; }
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { markErr('inputRegEmail'); return; }
     if (!pass || pass.length < 8) { markErr('inputRegPass'); return; }
     if (!confirm || confirm !== pass) {

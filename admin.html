@@ -340,9 +340,15 @@
             <button class="filter-tab is-active" role="tab" data-pengguna-tab="user">Pengguna App</button>
             <button class="filter-tab" role="tab" data-pengguna-tab="klinik">Pemilik Klinik</button>
           </div>
-          <div class="filter-search">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" aria-hidden="true" width="15" height="15"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-            <input type="search" id="penggunaSearch" placeholder="Cari nama / username / email…" />
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:#374151;cursor:pointer">
+              <input type="checkbox" id="filterTidakAktif" style="accent-color:#FF9800;width:15px;height:15px" />
+              Tidak aktif &gt; 30 hari
+            </label>
+            <div class="filter-search">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" aria-hidden="true" width="15" height="15"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+              <input type="search" id="penggunaSearch" placeholder="Cari nama / username / email…" />
+            </div>
           </div>
         </div>
 
@@ -358,10 +364,11 @@
                 <th>Kota</th>
                 <th>Bergabung</th>
                 <th>Klinik Terhubung</th>
+                <th>Aksi</th>
               </tr>
             </thead>
             <tbody id="penggunaTbody">
-              <tr><td colspan="8" class="empty-state">Belum ada data pengguna.</td></tr>
+              <tr><td colspan="9" class="empty-state">Belum ada data pengguna.</td></tr>
             </tbody>
           </table>
         </div>

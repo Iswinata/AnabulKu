@@ -708,17 +708,40 @@
   /* ================================================================
      PENGGUNA — terintegrasi dengan anabulku_users (dari register.html)
   ================================================================ */
-  let penggunaSearch  = '';
-  let penggunaTabMode = 'user'; // 'user' | 'klinik'
+  let penggunaSearch     = '';
+  let penggunaTabMode    = 'user'; // 'user' | 'klinik'
+  let filterTidakAktif   = false;
+  const INACTIVE_DAYS    = 30;
 
   function getUsers() { return LS.get('anabulku_users', []); }
+  function saveUsers(arr) { LS.set('anabulku_users', arr); }
+
+  /* Cek apakah user tidak aktif lebih dari INACTIVE_DAYS hari */
+  function isInactive(u) {
+    const ref = u.lastLogin || u.createdAt;
+    if (!ref) return true;
+    const diffDays = (Date.now() - new Date(ref).getTime()) / (1000 * 60 * 60 * 24);
+    return diffDays > INACTIVE_DAYS;
+  }
+
+  function deleteUser(email) {
+    const users  = getUsers();
+    const target = users.find(u => u.email === email);
+    const nama   = target ? (target.nama || target.username || email) : email;
+    if (!confirm(`Hapus akun "${nama}"?\nTindakan ini tidak dapat dibatalkan.`)) return;
+    saveUsers(users.filter(u => u.email !== email));
+    renderPenggunaTable();
+    showToast(`Akun ${nama} berhasil dihapus.`, 'error');
+  }
+  window.deleteUser = deleteUser;
 
   function renderPenggunaTable() {
     const tbody = document.getElementById('penggunaTbody');
 
     if (penggunaTabMode === 'user') {
-      /* ── Tab: Pengguna Terdaftar (dari login/register) ── */
+      /* ── Tab: Pengguna Terdaftar ── */
       let data = getUsers();
+      if (filterTidakAktif) data = data.filter(isInactive);
       if (penggunaSearch) {
         const q = penggunaSearch.toLowerCase();
         data = data.filter(u =>
@@ -729,26 +752,36 @@
         );
       }
       if (!data.length) {
-        tbody.innerHTML = '<tr><td colspan="8" class="empty-state">Belum ada pengguna terdaftar.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="9" class="empty-state">Belum ada pengguna terdaftar.</td></tr>';
         return;
       }
       const kliniks = getKliniks();
       tbody.innerHTML = data.map((u, i) => {
-        /* Cari klinik yang terhubung ke user ini via email */
-        const klinik = kliniks.find(c =>
-          c.email === u.email || c.namaOwner === u.nama
-        );
-        const klinikNama   = klinik ? esc(klinik.namaKlinik) : '<span style="color:#9CA3AF">—</span>';
-        const klinikStatus = klinik ? badgeHtml(klinik.adminStatus || 'pending') : '<span style="color:#9CA3AF">—</span>';
-        return `<tr>
+        const klinik     = kliniks.find(c => c.email === u.email || c.namaOwner === u.nama);
+        const klinikNama = klinik ? esc(klinik.namaKlinik) : '<span style="color:#9CA3AF">—</span>';
+        const inaktif    = isInactive(u);
+        const rowStyle   = inaktif ? 'background:#FFF7ED' : '';
+        const badge      = inaktif
+          ? '<span style="display:inline-block;font-size:10px;background:#FEE2E2;color:#DC2626;border-radius:4px;padding:1px 6px;margin-left:4px">Tidak Aktif</span>'
+          : '';
+        const emailKey = esc(u.email || '');
+        return `<tr style="${rowStyle}">
           <td>${i+1}</td>
-          <td><strong>${esc(u.nama || '—')}</strong></td>
+          <td><strong>${esc(u.nama || '—')}</strong>${badge}</td>
           <td style="font-size:12px;color:#6B7280">@${esc(u.username || '—')}</td>
           <td style="font-size:12px">${esc(u.email || '—')}</td>
           <td style="font-size:12px">${esc(u.noHp || '—')}</td>
           <td style="font-size:12px">${esc(u.kota || '—')}</td>
           <td style="font-size:12px;white-space:nowrap">${fmtDate(u.createdAt)}</td>
           <td>${klinikNama}</td>
+          <td>
+            <button
+              style="background:#FEE2E2;color:#DC2626;border:none;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:12px;display:inline-flex;align-items:center;gap:4px"
+              title="Hapus akun" onclick="deleteUser('${emailKey}')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="13" height="13" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+              Hapus
+            </button>
+          </td>
         </tr>`;
       }).join('');
 
@@ -764,7 +797,7 @@
         );
       }
       if (!pairs.length) {
-        tbody.innerHTML = '<tr><td colspan="8" class="empty-state">Tidak ada data pemilik klinik.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="9" class="empty-state">Tidak ada data pemilik klinik.</td></tr>';
         return;
       }
       tbody.innerHTML = pairs.map(({ c, idx }, i) => {
@@ -781,6 +814,7 @@
               <button class="btn-icon btn-icon--view" title="Lihat klinik" onclick="viewKlinik(${idx})">👁</button>
             </div>
           </td>
+          <td></td>
         </tr>`;
       }).join('');
     }
@@ -811,6 +845,11 @@
 
   document.getElementById('penggunaSearch').addEventListener('input', e => {
     penggunaSearch = e.target.value.trim();
+    renderPenggunaTable();
+  });
+
+  document.getElementById('filterTidakAktif').addEventListener('change', e => {
+    filterTidakAktif = e.target.checked;
     renderPenggunaTable();
   });
 
