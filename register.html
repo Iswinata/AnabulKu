@@ -825,6 +825,7 @@
 
   function generateAndSendOtp(waNumber) {
     currentOtp = '111111'; /* TESTING: hardcode OTP */
+    console.log('[AnabulKu] OTP saat ini:', currentOtp);
     const boxes = document.querySelectorAll('.otp-box');
     boxes.forEach(b => { b.value = ''; b.classList.remove('is-error'); });
     document.getElementById('otpError').style.display = 'none';
