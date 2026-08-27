@@ -797,9 +797,14 @@
 
 </div>
 
+<script src="wa-config.js"></script>
 <script>
 (function () {
   'use strict';
+
+  /* ── URL WA Server diambil dari wa-config.js ──
+     Edit file wa-config.js untuk ganti URL Railway.  */
+  const WA_SERVER = (window.WA_SERVER_URL || 'http://localhost:3001').replace(/\/$/, '');
 
   const LS = {
     get: (k, d) => { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } },
@@ -930,7 +935,7 @@
     btn.disabled = true;
     const phone = document.getElementById('inputNoHp').value.trim();
     try {
-      const res  = await fetch('/api/send-otp', {
+      const res  = await fetch(WA_SERVER + '/api/send-otp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ phone }),
@@ -1019,7 +1024,7 @@
     btn.disabled = true; btn.textContent = 'Mengirim…';
     clearOtpBoxes(); clearOtpError();
     try {
-      const res  = await fetch('/api/send-otp', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone }) });
+      const res  = await fetch(WA_SERVER + '/api/send-otp', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone }) });
       const data = await res.json();
       if (!data.status) { showOtpError('Gagal kirim ulang: ' + (data.reason || 'Coba lagi.')); btn.disabled = false; btn.textContent = 'Kirim Ulang OTP'; return; }
     } catch { showOtpError('Tidak dapat menghubungi server.'); btn.disabled = false; btn.textContent = 'Kirim Ulang OTP'; return; }
@@ -1035,7 +1040,7 @@
     const btnTxt = document.getElementById('verifyBtnText');
     btnTxt.textContent = 'Memverifikasi…'; btn.disabled = true;
     try {
-      const res  = await fetch('/api/verify-otp', {
+      const res  = await fetch(WA_SERVER + '/api/verify-otp', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ phone, code }),
       });

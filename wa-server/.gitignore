@@ -1,0 +1,11 @@
+# Dependensi Node
+node_modules/
+
+# Session WhatsApp (jangan di-commit ke git)
+.wa-session/
+
+# Environment
+.env
+
+# Log
+*.log
