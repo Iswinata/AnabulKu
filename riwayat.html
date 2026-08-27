@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
@@ -283,6 +283,24 @@
     }
     .btn-batal:active { background: #FEF2F2; }
 
+    /* Footer konfirmasi — tampil saat booking sudah dikonfirmasi klinik */
+    .card-foot--confirmed {
+      flex-direction: column;
+      gap: 2px;
+      background: #F0FDF4;
+      border-top: 1px solid #BBF7D0;
+      padding: 10px 16px 12px;
+    }
+    .foot-confirmed-badge {
+      font-size: 13px;
+      font-weight: 700;
+      color: #059669;
+    }
+    .foot-confirmed-sub {
+      font-size: 11.5px;
+      color: #6B7280;
+    }
+
     /* ═══════════════════════════════
        Empty state
     ═══════════════════════════════ */
@@ -472,18 +490,20 @@
     dibatalkan:          { label:"Dibatalkan",       strip:"s-dibatalkan",   pill:"s-dibatalkan"   },
   };
   function getStatus(b) {
-    /* Booking sudah dibatalkan — prioritas tertinggi */
-    if ((b.status||"").toLowerCase() === "dibatalkan") {
-      return STATUS.dibatalkan;
-    }
+    var st = (b.status || "").toLowerCase();
+    /* Booking dibatalkan — prioritas tertinggi */
+    if (st === "dibatalkan") return STATUS.dibatalkan;
     /* Belum bayar sama sekali (masih di halaman payment) */
     if (b._isPending) return { label:"Menunggu Pembayaran", strip:"s-pending", pill:"s-pending" };
-    /* Sudah ada statusPembayaran dari payment.html */
+    /* Status klinik dikonfirmasi/selesai — prioritas di atas statusPembayaran */
+    if (st === "dikonfirmasi") return STATUS.dikonfirmasi;
+    if (st === "selesai")      return STATUS.selesai;
+    /* Sudah transfer tapi klinik belum konfirmasi */
     if (b.statusPembayaran && STATUS_BAYAR[b.statusPembayaran]) {
       return STATUS_BAYAR[b.statusPembayaran];
     }
     /* Fallback ke status klinik */
-    return STATUS[(b.status||"").toLowerCase()] || { label: b.status||"—", strip:"s-pending", pill:"s-pending" };
+    return STATUS[st] || { label: b.status||"—", strip:"s-pending", pill:"s-pending" };
   }
 
   /* ── Auto-cancel booking yang deadlinenya sudah lewat ── */
@@ -553,10 +573,13 @@
       return b.sumber === "app_user" || !b.sumber;
     });
 
-    /* Tandai booking yang masih pending payment */
+    /* Tandai booking yang masih pending payment —
+       jangan tandai jika klinik sudah konfirmasi/selesai/batalkan */
     var foundPending = false;
     result = result.map(function(b) {
-      if (pendingId && b.id === pendingId) {
+      var bStatus = (b.status || "").toLowerCase();
+      var sudahKonfirmasi = bStatus === "dikonfirmasi" || bStatus === "selesai" || bStatus === "dibatalkan";
+      if (pendingId && b.id === pendingId && !sudahKonfirmasi) {
         foundPending = true;
         return Object.assign({}, b, { _isPending: true });
       }
@@ -565,16 +588,20 @@
 
     /* Jika pending belum masuk bookings (race condition), sisipkan di awal */
     if (pendingId && !foundPending && _pendingPayment) {
-      result = [Object.assign({}, _pendingPayment, { _isPending: true })].concat(result);
+      var pStatus = (_pendingPayment.status || "").toLowerCase();
+      if (pStatus !== "dikonfirmasi" && pStatus !== "selesai" && pStatus !== "dibatalkan") {
+        result = [Object.assign({}, _pendingPayment, { _isPending: true })].concat(result);
+      }
     }
 
     return result;
   }
 
   function isPending(b) {
+    /* Hanya booking yang benar-benar belum dikonfirmasi klinik */
     if (b._isPending) return true;
-    var s = (b.status||"").toLowerCase();
-    return s === "menunggu" || s === "dikonfirmasi";
+    var s = (b.status || "").toLowerCase();
+    return s === "menunggu";
   }
 
   /* ── Render card ── */
@@ -610,10 +637,15 @@
     var foot = "";
     var statusNow = (b.status||"").toLowerCase();
     var sudahBayar = b.statusPembayaran === "lunas" || b.statusPembayaran === "bayar_ditempat";
-    var belumBayar = !sudahBayar && statusNow !== "dibatalkan";
 
-    if (belumBayar && (b._isPending || statusNow === "menunggu" || statusNow === "dikonfirmasi")) {
-      /* Semua booking yang belum selesai bayar tampil tombol Batalkan + Lanjutkan Bayar */
+    if (statusNow === "dikonfirmasi") {
+      /* Booking sudah dikonfirmasi klinik — tampil info konfirmasi, tanpa tombol batalkan */
+      foot = '<div class="card-foot card-foot--confirmed">' +
+        '<span class="foot-confirmed-badge">✔ Booking Terkonfirmasi</span>' +
+        '<span class="foot-confirmed-sub">Silakan datang sesuai jadwal</span>' +
+        '</div>';
+    } else if (!sudahBayar && (b._isPending || statusNow === "menunggu")) {
+      /* Belum dikonfirmasi + belum bayar — tampil Batalkan + Lanjutkan Bayar */
       var cancelAction = b._isPending ? "cancel-pending" : "cancel";
       foot = '<div class="card-foot">' +
         '<button class="btn-batal" type="button" data-id="'+esc(b.id||"")+'" data-action="'+cancelAction+'">Batalkan</button>' +

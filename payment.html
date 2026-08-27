@@ -1163,7 +1163,24 @@
         document.getElementById("successOverlay").classList.add("is-open");
       }, 900);
     } else {
-      /* Metode transfer / VA → tampilkan VA overlay */
+      /* Metode transfer / VA → update statusPembayaran dulu, lalu tampilkan VA overlay */
+      try {
+        var bookings = JSON.parse(localStorage.getItem("anabulku_bookings")) || [];
+        var idx = bookings.findIndex(function(b) { return b.id === pending.id; });
+        if (idx >= 0) {
+          bookings[idx].metodePembayaran = selectedMethod;
+          bookings[idx].statusPembayaran = "menunggu_pembayaran";
+        }
+        localStorage.setItem("anabulku_bookings", JSON.stringify(bookings));
+
+        /* Simpan juga ke pending_payment agar badge riwayat user aktif */
+        var pendingList = JSON.parse(localStorage.getItem("anabulku_pending_payment") || "[]");
+        if (!Array.isArray(pendingList)) pendingList = [];
+        if (!pendingList.find(function(p) { return p.bookingId === pending.id; })) {
+          pendingList.push({ bookingId: pending.id, time: new Date().toISOString() });
+          localStorage.setItem("anabulku_pending_payment", JSON.stringify(pendingList));
+        }
+      } catch (e) { /* silent */ }
       showVAOverlay();
     }
   });

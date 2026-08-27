@@ -537,7 +537,12 @@
       <div class="step-line" id="line2"></div>
       <div class="step-item">
         <div class="step-circle" id="circle3">3</div>
-        <span class="step-label" id="label3">Konfirmasi</span>
+        <span class="step-label" id="label3">Verifikasi</span>
+      </div>
+      <div class="step-line" id="line3"></div>
+      <div class="step-item">
+        <div class="step-circle" id="circle4">4</div>
+        <span class="step-label" id="label4">Konfirmasi</span>
       </div>
     </div>
   </div>
@@ -668,8 +673,53 @@
       </div>
     </div>
 
-    <!-- ── Step 3: Konfirmasi ── -->
+    <!-- ── Step 3: Verifikasi OTP WhatsApp ── -->
     <div class="step-panel" id="step3">
+      <p class="section-title">Verifikasi WhatsApp</p>
+      <div class="otp-block">
+        <div class="otp-header">
+          <div class="otp-icon-wrap" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+              <path d="M12 0C5.373 0 0 5.373 0 12c0 2.125.558 4.118 1.531 5.845L.057 23.737a.75.75 0 0 0 .921.921l5.892-1.474A11.943 11.943 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.9 0-3.68-.513-5.21-1.408l-.374-.223-3.873.968.984-3.595-.245-.386A9.953 9.953 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
+            </svg>
+          </div>
+          <div>
+            <p class="otp-title">Kode OTP via WhatsApp</p>
+            <p class="otp-sub" id="otpSubText">Kode 6 digit dikirim ke nomor HP kamu</p>
+          </div>
+        </div>
+        <div class="otp-inputs" id="otpInputs" role="group" aria-label="Masukkan 6 digit kode OTP">
+          <input class="otp-box" type="tel" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Digit 1" id="otp1" autocomplete="one-time-code" />
+          <input class="otp-box" type="tel" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Digit 2" id="otp2" />
+          <input class="otp-box" type="tel" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Digit 3" id="otp3" />
+          <input class="otp-box" type="tel" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Digit 4" id="otp4" />
+          <input class="otp-box" type="tel" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Digit 5" id="otp5" />
+          <input class="otp-box" type="tel" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Digit 6" id="otp6" />
+        </div>
+        <p class="otp-error" id="otpError" style="display:none" role="alert"></p>
+        <div class="otp-resend">
+          <span id="otpTimerText">Kirim ulang dalam <strong id="otpCountdown">60</strong>s</span>
+          <button class="otp-resend-btn" id="btnResendOtp" disabled style="display:none">Kirim Ulang OTP</button>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-prev" id="btnBack2">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true" width="12" height="12">
+            <path d="M19 12H5M12 5l-7 7 7 7"/>
+          </svg>
+          Kembali
+        </button>
+        <button class="btn-next" id="btnVerifyOtp" style="flex:1;margin-bottom:0">
+          <span id="verifyBtnText">Verifikasi</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true" width="15" height="15">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+    <!-- ── Step 4: Konfirmasi ── -->
+    <div class="step-panel" id="step4">
       <p class="section-title">Konfirmasi</p>
       <div class="summary-card">
         <p class="summary-card-title">Ringkasan Akun</p>
@@ -686,25 +736,27 @@
           <span class="summary-val" id="summEmail">—</span>
         </div>
         <div class="summary-row">
+          <span class="summary-key">No. HP</span>
+          <span class="summary-val" id="summNoHp">—</span>
+        </div>
+        <div class="summary-row">
           <span class="summary-key">Kota</span>
           <span class="summary-val" id="summKota">—</span>
         </div>
       </div>
-      <!-- Konfirmasi Akun notice -->
-      <div class="otp-block" id="konfirmasiNotice">
-        <div class="otp-header">
-          <div class="otp-icon-wrap" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="22" height="22">
-              <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+      <div class="otp-block" style="margin-bottom:10px">
+        <div class="otp-header" style="margin-bottom:0">
+          <div class="otp-icon-wrap" aria-hidden="true" style="background:#f0fdf4;border-color:#86efac;color:#16a34a">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" width="20" height="20">
+              <polyline points="20 6 9 17 4 12"/>
             </svg>
           </div>
           <div>
-            <p class="otp-title">Konfirmasi Akun</p>
-            <p class="otp-sub">Akun kamu akan dikonfirmasi oleh tim AnabulKu melalui nomor HP yang terdaftar. Pastikan nomormu aktif dan dapat dihubungi.</p>
+            <p class="otp-title" style="color:var(--green-d)">WhatsApp Terverifikasi ✓</p>
+            <p class="otp-sub">Nomor HP kamu sudah diverifikasi via WhatsApp.</p>
           </div>
         </div>
       </div>
-
       <label class="tos-wrap">
         <input type="checkbox" id="chkTos" />
         <span class="tos-text">
@@ -713,14 +765,14 @@
         </span>
       </label>
       <div class="btn-row">
-        <button class="btn-prev" id="btnBack2">
+        <button class="btn-prev" id="btnBack3">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true" width="12" height="12">
             <path d="M19 12H5M12 5l-7 7 7 7"/>
           </svg>
           Kembali
         </button>
         <button class="btn-next" id="btnRegister" style="flex:1;margin-bottom:0">
-          <span id="regBtnText">Konfirmasi Akun</span>
+          <span id="regBtnText">Buat Akun</span>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true" width="15" height="15">
             <polyline points="20 6 9 17 4 12"/>
           </svg>
@@ -754,7 +806,7 @@
     set: (k, v) => localStorage.setItem(k, JSON.stringify(v)),
   };
 
-  const TOTAL = 3;
+  const TOTAL = 4;
 
   function goStep(n) {
     for (let i = 1; i <= TOTAL; i++) {
@@ -851,8 +903,8 @@
     goStep(2);
   });
 
-  /* Step 2 */
-  document.getElementById('btnStep2').addEventListener('click', () => {
+  /* Step 2 → kirim OTP ke WhatsApp lalu ke Step 3 */
+  document.getElementById('btnStep2').addEventListener('click', async () => {
     const username = document.getElementById('inputUsername').value.trim();
     const email    = document.getElementById('inputRegEmail').value.trim();
     const pass     = document.getElementById('inputRegPass').value;
@@ -868,48 +920,171 @@
     document.getElementById('confirmPassHint').style.display = 'none';
     const users = LS.get('anabulku_users', []);
     if (users.find(u => u.username === username)) { markErr('inputUsername'); return; }
-    if (users.find(u => u.email === email)) { markErr('inputRegEmail'); return; }
-    document.getElementById('summNama').textContent     = document.getElementById('inputNama').value.trim();
-    document.getElementById('summUsername').textContent = username;
-    document.getElementById('summEmail').textContent    = email;
-    document.getElementById('summKota').textContent     = document.getElementById('inputKota').value.trim() || '—';
-    const noHp     = document.getElementById('inputNoHp').value.trim();
+    if (users.find(u => u.email    === email))    { markErr('inputRegEmail'); return; }
+
+    /* Kirim OTP via WhatsApp */
+    const btn    = document.getElementById('btnStep2');
+    const btnTxt = btn.querySelector('span') || btn;
+    const origTxt = btnTxt.textContent;
+    btnTxt.textContent = 'Mengirim OTP…';
+    btn.disabled = true;
+    const phone = document.getElementById('inputNoHp').value.trim();
+    try {
+      const res  = await fetch('/api/send-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone }),
+      });
+      const data = await res.json();
+      if (!data.status) {
+        alert('Gagal mengirim OTP: ' + (data.reason || 'Coba lagi.'));
+        btnTxt.textContent = origTxt; btn.disabled = false; return;
+      }
+    } catch {
+      alert('Tidak dapat menghubungi server. Periksa koneksi internet.');
+      btnTxt.textContent = origTxt; btn.disabled = false; return;
+    }
+    btnTxt.textContent = origTxt;
+    btn.disabled = false;
+    const maskedPhone = phone.replace(/(\d{4})\d+(\d{3})/, '$1****$2');
+    document.getElementById('otpSubText').textContent = 'Kode 6 digit dikirim ke WhatsApp ' + maskedPhone;
     goStep(3);
+    startOtpTimer();
+    focusOtpFirst();
   });
 
   document.getElementById('btnBack1').addEventListener('click', () => goStep(1));
-  document.getElementById('btnBack2').addEventListener('click', () => goStep(2));
+  document.getElementById('btnBack2').addEventListener('click', () => {
+    clearInterval(otpTimerInterval);
+    clearOtpBoxes(); clearOtpError(); goStep(2);
+  });
+  document.getElementById('btnBack3').addEventListener('click', () => goStep(3));
 
-  /* Step 3 — Konfirmasi Akun (pending review oleh admin) */
+  /* ── OTP box helpers ── */
+  const otpBoxes = Array.from(document.querySelectorAll('.otp-box'));
+  otpBoxes.forEach((box, idx) => {
+    box.addEventListener('input', () => {
+      box.value = box.value.replace(/\D/g, '').slice(0, 1);
+      if (box.value && idx < otpBoxes.length - 1) otpBoxes[idx + 1].focus();
+      clearOtpError();
+    });
+    box.addEventListener('keydown', e => {
+      if (e.key === 'Backspace' && !box.value && idx > 0) {
+        otpBoxes[idx - 1].focus(); otpBoxes[idx - 1].value = '';
+      }
+    });
+    box.addEventListener('paste', e => {
+      e.preventDefault();
+      const text = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '');
+      text.split('').slice(0, 6).forEach((ch, i) => { if (otpBoxes[i]) otpBoxes[i].value = ch; });
+      otpBoxes[Math.min(text.length, 5)].focus(); clearOtpError();
+    });
+  });
+
+  function focusOtpFirst() { otpBoxes[0].focus(); }
+  function getOtpValue()   { return otpBoxes.map(b => b.value).join(''); }
+  function clearOtpBoxes() { otpBoxes.forEach(b => b.value = ''); }
+  function showOtpError(msg) {
+    const el = document.getElementById('otpError');
+    el.textContent = msg; el.style.display = '';
+    otpBoxes.forEach(b => b.classList.add('is-error'));
+  }
+  function clearOtpError() {
+    document.getElementById('otpError').style.display = 'none';
+    otpBoxes.forEach(b => b.classList.remove('is-error'));
+  }
+
+  /* ── Countdown timer ── */
+  let otpTimerInterval = null;
+  function startOtpTimer(seconds = 60) {
+    clearInterval(otpTimerInterval);
+    const countdownEl = document.getElementById('otpCountdown');
+    const timerText   = document.getElementById('otpTimerText');
+    const resendBtn   = document.getElementById('btnResendOtp');
+    timerText.style.display = ''; resendBtn.style.display = 'none'; resendBtn.disabled = true;
+    let remaining = seconds; countdownEl.textContent = remaining;
+    otpTimerInterval = setInterval(() => {
+      remaining--; countdownEl.textContent = remaining;
+      if (remaining <= 0) {
+        clearInterval(otpTimerInterval);
+        timerText.style.display = 'none'; resendBtn.style.display = ''; resendBtn.disabled = false;
+      }
+    }, 1000);
+  }
+
+  /* ── Kirim ulang OTP ── */
+  document.getElementById('btnResendOtp').addEventListener('click', async () => {
+    const phone = document.getElementById('inputNoHp').value.trim();
+    const btn   = document.getElementById('btnResendOtp');
+    btn.disabled = true; btn.textContent = 'Mengirim…';
+    clearOtpBoxes(); clearOtpError();
+    try {
+      const res  = await fetch('/api/send-otp', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone }) });
+      const data = await res.json();
+      if (!data.status) { showOtpError('Gagal kirim ulang: ' + (data.reason || 'Coba lagi.')); btn.disabled = false; btn.textContent = 'Kirim Ulang OTP'; return; }
+    } catch { showOtpError('Tidak dapat menghubungi server.'); btn.disabled = false; btn.textContent = 'Kirim Ulang OTP'; return; }
+    btn.textContent = 'Kirim Ulang OTP'; startOtpTimer(); focusOtpFirst();
+  });
+
+  /* ── Step 3: Verifikasi OTP → Step 4 ── */
+  document.getElementById('btnVerifyOtp').addEventListener('click', async () => {
+    const code = getOtpValue();
+    if (code.length < 6) { showOtpError('Masukkan 6 digit kode OTP.'); return; }
+    const phone  = document.getElementById('inputNoHp').value.trim();
+    const btn    = document.getElementById('btnVerifyOtp');
+    const btnTxt = document.getElementById('verifyBtnText');
+    btnTxt.textContent = 'Memverifikasi…'; btn.disabled = true;
+    try {
+      const res  = await fetch('/api/verify-otp', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone, code }),
+      });
+      const data = await res.json();
+      if (!data.status) {
+        showOtpError(data.reason || 'Kode OTP salah.');
+        btnTxt.textContent = 'Verifikasi'; btn.disabled = false; return;
+      }
+    } catch {
+      showOtpError('Tidak dapat menghubungi server. Periksa koneksi.');
+      btnTxt.textContent = 'Verifikasi'; btn.disabled = false; return;
+    }
+    clearInterval(otpTimerInterval);
+    btnTxt.textContent = 'Verifikasi'; btn.disabled = false;
+    document.getElementById('summNama').textContent     = document.getElementById('inputNama').value.trim();
+    document.getElementById('summUsername').textContent = document.getElementById('inputUsername').value.trim();
+    document.getElementById('summEmail').textContent    = document.getElementById('inputRegEmail').value.trim();
+    document.getElementById('summNoHp').textContent     = phone;
+    document.getElementById('summKota').textContent     = document.getElementById('inputKota').value.trim() || '—';
+    goStep(4);
+  });
+
+  /* ── Step 4: Buat Akun ── */
   document.getElementById('btnRegister').addEventListener('click', () => {
     const tos    = document.getElementById('chkTos').checked;
     const btn    = document.getElementById('btnRegister');
     const btnTxt = document.getElementById('regBtnText');
     if (!tos) { document.getElementById('chkTos').focus(); return; }
-
-    btnTxt.textContent = 'Memproses…';
-    btn.disabled = true;
-
+    btnTxt.textContent = 'Memproses…'; btn.disabled = true;
     setTimeout(() => {
-      const pass = document.getElementById('inputRegPass').value;
       const newUser = {
-        nama:          document.getElementById('inputNama').value.trim(),
-        noHp:          document.getElementById('inputNoHp').value.trim(),
-        kota:          document.getElementById('inputKota').value.trim(),
-        username:      document.getElementById('inputUsername').value.trim(),
-        email:         document.getElementById('inputRegEmail').value.trim(),
-        password:      pass,
-        role:          'user',
-        accountStatus: 'pending',
-        createdAt:     new Date().toISOString(),
+        nama:             document.getElementById('inputNama').value.trim(),
+        noHp:             document.getElementById('inputNoHp').value.trim(),
+        kota:             document.getElementById('inputKota').value.trim(),
+        username:         document.getElementById('inputUsername').value.trim(),
+        email:            document.getElementById('inputRegEmail').value.trim(),
+        password:         document.getElementById('inputRegPass').value,
+        role:             'user',
+        accountStatus:    'active',
+        whatsappVerified: true,
+        createdAt:        new Date().toISOString(),
       };
       const users = LS.get('anabulku_users', []);
       users.push(newUser);
       LS.set('anabulku_users', users);
       localStorage.setItem('anabulku_notifications', JSON.stringify([]));
-      document.getElementById('regBody').style.display = 'none';
-      document.querySelector('.steps-wrap').style.display = 'none';
-      document.querySelector('.page-header').style.display = 'none';
+      document.getElementById('regBody').style.display          = 'none';
+      document.querySelector('.steps-wrap').style.display       = 'none';
+      document.querySelector('.page-header').style.display      = 'none';
       document.getElementById('successScreen').classList.add('is-active');
     }, 600);
   });
