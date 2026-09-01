@@ -1,18 +1,38 @@
 /* ================================================================
    AnabulKu — WhatsApp OTP Server
-   Express + whatsapp-web.js (CommonJS)
+   Express + whatsapp-web.js
+   Endpoints:
+     GET  /admin          → back office scan QR
+     GET  /api/status     → status koneksi WA
+     POST /api/send-otp   → kirim OTP
+     POST /api/verify-otp → verifikasi OTP
 ================================================================ */
 
-'use strict';
+import express       from 'express';
+import cors          from 'cors';
+import qrcode        from 'qrcode';
+import { Client, LocalAuth } from 'whatsapp-web.js';
+import { execSync }  from 'child_process';
 
-const express               = require('express');
-const cors                  = require('cors');
-const qrcode                = require('qrcode');
-const { Client, LocalAuth } = require('whatsapp-web.js');
-const chromium              = require('@sparticuz/chromium');
+/* Auto-detect Chromium path (Railway Nixpacks / Linux / Windows) */
+function findChromium() {
+  if (process.env.PUPPETEER_EXECUTABLE_PATH) return process.env.PUPPETEER_EXECUTABLE_PATH;
+  const candidates = [
+    '/usr/bin/chromium',
+    '/usr/bin/chromium-browser',
+    '/usr/bin/google-chrome',
+    '/usr/bin/google-chrome-stable',
+    '/nix/var/nix/profiles/default/bin/chromium',
+  ];
+  for (const p of candidates) {
+    try { execSync(`test -f ${p}`); return p; } catch (_) {}
+  }
+  try { return execSync('which chromium || which chromium-browser || which google-chrome', { encoding: 'utf8' }).trim(); } catch (_) {}
+  return null; // fallback: biarkan puppeteer cari sendiri
+}
 
-const app         = express();
-const PORT        = process.env.PORT || 3001;
+const app  = express();
+const PORT = process.env.PORT || 3001;
 const ADMIN_TOKEN = process.env.ADMIN_TOKEN || 'anabulku-admin';
 
 /* ── CORS ── */
@@ -54,293 +74,166 @@ function purgeExpired() {
 ================================================================ */
 let waStatus  = 'disconnected';
 let qrDataUrl = null;
-let waClient  = null;
 
-async function startWaClient() {
-  const executablePath = await chromium.executablePath();
-  console.log('[WA] Chromium path:', executablePath);
+const waClient = new Client({
+  authStrategy: new LocalAuth({ dataPath: './.wa-session' }),
+  puppeteer: {
+    args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--disable-gpu'],
+    ...(process.env.PUPPETEER_EXECUTABLE_PATH
+      ? { executablePath: process.env.PUPPETEER_EXECUTABLE_PATH }
+      : {}),
+  },
+});
 
-  const client = new Client({
-    authStrategy: new LocalAuth({ dataPath: './.wa-session' }),
-    puppeteer: {
-      executablePath,
-      args: chromium.args.concat([
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-        '--disable-dev-shm-usage',
-        '--single-process',
-        '--no-zygote',
-      ]),
-      headless: chromium.headless,
-    },
-  });
+waClient.on('qr', async (qr) => {
+  waStatus = 'qr_ready';
+  try { qrDataUrl = await qrcode.toDataURL(qr); } catch (e) { console.error('[WA] QR error:', e); }
+  console.log('[WA] QR siap — buka /admin untuk scan');
+});
 
-  client.on('qr', async (qr) => {
-    waStatus = 'qr';
-    try { qrDataUrl = await qrcode.toDataURL(qr); } catch (e) { console.error('[WA] QR error:', e.message); }
-    console.log('[WA] QR siap, buka /admin untuk scan');
-  });
+waClient.on('authenticated', () => {
+  waStatus = 'connecting'; qrDataUrl = null;
+  console.log('[WA] Authenticated');
+});
 
-  client.on('ready', () => {
-    waStatus = 'connected'; qrDataUrl = null;
-    console.log('[WA] Terhubung!');
-  });
+waClient.on('ready', () => {
+  waStatus = 'ready';
+  console.log('[WA] Siap mengirim pesan!');
+});
 
-  client.on('disconnected', (reason) => {
-    waStatus = 'disconnected';
-    console.log('[WA] Terputus:', reason);
-    setTimeout(startWaClient, 5000);
-  });
-
-  client.on('auth_failure', (msg) => {
-    waStatus = 'disconnected';
-    console.error('[WA] Auth failure:', msg);
-  });
-
-  await client.initialize();
-  waClient = client;
-}
+waClient.on('disconnected', (reason) => {
+  waStatus = 'disconnected'; qrDataUrl = null;
+  console.log('[WA] Disconnected:', reason);
+  setTimeout(() => waClient.initialize(), 5000);
+});
 
 /* ================================================================
-   Admin Back Office
+   Back Office — halaman scan QR
 ================================================================ */
 app.get('/admin', (req, res) => {
   if (req.query.token !== ADMIN_TOKEN) {
-    return res.status(401).send(`<!DOCTYPE html><html><head>
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>401 Unauthorized</title>
-      <style>body{font-family:sans-serif;text-align:center;padding:40px;background:#f5f5f5;color:#333}</style>
-    </head><body><h2>⛔ 401 Unauthorized</h2><p>Token tidak valid.</p></body></html>`);
+    return res.status(401).send(`<html><body style="font-family:sans-serif;padding:40px">
+      <h2>⛔ Unauthorized</h2><p>Akses: <code>/admin?token=TOKEN_KAMU</code></p>
+    </body></html>`);
   }
+  const statusLabel = {
+    disconnected: '🔴 Tidak Terhubung', qr_ready: '🟡 Scan QR untuk Login',
+    connecting:   '🟠 Menghubungkan...', ready:    '🟢 Terhubung & Siap',
+  }[waStatus] || waStatus;
 
-  let body = '';
-  if (waStatus === 'connected') {
-    body = `
-      <div class="card">
-        <div class="status-icon">🟢</div>
-        <h2 class="status-title connected">WhatsApp Terhubung</h2>
-        <p class="status-desc">Server OTP siap mengirim pesan.</p>
-      </div>
-      <script>setTimeout(()=>location.reload(), 10000)</script>`;
-  } else if (waStatus === 'qr' && qrDataUrl) {
-    body = `
-      <div class="card">
-        <div class="status-icon">📱</div>
-        <h2 class="status-title">Scan QR Code</h2>
-        <div class="qr-wrapper">
-          <img src="${qrDataUrl}" alt="QR Code WhatsApp" class="qr-img"/>
-        </div>
-        <ol class="steps">
-          <li>Buka <strong>WhatsApp</strong> di HP kamu</li>
-          <li>Ketuk menu <strong>⋮</strong> → <strong>Perangkat Tertaut</strong></li>
-          <li>Ketuk <strong>Tautkan Perangkat</strong></li>
-          <li>Arahkan kamera ke QR di atas</li>
-        </ol>
-        <p class="refresh-note">⏳ Halaman otomatis refresh dalam <span id="countdown">5</span> detik...</p>
-      </div>
-      <script>
-        var s = 5;
-        var el = document.getElementById('countdown');
-        var iv = setInterval(function(){
-          s--; if(el) el.textContent = s;
-          if(s <= 0){ clearInterval(iv); location.reload(); }
-        }, 1000);
-      </script>`;
-  } else {
-    body = `
-      <div class="card">
-        <div class="status-icon">⏳</div>
-        <h2 class="status-title">Menunggu WhatsApp...</h2>
-        <p class="status-desc">Sedang menginisialisasi koneksi. Harap tunggu.</p>
-        <div class="spinner"></div>
-        <p class="refresh-note">Halaman otomatis refresh dalam <span id="countdown">3</span> detik...</p>
-      </div>
-      <script>
-        var s = 3;
-        var el = document.getElementById('countdown');
-        var iv = setInterval(function(){
-          s--; if(el) el.textContent = s;
-          if(s <= 0){ clearInterval(iv); location.reload(); }
-        }, 1000);
-      </script>`;
-  }
+  const qrSection = waStatus === 'qr_ready' && qrDataUrl
+    ? `<div style="text-align:center;margin:24px 0">
+        <p style="color:#666;margin-bottom:12px">Scan QR ini dengan WhatsApp kamu</p>
+        <img src="${qrDataUrl}" style="width:260px;height:260px;border:4px solid #ff9800;border-radius:12px" alt="QR"/>
+       </div>`
+    : waStatus === 'ready'
+    ? `<div style="text-align:center;margin:24px 0;padding:20px;background:#f0fdf4;border-radius:12px">
+        <p style="font-size:48px">✅</p>
+        <p style="color:#16a34a;font-weight:600">WhatsApp terhubung!</p>
+        <p style="color:#666;font-size:14px">Server siap mengirim OTP</p>
+       </div>`
+    : `<div style="text-align:center;margin:24px 0;padding:20px;background:#fefce8;border-radius:12px">
+        <p style="font-size:48px">⏳</p>
+        <p style="color:#854d0e;font-weight:600">Inisialisasi WhatsApp...</p>
+        <p style="color:#666;font-size:14px">Auto-refresh tiap 5 detik</p>
+       </div>`;
 
   res.send(`<!DOCTYPE html>
-<html lang="id">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AnabulKu — WA Admin</title>
+<html lang="id"><head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>AnabulKu — WA Back Office</title>
+  ${waStatus !== 'ready' ? '<meta http-equiv="refresh" content="5"/>' : ''}
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: #f0f4f8;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
-      color: #333;
-    }
-
-    .header {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    .header h1 {
-      font-size: 1.4rem;
-      font-weight: 700;
-      color: #1a1a2e;
-    }
-
-    .header p {
-      font-size: 0.85rem;
-      color: #666;
-      margin-top: 4px;
-    }
-
-    .card {
-      background: #fff;
-      border-radius: 16px;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.10);
-      padding: 32px 24px;
-      width: 100%;
-      max-width: 400px;
-      text-align: center;
-    }
-
-    .status-icon {
-      font-size: 3rem;
-      margin-bottom: 12px;
-    }
-
-    .status-title {
-      font-size: 1.25rem;
-      font-weight: 700;
-      margin-bottom: 8px;
-      color: #1a1a2e;
-    }
-
-    .status-title.connected {
-      color: #16a34a;
-    }
-
-    .status-desc {
-      font-size: 0.9rem;
-      color: #555;
-      line-height: 1.5;
-    }
-
-    .qr-wrapper {
-      margin: 20px auto;
-      width: 100%;
-      max-width: 280px;
-      aspect-ratio: 1 / 1;
-      border: 3px solid #e2e8f0;
-      border-radius: 12px;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #fff;
-    }
-
-    .qr-img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      display: block;
-    }
-
-    .steps {
-      text-align: left;
-      margin: 16px 0;
-      padding-left: 20px;
-      font-size: 0.88rem;
-      color: #444;
-      line-height: 2;
-    }
-
-    .steps li {
-      margin-bottom: 2px;
-    }
-
-    .refresh-note {
-      font-size: 0.8rem;
-      color: #999;
-      margin-top: 16px;
-    }
-
-    .spinner {
-      width: 40px;
-      height: 40px;
-      border: 4px solid #e2e8f0;
-      border-top-color: #3b82f6;
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-      margin: 20px auto;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Segoe UI',sans-serif;background:#f5f5f5;display:flex;justify-content:center;padding:40px 16px}
+    .card{background:#fff;border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,.1);padding:32px;width:100%;max-width:420px}
+    .brand-name{font-size:22px;font-weight:700;color:#f57c00}
+    .badge{display:inline-block;padding:6px 14px;border-radius:999px;background:#f3f4f6;font-size:14px;font-weight:500;margin-bottom:20px}
+    .row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #f3f4f6;font-size:14px;color:#555}
+    .row:last-child{border-bottom:none} .row b{color:#222}
+    .btn{width:100%;margin-top:12px;padding:12px;border:none;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer}
+    .btn-orange{background:#ff9800;color:#fff} .btn-red{background:#fee2e2;color:#dc2626;margin-top:6px}
   </style>
-</head>
-<body>
-  <div class="header">
-    <h1>🐾 AnabulKu WA Admin</h1>
-    <p>Panel manajemen WhatsApp OTP</p>
+</head><body><div class="card">
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:24px">
+    <span style="font-size:32px">🐾</span>
+    <div><div class="brand-name">AnabulKu</div><div style="font-size:12px;color:#888">WA OTP Back Office</div></div>
   </div>
-  ${body}
-</body>
-</html>`);
+  <div class="badge">${statusLabel}</div>
+  ${qrSection}
+  <div style="margin-top:16px">
+    <div class="row"><span>Status</span><b>${waStatus}</b></div>
+    <div class="row"><span>OTP aktif</span><b>${otpStore.size}</b></div>
+    <div class="row"><span>Waktu server</span><b>${new Date().toLocaleString('id-ID')}</b></div>
+  </div>
+  <button class="btn btn-orange" onclick="location.reload()">🔄 Refresh</button>
+  ${waStatus === 'ready'
+    ? `<form method="POST" action="/admin/logout?token=${ADMIN_TOKEN}" style="margin-top:6px">
+         <button class="btn btn-red" type="submit">🚪 Logout WhatsApp</button>
+       </form>`
+    : ''}
+</div></body></html>`);
 });
 
-/* ── Status ── */
-app.get('/api/status', (req, res) => res.json({ status: waStatus }));
+app.post('/admin/logout', async (req, res) => {
+  if (req.query.token !== ADMIN_TOKEN) return res.status(401).send('Unauthorized');
+  try { await waClient.logout(); } catch (_) {}
+  waStatus = 'disconnected';
+  res.redirect(`/admin?token=${ADMIN_TOKEN}`);
+});
 
-/* ── Send OTP ── */
+/* ================================================================
+   API Endpoints
+================================================================ */
+app.get('/api/status', (_req, res) => {
+  res.json({ status: waStatus, ready: waStatus === 'ready' });
+});
+
 app.post('/api/send-otp', async (req, res) => {
-  purgeExpired();
-  const { phone } = req.body;
+  const { phone } = req.body || {};
   if (!phone) return res.status(400).json({ status: false, reason: 'Nomor HP wajib diisi' });
-  if (waStatus !== 'connected') return res.status(503).json({ status: false, reason: 'WhatsApp server belum terhubung' });
+  if (waStatus !== 'ready') return res.status(503).json({
+    status: false, reason: 'WhatsApp belum terhubung. Hubungi admin untuk scan QR.',
+  });
 
-  const target = toE164(phone);
-  const otp    = generateOtp();
-  otpStore.set(target, { code: otp, expiresAt: Date.now() + 5 * 60 * 1000, attempts: 0 });
+  purgeExpired();
+  const target   = toE164(phone);
+  const existing = otpStore.get(target);
+  if (existing && existing.expiresAt - Date.now() > 4 * 60 * 1000) {
+    return res.status(429).json({ status: false, reason: 'Tunggu 60 detik sebelum kirim ulang.' });
+  }
+
+  const code = generateOtp();
+  otpStore.set(target, { code, expiresAt: Date.now() + 5 * 60 * 1000, attempts: 0 });
+
+  const message =
+    `🐾 *AnabulKu — Kode Verifikasi*\n\n` +
+    `Kode OTP kamu: *${code}*\n\n` +
+    `Berlaku selama *5 menit*. Jangan bagikan kode ini ke siapapun.\n\n` +
+    `Jika kamu tidak mendaftar di AnabulKu, abaikan pesan ini.`;
 
   try {
-    await waClient.sendMessage(`${target}@c.us`,
-      `*AnabulKu* - Kode verifikasi kamu: *${otp}*\n\nBerlaku 5 menit. Jangan bagikan ke siapapun.`
-    );
+    await waClient.sendMessage(target + '@c.us', message);
     console.log(`[OTP] Terkirim ke ${target}`);
-    return res.json({ status: true, message: 'OTP terkirim' });
-  } catch (e) {
+    return res.json({ status: true, message: 'OTP berhasil dikirim' });
+  } catch (err) {
+    console.error('[OTP] Gagal kirim:', err.message);
     otpStore.delete(target);
-    console.error('[OTP] Gagal kirim:', e.message);
-    return res.status(500).json({ status: false, reason: 'Gagal mengirim OTP' });
+    return res.status(500).json({ status: false, reason: 'Gagal mengirim pesan WhatsApp' });
   }
 });
 
-/* ── Verify OTP ── */
 app.post('/api/verify-otp', (req, res) => {
-  purgeExpired();
-  const { phone, code } = req.body;
-  if (!phone || !code) return res.status(400).json({ status: false, reason: 'Phone dan code wajib diisi' });
+  const { phone, code } = req.body || {};
+  if (!phone || !code) return res.status(400).json({ status: false, reason: 'phone dan code wajib diisi' });
 
   const target = toE164(phone);
   const entry  = otpStore.get(target);
 
-  if (!entry) return res.status(400).json({ status: false, reason: 'OTP tidak ditemukan atau sudah kadaluarsa' });
-  if (entry.expiresAt < Date.now()) {
+  if (!entry) return res.status(400).json({ status: false, reason: 'OTP tidak ditemukan atau kedaluwarsa. Kirim ulang.' });
+  if (Date.now() > entry.expiresAt) {
     otpStore.delete(target);
-    return res.status(400).json({ status: false, reason: 'OTP sudah kadaluarsa' });
+    return res.status(400).json({ status: false, reason: 'OTP kedaluwarsa. Silakan kirim ulang.' });
   }
   if (entry.attempts >= 5) {
     otpStore.delete(target);
@@ -356,12 +249,18 @@ app.post('/api/verify-otp', (req, res) => {
 });
 
 /* ================================================================
-   Start
+   Start Server
 ================================================================ */
 app.listen(PORT, () => {
   console.log(`[AnabulKu WA Server] Jalan di port ${PORT}`);
   console.log(`[AnabulKu WA Server] Back office: http://localhost:${PORT}/admin?token=${ADMIN_TOKEN}`);
 });
 
-startWaClient().catch(e => console.error('[WA] Gagal start:', e.message));
 
+
+waClient.on('auth_failure', (msg) => {
+  waStatus = 'disconnected';
+  console.error('[WA] Auth failure:', msg);
+});
+
+waClient.initialize();
