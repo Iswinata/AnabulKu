@@ -347,9 +347,9 @@
       border-left: 2.5px solid #111827;
       border-right: 2.5px solid #111827;
       box-shadow: 0 -4px 40px rgba(0,0,0,.18);
-      padding: 0 0 env(safe-area-inset-bottom,24px);
       animation: pmSlideUp .32s cubic-bezier(.22,.72,0,1) forwards;
       max-height: 92dvh; display: flex; flex-direction: column;
+      overflow: hidden;
     }
     @keyframes pmSlideUp { from{transform:translateY(110%)} to{transform:translateY(0)} }
     .pay-handle { width: 44px; height: 5px; background: #E5E7EB; border-radius: 99px; margin: 12px auto 0; flex-shrink: 0; }
@@ -374,7 +374,7 @@
     }
     .pay-head-close:active { transform: translate(1px,1px); box-shadow: 1px 1px 0 #111827; }
     .pay-head-close svg { width: 14px; height: 14px; }
-    .pay-body { padding: 16px 18px 4px; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; flex: 1; }
+    .pay-body { padding: 16px 18px 20px; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; flex: 1; -webkit-overflow-scrolling: touch; }
     .pay-body::-webkit-scrollbar { width: 0; }
     .pm-card { border: 2px solid #111827; border-radius: 14px; box-shadow: 3px 3px 0 #111827; background: #fff; overflow: hidden; }
     .pm-card-head { padding: 12px 14px; display: flex; align-items: center; gap: 10px; border-bottom: 1.5px solid #F3F4F6; background: #FAFAFA; }
@@ -406,7 +406,7 @@
     .pm-metode-label { font-size: 10px; font-weight: 700; color: #F97316; text-transform: uppercase; letter-spacing: .6px; }
     .pm-metode-name  { font-size: 14px; font-weight: 800; color: #111827; margin-top: 2px; line-height: 1.2; }
     .pm-qris-box { padding: 20px 14px; display: flex; flex-direction: column; align-items: center; gap: 12px; background: #FAFAFA; }
-    .pm-qris-wrap { width: 220px; height: 220px; border-radius: 14px; border: 2.5px solid #111827; box-shadow: 3px 3px 0 #111827; background: #fff; display: grid; place-items: center; overflow: hidden; padding: 8px; }
+    .pm-qris-wrap { width: min(220px, 72vw); height: min(220px, 72vw); border-radius: 14px; border: 2.5px solid #111827; box-shadow: 3px 3px 0 #111827; background: #fff; display: grid; place-items: center; overflow: hidden; padding: 8px; }
     .pm-qris-wrap svg { width: 136px; height: 136px; }
     .pm-qris-label { font-size: 11px; color: #6B7280; text-align: center; line-height: 1.6; }
     .pm-qris-amount { font-size: 18px; font-weight: 800; color: #111827; background: linear-gradient(135deg,#FEF3C7,#FDE68A); border: 2px solid #F59E0B; border-radius: 10px; padding: 6px 18px; box-shadow: 2px 2px 0 #111827; }
@@ -432,7 +432,7 @@
     .pm-summary-row.total { padding-top: 10px; border-top: 1.5px dashed #E5E7EB; margin-top: 2px; }
     .pm-summary-row.total span:first-child { color: #374151; font-weight: 700; font-size: 13px; }
     .pm-summary-row.total span:last-child { color: #EA580C; font-size: 15px; font-weight: 800; }
-    .pay-footer { padding: 14px 18px 6px; flex-shrink: 0; border-top: 1.5px solid #F3F4F6; }
+    .pay-footer { padding: 14px 18px env(safe-area-inset-bottom, 20px); flex-shrink: 0; border-top: 1.5px solid #F3F4F6; }
     .pay-close-btn {
       width: 100%; padding: 13px; border-radius: 12px;
       background: #fff; color: #374151; font-size: 13px; font-weight: 700;
