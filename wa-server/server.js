@@ -105,21 +105,200 @@ async function startWaClient() {
    Admin Back Office
 ================================================================ */
 app.get('/admin', (req, res) => {
-  if (req.query.token !== ADMIN_TOKEN) return res.status(401).send('<h2>401 Unauthorized</h2>');
+  if (req.query.token !== ADMIN_TOKEN) {
+    return res.status(401).send(`<!DOCTYPE html><html><head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>401 Unauthorized</title>
+      <style>body{font-family:sans-serif;text-align:center;padding:40px;background:#f5f5f5;color:#333}</style>
+    </head><body><h2>⛔ 401 Unauthorized</h2><p>Token tidak valid.</p></body></html>`);
+  }
+
   let body = '';
   if (waStatus === 'connected') {
-    body = '<h2 style="color:green">🟢 WhatsApp Terhubung</h2><p>OTP siap dikirim.</p>';
+    body = `
+      <div class="card">
+        <div class="status-icon">🟢</div>
+        <h2 class="status-title connected">WhatsApp Terhubung</h2>
+        <p class="status-desc">Server OTP siap mengirim pesan.</p>
+      </div>
+      <script>setTimeout(()=>location.reload(), 10000)</script>`;
   } else if (waStatus === 'qr' && qrDataUrl) {
-    body = `<h2>📱 Scan QR Code</h2>
-      <img src="${qrDataUrl}" style="width:300px;height:300px"/>
-      <p>Buka WhatsApp → Perangkat Tertaut → Tautkan Perangkat</p>
-      <script>setTimeout(()=>location.reload(),5000)</script>`;
+    body = `
+      <div class="card">
+        <div class="status-icon">📱</div>
+        <h2 class="status-title">Scan QR Code</h2>
+        <div class="qr-wrapper">
+          <img src="${qrDataUrl}" alt="QR Code WhatsApp" class="qr-img"/>
+        </div>
+        <ol class="steps">
+          <li>Buka <strong>WhatsApp</strong> di HP kamu</li>
+          <li>Ketuk menu <strong>⋮</strong> → <strong>Perangkat Tertaut</strong></li>
+          <li>Ketuk <strong>Tautkan Perangkat</strong></li>
+          <li>Arahkan kamera ke QR di atas</li>
+        </ol>
+        <p class="refresh-note">⏳ Halaman otomatis refresh dalam <span id="countdown">5</span> detik...</p>
+      </div>
+      <script>
+        var s = 5;
+        var el = document.getElementById('countdown');
+        var iv = setInterval(function(){
+          s--; if(el) el.textContent = s;
+          if(s <= 0){ clearInterval(iv); location.reload(); }
+        }, 1000);
+      </script>`;
   } else {
-    body = '<h2>⏳ Menunggu WhatsApp...</h2><script>setTimeout(()=>location.reload(),3000)</script>';
+    body = `
+      <div class="card">
+        <div class="status-icon">⏳</div>
+        <h2 class="status-title">Menunggu WhatsApp...</h2>
+        <p class="status-desc">Sedang menginisialisasi koneksi. Harap tunggu.</p>
+        <div class="spinner"></div>
+        <p class="refresh-note">Halaman otomatis refresh dalam <span id="countdown">3</span> detik...</p>
+      </div>
+      <script>
+        var s = 3;
+        var el = document.getElementById('countdown');
+        var iv = setInterval(function(){
+          s--; if(el) el.textContent = s;
+          if(s <= 0){ clearInterval(iv); location.reload(); }
+        }, 1000);
+      </script>`;
   }
-  res.send(`<!DOCTYPE html><html><head><meta charset="utf-8"><title>AnabulKu WA Admin</title>
-    <style>body{font-family:sans-serif;text-align:center;padding:40px;background:#f5f5f5}</style>
-    </head><body>${body}</body></html>`);
+
+  res.send(`<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AnabulKu — WA Admin</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f0f4f8;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      color: #333;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .header h1 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #1a1a2e;
+    }
+
+    .header p {
+      font-size: 0.85rem;
+      color: #666;
+      margin-top: 4px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+      padding: 32px 24px;
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    .status-icon {
+      font-size: 3rem;
+      margin-bottom: 12px;
+    }
+
+    .status-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #1a1a2e;
+    }
+
+    .status-title.connected {
+      color: #16a34a;
+    }
+
+    .status-desc {
+      font-size: 0.9rem;
+      color: #555;
+      line-height: 1.5;
+    }
+
+    .qr-wrapper {
+      margin: 20px auto;
+      width: 100%;
+      max-width: 280px;
+      aspect-ratio: 1 / 1;
+      border: 3px solid #e2e8f0;
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff;
+    }
+
+    .qr-img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    .steps {
+      text-align: left;
+      margin: 16px 0;
+      padding-left: 20px;
+      font-size: 0.88rem;
+      color: #444;
+      line-height: 2;
+    }
+
+    .steps li {
+      margin-bottom: 2px;
+    }
+
+    .refresh-note {
+      font-size: 0.8rem;
+      color: #999;
+      margin-top: 16px;
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid #e2e8f0;
+      border-top-color: #3b82f6;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 20px auto;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>🐾 AnabulKu WA Admin</h1>
+    <p>Panel manajemen WhatsApp OTP</p>
+  </div>
+  ${body}
+</body>
+</html>`);
 });
 
 /* ── Status ── */
