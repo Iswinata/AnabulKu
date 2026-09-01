@@ -112,8 +112,8 @@
     .order-rows { display: flex; flex-direction: column; gap: 0; }
     .order-row {
       display: flex;
-      align-items: center;
-      gap: 8px;
+      align-items: flex-start;
+      gap: 10px;
       padding: 10px 14px;
       border-bottom: 1px solid #F3F4F6;
     }
@@ -121,26 +121,30 @@
     .order-row .info-col {
       flex: 1;
       min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
     }
     .order-row .info-icon {
       flex-shrink: 0;
+      margin-top: 1px;
     }
     .order-row-key {
       color: #9CA3AF;
-      flex: 0 0 90px;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 500;
       word-break: break-word;
+      line-height: 1.4;
     }
     .order-row-val {
       font-weight: 700;
       color: #111827;
-      font-size: 12px;
-      flex: 1;
+      font-size: 12.5px;
       min-width: 0;
       word-break: break-word;
       overflow-wrap: anywhere;
-      text-align: right;
+      white-space: normal;
+      line-height: 1.4;
     }
     .order-row-val.chip { background: none; border-radius: 0; padding: 0; font-size: 12px; }
     .order-divider { height: 1px; background: #E5E7EB; margin: 4px 14px; }
@@ -716,6 +720,8 @@
               <p class="info-label">Pukul</p>
               <p class="info-val" id="payJam">—</p>
             </div>
+          </div>
+          <div class="order-row">
             <div class="info-icon">🐾</div>
             <div class="info-col">
               <p class="info-label">Hewan</p>
@@ -728,6 +734,8 @@
               <p class="info-label">Biaya Layanan</p>
               <p class="info-val" id="payBiaya">—</p>
             </div>
+          </div>
+          <div class="order-row">
             <div class="info-icon" style="opacity:0.6;">🏷️</div>
             <div class="info-col" style="opacity:0.6;">
               <p class="info-label">Biaya Platform</p>
