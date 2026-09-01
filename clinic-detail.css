@@ -1,156 +1,270 @@
 /* ===================================================================
-   AnabulKu — Halaman Detail Klinik (clinic-detail.html)
-   Matches Figma spec: iPhone 14/15 Pro 393×852, bg #FCECE3
+   AnabulKu — Halaman Detail Klinik  |  Glassmorphism dark-navy
 =================================================================== */
 
-/* Extra body padding to clear topbar */
 .cd-app { padding-bottom: 0; }
 
-/* ===================================================================
-   Main Clinic Card — gradient 90deg #FF9800→#FFD28F, shadow 2px 2px 0 #000
-   Spec: 349×113 at top 103
-=================================================================== */
+/* ── Main clinic card ── */
 .cd-main-card {
   position: relative;
   container-type: inline-size;
   margin-top: 22px;
   aspect-ratio: 349 / 113;
-  border-radius: 13px;
-  background: linear-gradient(90deg, #ff9800 0%, #ffd28f 100%);
-  box-shadow: 2px 2px 0px #000;
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(255,152,0,0.85) 0%, rgba(255,189,93,0.70) 100%);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,200,100,0.35);
+  box-shadow: 0 8px 28px rgba(255,152,0,0.25), inset 0 1px 0 rgba(255,255,255,0.20);
   overflow: hidden;
   isolation: isolate;
 }
 
-/* Reversed variant used if needed */
 .cd-main-card.cd-reverse {
-  background: linear-gradient(90deg, #ffd28f 0%, #ff9800 124.36%);
+  background: linear-gradient(135deg, rgba(255,189,93,0.75) 0%, rgba(255,152,0,0.85) 100%);
 }
 
-/* Photo box — 97×95 at left 10, top 9 */
 .cd-main-photo {
   position: absolute;
-  left: 2.87%;
-  top: 7.96%;
-  width: 27.79%;
-  height: 84.07%;
+  left: 2.87%; top: 7.96%;
+  width: 27.79%; height: 84.07%;
   z-index: 1;
   border-radius: 10px;
-  background: #fff center / cover no-repeat;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.16);
+  background: rgba(255,255,255,0.12) center / cover no-repeat;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  border: 1px solid rgba(255,255,255,0.25);
 }
 
-/* Text block — starts at left 119 */
 .cd-main-body {
   position: absolute;
-  left: 34.1%;
-  right: 3%;
-  top: 13.7%;
+  left: 34.1%; right: 3%; top: 13.7%;
   z-index: 2;
-  display: flex;
-  flex-direction: column;
+  display: flex; flex-direction: column;
   gap: 2.3cqw;
 }
 
 .cd-main-name {
-  color: #ffeed5;
-  font-weight: 600;
-  font-size: 4.31cqw;
-  line-height: 1.1;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  color: #fff;
+  font-weight: 700; font-size: 4.31cqw; line-height: 1.1;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.15);
 }
 
 .cd-main-addr {
-  color: #fff;
-  font-weight: 400;
-  font-size: 3.01cqw;
-  line-height: 1.15;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  color: rgba(255,255,255,0.85);
+  font-weight: 400; font-size: 3.01cqw; line-height: 1.15;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
 }
 
-.cd-main-meta {
-  display: flex;
-  align-items: center;
-  gap: 4.6cqw;
-  margin-top: 1.4cqw;
-}
+.cd-main-meta { display: flex; align-items: center; gap: 4.6cqw; margin-top: 1.4cqw; }
+.cd-meta-chip { display: inline-flex; align-items: center; gap: 1.2cqw; }
+.cd-meta-ico  { width: 3.7cqw; height: 3.7cqw; flex: none; }
+.cd-meta-val  { color: #fff3d0; font-weight: 600; font-size: 3.66cqw; line-height: 1.1; }
 
-.cd-meta-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 1.2cqw;
-}
-
-.cd-meta-ico {
-  width: 3.7cqw;
-  height: 3.7cqw;
-  flex: none;
-}
-
-.cd-meta-val {
-  color: #ffe5bf;
-  font-weight: 600;
-  font-size: 3.66cqw;
-  line-height: 1.1;
-}
-
-/* ===================================================================
-   Date Picker Strip — 7 day scroll
-=================================================================== */
-.cd-date-section {
-  margin-top: 20px;
-}
+/* ── Date picker ── */
+.cd-date-section { margin-top: 20px; }
 
 .cd-date-strip {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 6px;
-  padding: 2px 0 6px;
+  display: grid; grid-template-columns: repeat(7,1fr);
+  gap: 6px; padding: 2px 0 6px;
 }
 
 .cd-day-btn {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-  width: 100%;
-  height: 60px;
-  padding: 8px 4px;
-  background: #fff;
-  border: 1.5px solid #E5E7EB;
-  border-radius: 12px;
-  cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 5px; width: 100%; height: 60px; padding: 8px 4px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 12px; cursor: pointer;
   font-family: 'Poppins', sans-serif;
-  transition: background 0.15s, border-color 0.15s, box-shadow 0.15s, transform 0.1s;
+  transition: background 0.15s, border-color 0.15s, transform 0.1s;
 }
 .cd-day-btn:hover:not(.is-active) {
-  border-color: #FFCC80;
-  background: #FFF7ED;
+  border-color: rgba(255,152,0,0.45);
+  background: rgba(255,152,0,0.12);
 }
-.cd-day-btn:active { transform: translate(1px, 1px); }
+.cd-day-btn:active { transform: scale(0.96); }
 
 .cd-day-btn.is-active {
-  background: linear-gradient(180deg, #FF9800 0%, #FFBC59 100%);
-  border-color: #FF9800;
-  box-shadow: 2px 2px 0 #000;
+  background: linear-gradient(180deg, rgba(255,152,0,0.85) 0%, rgba(255,189,93,0.75) 100%);
+  border-color: rgba(255,152,0,0.7);
+  box-shadow: 0 4px 14px rgba(255,152,0,0.30);
 }
 
 .cd-day-letter {
-  font-size: 11px;
-  font-weight: 600;
-  color: #6B7280;
-  line-height: 1;
-  text-transform: uppercase;
-  letter-spacing: 0.02em;
+  font-size: 11px; font-weight: 600;
+  color: rgba(255,255,255,0.50);
+  line-height: 1; text-transform: uppercase; letter-spacing: 0.02em;
 }
-.cd-day-btn.is-active .cd-day-letter { color: #fff3e0; }
+.cd-day-btn.is-active .cd-day-letter { color: rgba(255,255,255,0.90); }
+
+.cd-day-num {
+  font-size: 16px; font-weight: 700;
+  color: rgba(255,255,255,0.85);
+  line-height: 1;
+}
+.cd-day-btn.is-active .cd-day-num { color: #fff; }
+
+/* ── Doctor section ── */
+.cd-doctor-section { margin-top: 20px; }
+
+.cd-doctor-scroll {
+  display: flex; gap: 10px;
+  overflow-x: auto; padding-bottom: 4px;
+  scrollbar-width: none;
+}
+.cd-doctor-scroll::-webkit-scrollbar { display: none; }
+
+.cd-doctor-card {
+  flex: none; width: 120px;
+  background: rgba(255,255,255,0.10);
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 14px; padding: 14px 10px;
+  display: flex; flex-direction: column; align-items: center; gap: 7px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, transform 0.1s;
+}
+.cd-doctor-card:hover { background: rgba(255,255,255,0.16); border-color: rgba(255,152,0,0.40); }
+.cd-doctor-card:active { transform: scale(0.97); }
+.cd-doctor-card.is-active {
+  background: rgba(255,152,0,0.20);
+  border-color: rgba(255,152,0,0.65);
+  box-shadow: 0 4px 16px rgba(255,152,0,0.25);
+}
+
+.cd-doctor-photo {
+  width: 52px; height: 52px; border-radius: 50%;
+  object-fit: cover;
+  background: rgba(255,255,255,0.10);
+  border: 2px solid rgba(255,255,255,0.20);
+}
+.cd-doctor-card.is-active .cd-doctor-photo { border-color: rgba(255,152,0,0.70); }
+
+.cd-doctor-name {
+  font-size: 11px; font-weight: 700;
+  color: #fff; text-align: center; line-height: 1.2;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+
+.cd-doctor-spec {
+  font-size: 10px; font-weight: 400;
+  color: rgba(255,255,255,0.55); text-align: center; line-height: 1.2;
+}
+
+/* ── Time slot grid ── */
+.cd-time-section { margin-top: 18px; }
+
+.cd-time-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.cd-time-slot {
+  padding: 10px 4px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.08);
+  font-family: 'Poppins', sans-serif;
+  font-size: 12px; font-weight: 600;
+  color: rgba(255,255,255,0.70);
+  text-align: center; cursor: pointer;
+  transition: background 0.12s, border-color 0.12s, transform 0.1s;
+}
+.cd-time-slot:hover:not(.past):not(.booked) {
+  background: rgba(255,152,0,0.18);
+  border-color: rgba(255,152,0,0.50);
+}
+.cd-time-slot:active:not(.past):not(.booked) { transform: scale(0.96); }
+
+/* Available */
+.cd-time-slot.available {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.18);
+  color: rgba(255,255,255,0.75);
+}
+
+/* Selected */
+.cd-time-slot.selected {
+  background: linear-gradient(180deg, rgba(255,152,0,0.9) 0%, rgba(255,189,93,0.85) 100%);
+  border-color: rgba(255,152,0,0.80);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(255,152,0,0.30);
+}
+
+/* Row tombol Pilih Layanan */
+.cd-time-action-row {
+  position: relative; z-index: 1;
+  display: flex; justify-content: flex-end;
+  margin-top: 8px;
+}
+
+/* Pilih Layanan CTA */
+.cd-pilih-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 110px; height: 34px; padding: 0 16px;
+  background: linear-gradient(135deg, #ff9800 0%, #ffbd5d 100%);
+  border: none; border-radius: 10px;
+  box-shadow: 0 4px 14px rgba(255,152,0,0.35);
+  font-family: 'Poppins', sans-serif;
+  font-size: 12px; font-weight: 700; color: #fff;
+  cursor: pointer;
+  transition: transform 0.1s, opacity 0.1s;
+}
+.cd-pilih-btn:hover  { opacity: 0.90; }
+.cd-pilih-btn:active { transform: scale(0.97); opacity: 0.85; }
+
+/* Empty / no-data states */
+.cd-no-doctors {
+  text-align: center;
+  color: rgba(255,255,255,0.40);
+  font-size: 13px; padding: 24px 0;
+}
+
+.cd-no-doctors-day {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 10px; padding: 32px 16px; text-align: center;
+}
+.cd-no-doctors-day p {
+  color: rgba(255,255,255,0.40);
+  font-size: 13px; font-weight: 500; margin: 0;
+}
+
+/* Day tag today */
+.cd-day-tag.is-today {
+  background: rgba(255,152,0,0.30);
+  color: #ffbd5d; font-weight: 700;
+  border-color: rgba(255,152,0,0.60);
+}
+
+/* Sesi group */
+.cd-sesi-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
+.cd-sesi-group:last-child { margin-bottom: 0; }
+
+.cd-sesi-group-header {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 9.5px; font-weight: 700;
+  color: #ffbd5d; letter-spacing: 0.05em; text-transform: uppercase;
+  background: rgba(255,152,0,0.15);
+  border-radius: 20px; padding: 2px 9px;
+  width: fit-content;
+  border: 1px solid rgba(255,152,0,0.25);
+}
+
+/* Slot states */
+.cd-time-slot.past {
+  background: rgba(255,255,255,0.04) !important;
+  color: rgba(255,255,255,0.20) !important;
+  box-shadow: none !important;
+  cursor: not-allowed !important;
+  text-decoration: line-through;
+}
+
+.cd-time-slot.booked {
+  background: rgba(239,68,68,0.12) !important;
+  color: rgba(239,68,68,0.70) !important;
+  border-color: rgba(239,68,68,0.25) !important;
+  cursor: not-allowed !important;
+}
+.cd-time-slot.booked::after { content: " ✕"; font-size: 9px; opacity: 0.8; }
 
 .cd-day-num {
   font-size: 16px;
@@ -160,199 +274,115 @@
 }
 .cd-day-btn.is-active .cd-day-num { color: #fff; }
 
-/* ===================================================================
-   Doctor Cards — spec: 349×156 gradient reverse, shadow 2px 2px 0 #000
-=================================================================== */
+/* ── Doctor Cards ── */
 .cd-doctors {
   margin-top: 18px;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
+  display: flex; flex-direction: column; gap: 14px;
 }
 
 .cd-doc-card {
   position: relative;
   container-type: inline-size;
-  border-radius: 13px;
-  background: linear-gradient(90deg, #ffd28f 0%, #ff9800 124.36%);
-  box-shadow: 2px 2px 0 #000;
-  overflow: hidden;
-  isolation: isolate;
-  padding: 9px 10px 10px;
+  border-radius: 16px;
+  background: rgba(255,255,255,0.10);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.18);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.20);
+  overflow: hidden; isolation: isolate;
+  padding: 12px 12px 12px;
 }
 
-/* Paw texture overlay */
-.cd-doc-card::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: url("Banner1.png") center / cover;
-  mix-blend-mode: soft-light;
-  opacity: 0.9;
-  z-index: 0;
-  pointer-events: none;
-}
+.cd-doc-card::before { display: none; }
 
-/* Inner layout above texture */
 .cd-doc-inner {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  gap: 10px;
+  position: relative; z-index: 1;
+  display: flex; gap: 12px;
 }
 
-/* Doctor photo — 97×95 */
 .cd-doc-photo {
-  flex: none;
-  width: 97px;
-  height: 95px;
-  border-radius: 10px;
-  background: #fff center / cover no-repeat;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.16);
-  overflow: hidden;
-  border: 1.5px solid rgba(255,255,255,0.6);
-  position: relative;
+  flex: none; width: 90px; height: 88px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.08) center / cover no-repeat;
+  border: 1.5px solid rgba(255,255,255,0.20);
+  overflow: hidden; position: relative;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
 }
 
-/* Fallback state — tidak ada foto dokter */
 .cd-doc-photo--empty {
-  background: #fff8f0;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
+  background: rgba(255,152,0,0.12);
+  display: flex; align-items: flex-end; justify-content: center;
 }
 
-/* Icon lokasi sebagai placeholder foto dokter */
 .cd-doc-photo-icon {
-  display: block;
-  width: 80px;
-  height: 80px;
-  object-fit: contain;
+  display: block; width: 72px; height: 72px; object-fit: contain;
 }
 
-/* Right text area */
 .cd-doc-info {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
+  flex: 1; min-width: 0;
+  display: flex; flex-direction: column; gap: 3px;
 }
 
 .cd-doc-name {
-  color: #ffeed5;
-  font-weight: 600;
-  font-size: 3.53cqw;   /* ≈12.3px @ 349 */
-  line-height: 1.15;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  color: #fff; font-weight: 700;
+  font-size: 3.53cqw; line-height: 1.15;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
 }
 
 .cd-doc-spec {
-  color: #a36233;
-  font-weight: 400;
-  font-size: 3.01cqw;   /* ≈10.5px */
-  line-height: 1.2;
+  color: rgba(255,255,255,0.55); font-weight: 400;
+  font-size: 3.01cqw; line-height: 1.2;
 }
 
-/* Jam kerja dokter hari ini — misal "🕐 08:00–12:00 & 14:00–17:00" */
 .cd-doc-hours {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  margin-top: 2px;
-  font-size: 3.01cqw;   /* ≈10.5px */
-  font-weight: 600;
-  color: #fff3e0;
-  line-height: 1.2;
+  display: inline-flex; align-items: center; gap: 4px; margin-top: 2px;
+  font-size: 3.01cqw; font-weight: 600; color: #ffbd5d; line-height: 1.2;
 }
 
 .cd-doc-sched-label {
-  color: #ffefd8;
-  font-weight: 400;
-  font-size: 3.01cqw;
-  margin-top: 4px;
+  color: rgba(255,255,255,0.45); font-weight: 400;
+  font-size: 3.01cqw; margin-top: 4px;
 }
 
-/* Day-of-week tags (Senin, Kamis, Sabtu …) */
 .cd-doc-days {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
-  margin-top: 3px;
+  display: flex; flex-wrap: wrap; gap: 5px; margin-top: 3px;
 }
 
 .cd-day-tag {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 43px;
-  height: 16px;
-  padding: 0 6px;
-  background: linear-gradient(180deg, #ff9800 0%, #ffbc59 100%);
-  border: none;
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 43px; height: 16px; padding: 0 6px;
+  background: rgba(255,152,0,0.25);
+  border: 1px solid rgba(255,152,0,0.50);
   border-radius: 8px;
-  box-shadow: 1px 1px 0 #000;
   font-family: 'Poppins', sans-serif;
-  font-size: 7.5px;
-  font-weight: 600;
-  color: #fff;
+  font-size: 7.5px; font-weight: 600; color: #ffbd5d;
   white-space: nowrap;
 }
 
-/* Divider line */
 .cd-doc-divider {
-  position: relative;
-  z-index: 1;
-  height: 1px;
-  background: #fffbf5;
-  margin: 8px 0;
+  position: relative; z-index: 1;
+  height: 1px; background: rgba(255,255,255,0.10); margin: 10px 0;
 }
 
-/* Wrapper area slot — flex column agar sesi-block stack ke bawah */
 .cd-time-row {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  position: relative; z-index: 1;
+  display: flex; flex-direction: column; gap: 8px;
 }
 
-/* Satu blok sesi */
-.cd-sesi-block {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
+.cd-sesi-block { display: flex; flex-direction: column; gap: 6px; }
 
-/* Header sesi: label "Sesi 1" + rentang jam */
-.cd-sesi-header {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
+.cd-sesi-header { display: flex; align-items: center; gap: 6px; }
 
 .cd-sesi-num {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  height: 16px;
-  padding: 0 7px;
-  background: rgba(255,255,255,0.25);
-  border-radius: 20px;
-  font-size: 9px;
-  font-weight: 700;
-  color: #fff;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  white-space: nowrap;
+  display: inline-flex; align-items: center; justify-content: center;
+  height: 16px; padding: 0 7px;
+  background: rgba(255,152,0,0.25);
+  border-radius: 20px; border: 1px solid rgba(255,152,0,0.40);
+  font-size: 9px; font-weight: 700; color: #ffbd5d;
+  letter-spacing: 0.04em; text-transform: uppercase; white-space: nowrap;
 }
 
 .cd-sesi-range {
-  font-size: 10px;
-  font-weight: 600;
+  font-size: 10px; font-weight: 600;
   color: #fff3e0;
   letter-spacing: 0.01em;
 }
@@ -428,46 +458,26 @@
   height: 30px;
   padding: 0 14px;
   background: linear-gradient(180deg, #ff9800 0%, #ffbc59 100%);
-  border: none;
   border-radius: 8px;
-  box-shadow: 2px 2px 0 #000;
+  box-shadow: 0 4px 14px rgba(255,152,0,0.35);
   font-family: 'Poppins', sans-serif;
-  font-size: 12px;
-  font-weight: 700;
-  color: #fff;
+  font-size: 12px; font-weight: 700; color: #fff;
   cursor: pointer;
-  transition: transform 0.1s, box-shadow 0.1s;
+  transition: transform 0.1s, opacity 0.1s;
 }
-.cd-pilih-btn:hover { background: linear-gradient(180deg, #fb8c00 0%, #ffa726 100%); }
-.cd-pilih-btn:active { transform: translate(1px,1px); box-shadow: 1px 1px 0 #000; }
+.cd-pilih-btn:hover  { opacity: 0.90; }
+.cd-pilih-btn:active { transform: scale(0.97); opacity: 0.85; }
 
-/* Empty / no-data state inside doctor section */
-.cd-no-doctors {
-  text-align: center;
-  color: #9CA3AF;
-  font-size: 13px;
-  padding: 24px 0;
-}
+.cd-no-doctors { text-align: center; color: rgba(255,255,255,0.40); font-size: 13px; padding: 24px 0; }
 
-/* Empty state when no doctors on the selected day */
 .cd-no-doctors-day {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  padding: 32px 16px;
-  text-align: center;
+  display: flex; flex-direction: column; align-items: center;
+  gap: 10px; padding: 32px 16px; text-align: center;
 }
-.cd-no-doctors-day p {
-  color: #9CA3AF;
-  font-size: 13px;
-  font-weight: 500;
-  margin: 0;
-}
+.cd-no-doctors-day p { color: rgba(255,255,255,0.40); font-size: 13px; font-weight: 500; margin: 0; }
 
-/* Day tag — highlight the currently selected day */
 .cd-day-tag.is-today {
-  background: #FF9800;
+  background: rgba(255,152,0,0.35);
   color: #fff;
   font-weight: 700;
   border-color: #FF9800;

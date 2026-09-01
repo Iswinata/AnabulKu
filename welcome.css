@@ -7,23 +7,19 @@
 
 :root {
   --frame-bg: #fcece3;
-  --ink-title: #2c3e50;
-  --sub: #7f8c8d;
-  --dot-off: #d1d5db;
-  --dot-on: #000000;
+  --ink-title: #ffffff;
+  --sub: rgba(255,255,255,0.65);
+  --dot-off: rgba(255,255,255,0.25);
+  --dot-on: #ff9800;
   --cta-a: #ff9800;
-  --cta-b: #ffc46d;
+  --cta-b: #ffbd5d;
   --black: #000000;
   --white: #ffffff;
 
-  --shadow-hard: 2px 2px 0px var(--black);
-  --shadow-pillar: 0px 5px 0px var(--black);
+  --shadow-hard: 0 4px 20px rgba(0,0,0,0.25);
+  --shadow-pillar: 0 8px 32px rgba(0,0,0,0.2);
 
-  /* How far the whole pillar block (pillars + pet avatars) is pulled up.
-     Increase to raise it further, decrease to lower it. */
   --pillar-shift: 48px;
-
-  /* Extra drop applied only to the 2nd pillar and its avatar */
   --p2-drop: 26px;
 }
 
@@ -37,7 +33,8 @@ html, body {
 
 body {
   font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-  background: #e7dbd0;
+  background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+  background-attachment: fixed;
   color: var(--ink-title);
   display: flex;
   justify-content: center;
@@ -49,15 +46,19 @@ body {
 .welcome {
   position: relative;
   width: 100%;
-  max-width: 393px;               /* same width as home (.app) */
+  max-width: 393px;
   height: 100vh;
-  height: 100dvh;                 /* exact viewport height, no overflow */
-  background: var(--frame-bg);
+  height: 100dvh;
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-left: 1px solid rgba(255,255,255,0.12);
+  border-right: 1px solid rgba(255,255,255,0.12);
   overflow: hidden;
   isolation: isolate;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 0 40px -10px rgba(0, 0, 0, 0.18);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.26);
 }
 
 /* ===================================================================
@@ -84,12 +85,12 @@ body {
 }
 
 /* left → right: width & left are % of 393, height is % of 342 */
-.p1 { left: 0%;      width: 20.10%; height: 78.36%; background: #ffc5ba; }  /* 79 x 268 */
-.p2 { left: 20.10%;  width: 19.85%; height: 52.92%; background: #fb923c;    /* 78 x 181 */
-      top: var(--p2-drop); }                                                /* nudged down */
-.p3 { left: 39.95%;  width: 20.10%; height: 100%;   background: #ffb74d; }  /* 79 x 342 */
-.p4 { left: 60.05%;  width: 19.85%; height: 78.36%; background: #b4f5fd; }  /* 78 x 268 */
-.p5 { left: 79.90%;  width: 20.10%; height: 55.26%; background: #e2c5ff; }  /* 79 x 189 */
+.p1 { left: 0%;      width: 20.10%; height: 78.36%; background: rgba(255,197,186,0.35); }
+.p2 { left: 20.10%;  width: 19.85%; height: 52.92%; background: rgba(251,146,60,0.40);
+      top: var(--p2-drop); }
+.p3 { left: 39.95%;  width: 20.10%; height: 100%;   background: rgba(255,183,77,0.40); }
+.p4 { left: 60.05%;  width: 19.85%; height: 78.36%; background: rgba(180,245,253,0.30); }
+.p5 { left: 79.90%;  width: 20.10%; height: 55.26%; background: rgba(226,197,255,0.30); }
 
 
 /* Circular pet avatars seated in each pillar's rounded bottom cap */
@@ -175,18 +176,19 @@ body {
   flex: none;
   display: grid;
   place-items: center;
-  background: linear-gradient(90deg, var(--cta-a) 0%, var(--cta-b) 100%);
-  box-shadow: var(--shadow-hard);
-  border-radius: 10px;
+  background: linear-gradient(135deg, var(--cta-a) 0%, var(--cta-b) 100%);
+  box-shadow: 0 6px 20px rgba(255,152,0,0.38);
+  border-radius: 16px;
+  border: none;
   color: var(--white);
-  font-weight: 600;
-  font-size: 19.0062px;
-  line-height: 30px;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1;
   text-align: center;
   text-decoration: none;
-  transition: transform 0.1s ease;
+  transition: transform 0.1s ease, opacity 0.1s;
 }
-.cta:active { transform: translate(1px, 1px); }
+.cta:active { transform: scale(0.97); opacity: 0.92; }
 
 /* Login link */
 .login {

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="theme-color" content="#FCECE3" />
+  <meta name="theme-color" content="#0f0c29" />
   <title>Favorit — AnabulKu</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -13,154 +13,216 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html, body {
       font-family: "Poppins", system-ui, sans-serif;
-      background: #e7dbd0;
       -webkit-text-size-adjust: 100%;
       -webkit-font-smoothing: antialiased;
-      min-height: 100dvh;
+      min-height: 100dvh; color: #fff;
     }
     body { display: flex; justify-content: center; }
-    button { font-family: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; border: none; background: none; }
+    button { font-family: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; border: none; background: none; color: inherit; }
     a { text-decoration: none; color: inherit; -webkit-tap-highlight-color: transparent; }
 
     .app {
       position: relative; width: 100%; max-width: 393px; min-height: 100dvh;
-      background: #f5ebe0; box-shadow: 0 0 40px -10px rgba(0,0,0,.2);
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+      border-left: 1px solid rgba(255,255,255,0.18); border-right: 1px solid rgba(255,255,255,0.18);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.26);
       display: flex; flex-direction: column; padding: 0;
     }
 
-    /* Header */
-    .header { background: #fcece3; padding: 20px 22px 14px; flex-shrink: 0; }
+    .header {
+      background: rgba(255,255,255,0.06);
+      backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(255,255,255,0.10);
+      padding: 20px 22px 14px; flex-shrink: 0;
+    }
     .header-top { display: flex; align-items: center; gap: 12px; }
     .btn-back {
       display: grid; place-items: center; width: 40px; height: 40px;
-      border-radius: 12px; border: 1px solid #e5e7eb; background: #fff;
-      box-shadow: 0px 1px 2px rgba(0,0,0,.05); color: #4b5563;
-      flex-shrink: 0; transition: transform .12s;
+      border-radius: 12px; border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.09);
+      color: rgba(255,255,255,0.75); flex-shrink: 0; transition: background .12s, transform .12s;
     }
     .btn-back:active { transform: scale(.94); }
     .btn-back svg { width: 20px; height: 20px; }
+    .btn-back svg path, .btn-back svg polyline { stroke: rgba(255,255,255,0.75); }
     .header-text { min-width: 0; }
-    .header-title { font-size: 14px; font-weight: 700; color: #1F2937; line-height: 1.3; }
-    .header-sub { font-size: 12px; color: #9CA3AF; font-weight: 400; line-height: 1.4; margin-top: 1px; }
+    .header-title { font-size: 14px; font-weight: 700; color: #fff; line-height: 1.3; }
+    .header-sub { font-size: 12px; color: rgba(255,255,255,0.45); font-weight: 400; line-height: 1.4; margin-top: 1px; }
 
-    /* Filter tabs */
     .filter-wrap {
-      background: #fcece3;
-      padding: 10px 20px 14px;
-      flex-shrink: 0;
-      border-bottom: 1px solid #f0e0d4;
+      background: rgba(255,255,255,0.04);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      padding: 10px 20px 14px; flex-shrink: 0;
     }
-    .filter-bar {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 8px;
-    }
+    .filter-bar { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
     .filter-chip {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 5px;
-      padding: 8px 4px 7px;
-      border-radius: 12px;
-      border: 1.5px solid #e5d8ce;
-      background: #fff;
-      font-size: 10px;
-      font-weight: 600;
-      color: #6B7280;
-      transition: all .15s;
-      white-space: nowrap;
-      line-height: 1;
-      cursor: pointer;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 5px; padding: 8px 4px 7px;
+      border-radius: 12px; border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.08);
+      font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.60);
+      transition: all .15s; white-space: nowrap; line-height: 1; cursor: pointer;
     }
-    .filter-chip-icon {
-      font-size: 20px;
-      line-height: 1;
-    }
+    .filter-chip-icon { font-size: 20px; line-height: 1; }
     .filter-chip.active {
-      background: linear-gradient(180deg, #FF9800 0%, #FFD21F 100%);
-      border-color: #FF9800;
-      color: #fff;
-      box-shadow: 2px 2px 0 #000;
-    }
-    .filter-chip.active .filter-chip-icon {
-      filter: drop-shadow(0 0 2px rgba(255,152,0,.4));
+      background: rgba(255,152,0,0.22); border-color: rgba(255,152,0,0.60);
+      color: #ffbd5d; box-shadow: 0 0 0 2px rgba(255,152,0,0.18);
     }
 
 
-    /* Content */
-    .content { flex: 1; overflow-y: auto; padding: 16px 20px 0; -webkit-overflow-scrolling: touch; }
-    .fav-count { font-size: 12px; color: #9CA3AF; font-weight: 500; margin-bottom: 12px; }
-    .fav-count span { color: #FF9800; font-weight: 700; }
+    .content { flex: 1; overflow-y: auto;
+      padding: 16px 20px 100px;
+      scrollbar-width: none;
+    }
+    .content::-webkit-scrollbar { display: none; }
+
     .fav-list { display: flex; flex-direction: column; gap: 12px; }
 
-    /* Klinik card */
+    .fav-card {
+      display: flex; align-items: center; gap: 12px;
+      padding: 13px 14px;
+      background: rgba(255,255,255,0.10);
+      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.16);
+      border-radius: 18px;
+      cursor: pointer;
+      transition: background .15s, transform .12s, border-color .15s;
+      box-shadow: 0 3px 14px rgba(0,0,0,0.18);
+      text-decoration: none; color: inherit;
+    }
+    .fav-card:hover { background: rgba(255,255,255,0.15); border-color: rgba(255,152,0,0.35); }
+    .fav-card:active { transform: scale(.98); }
+
+    .fav-thumb {
+      width: 58px; height: 58px; border-radius: 14px;
+      object-fit: cover; flex-shrink: 0;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+
+    .fav-info { flex: 1; min-width: 0; }
+    .fav-name {
+      font-size: 13.5px; font-weight: 700; color: #fff;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 3px;
+    }
+    .fav-addr {
+      font-size: 11px; color: rgba(255,255,255,0.50);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 5px;
+    }
+    .fav-meta { display: flex; align-items: center; gap: 8px; }
+    .fav-chip {
+      display: inline-flex; align-items: center; gap: 3px;
+      font-size: 10.5px; font-weight: 600; color: rgba(255,255,255,0.70);
+    }
+    .fav-chip svg { width: 11px; height: 11px; }
+    .fav-tag {
+      font-size: 10px; font-weight: 600;
+      padding: 2px 7px; border-radius: 6px;
+      background: rgba(255,152,0,0.20); color: #ffbd5d;
+      border: 1px solid rgba(255,152,0,0.30);
+    }
+
+    .fav-remove {
+      width: 32px; height: 32px; flex-shrink: 0;
+      border-radius: 50%;
+      background: rgba(239,68,68,0.15);
+      border: 1px solid rgba(239,68,68,0.25);
+      display: grid; place-items: center;
+      transition: background .15s;
+    }
+    .fav-remove:hover { background: rgba(239,68,68,0.28); }
+    .fav-remove svg { width: 15px; height: 15px; }
+    .fav-remove svg path { stroke: #fca5a5; }
+
+    .fav-empty {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 10px; padding: 56px 24px; text-align: center;
+    }
+    .fav-empty-icon { font-size: 44px; }
+    .fav-empty-title { font-size: 15px; font-weight: 700; color: #fff; }
+    .fav-empty-sub { font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.5; }
+    .fav-empty-cta {
+      margin-top: 6px; padding: 11px 24px; border-radius: 12px;
+      background: linear-gradient(135deg, #ff9800 0%, #ffbd5d 100%);
+      color: #fff; font-size: 13px; font-weight: 700;
+      text-decoration: none; display: inline-block;
+      box-shadow: 0 4px 14px rgba(255,152,0,0.35);
+    }
+
+    @media (prefers-reduced-motion:reduce) { *{transition:none!important;animation:none!important;} }
+    .fav-count { font-size: 12px; color: rgba(255,255,255,0.50); font-weight: 500; margin-bottom: 12px; }
+    .fav-count span { color: #ffbd5d; font-weight: 700; }
+    .fav-list { display: flex; flex-direction: column; gap: 12px; }
+
     .fav-card {
       position: relative; display: flex; align-items: center; gap: 12px;
-      background: #fff; border-radius: 14px; border: 1.5px solid #f0e6dc;
-      box-shadow: 2px 2px 0 #000; padding: 12px;
-      transition: transform .1s, box-shadow .1s; overflow: hidden;
+      background: rgba(255,255,255,0.10);
+      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      border-radius: 18px; border: 1px solid rgba(255,255,255,0.16);
+      box-shadow: 0 3px 14px rgba(0,0,0,0.18); padding: 12px;
+      transition: background .15s, transform .12s; overflow: hidden;
+      cursor: pointer;
     }
-    .fav-card:active { transform: translate(1px,1px); box-shadow: 1px 1px 0 #000; background: linear-gradient(180deg, #fff7ed 0%, #ffedd5 100%); }
+    .fav-card:hover { background: rgba(255,255,255,0.15); border-color: rgba(255,152,0,0.35); }
+    .fav-card:active { transform: scale(.98); }
     .fav-photo {
-      flex-shrink: 0; width: 64px; height: 64px; border-radius: 10px;
-      background: linear-gradient(135deg,#ffedd5,#fed7aa);
+      flex-shrink: 0; width: 64px; height: 64px; border-radius: 12px;
+      background: rgba(255,152,0,0.20);
       background-size: cover; background-position: center;
-      border: 1.5px solid #fde8c8;
+      border: 1px solid rgba(255,152,0,0.35);
       display: flex; align-items: center; justify-content: center;
-      color: #f97316; font-size: 24px;
+      color: #ffbd5d; font-size: 24px;
     }
     .fav-info { flex: 1; min-width: 0; }
     .fav-name {
-      font-size: 13px; font-weight: 700; color: #1F2937; line-height: 1.3;
+      font-size: 13px; font-weight: 700; color: #fff; line-height: 1.3;
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
     .fav-addr {
-      font-size: 11px; color: #9CA3AF; line-height: 1.4; margin-top: 2px;
+      font-size: 11px; color: rgba(255,255,255,0.50); line-height: 1.4; margin-top: 2px;
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
     .fav-chips { display: flex; gap: 6px; margin-top: 6px; flex-wrap: wrap; }
     .fav-chip {
       display: inline-flex; align-items: center; gap: 3px;
       padding: 3px 8px; border-radius: 99px; font-size: 10px; font-weight: 600;
-      background: #FFF7ED; border: 1px solid #FED7AA; color: #C2410C;
+      background: rgba(255,152,0,0.18); border: 1px solid rgba(255,152,0,0.35); color: #ffbd5d;
     }
     .fav-chip svg { width: 10px; height: 10px; flex-shrink: 0; }
     .fav-detail-btn {
       display: inline-flex; align-items: center; gap: 4px;
-      margin-top: 7px; font-size: 11px; font-weight: 600; color: #FF9800;
+      margin-top: 7px; font-size: 11px; font-weight: 600; color: #ffbd5d;
     }
     .fav-detail-btn svg { width: 12px; height: 12px; }
     .fav-remove {
       flex-shrink: 0; display: grid; place-items: center;
       width: 34px; height: 34px; border-radius: 50%;
-      background: #FFF1F2; border: 1.5px solid #FECDD3; color: #ef4444;
+      background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.30); color: #fca5a5;
       transition: transform .12s, background .12s; z-index: 1;
       align-self: flex-start; margin-top: 2px;
     }
-    .fav-remove:active { transform: scale(.9); background: #fee2e2; }
+    .fav-remove:active { transform: scale(.9); background: rgba(239,68,68,0.28); }
     .fav-remove svg { width: 16px; height: 16px; }
 
-    /* Empty state */
     .fav-empty {
       display: flex; flex-direction: column; align-items: center;
       gap: 10px; padding: 60px 24px 40px; text-align: center;
     }
     .fav-empty-icon {
       width: 80px; height: 80px; border-radius: 0;
-      background: none;
-      border: none; display: grid; place-items: center; font-size: 52px;
+      background: none; border: none; display: grid; place-items: center; font-size: 52px;
       margin-bottom: 6px; box-shadow: none;
     }
-    .fav-empty-title { font-size: 17px; font-weight: 700; color: #374151; }
-    .fav-empty-sub { font-size: 13px; color: #9CA3AF; line-height: 1.6; max-width: 260px; }
+    .fav-empty-title { font-size: 17px; font-weight: 700; color: #fff; }
+    .fav-empty-sub { font-size: 13px; color: rgba(255,255,255,0.50); line-height: 1.6; max-width: 260px; }
     .fav-empty-cta {
       margin-top: 4px; display: inline-flex; align-items: center; gap: 6px;
-      padding: 10px 22px; background: linear-gradient(90deg,#FF9800,#FFC46D);
-      color: #fff; font-size: 13px; font-weight: 700; border-radius: 10px;
-      box-shadow: 2px 2px 0 #000; transition: transform .1s, box-shadow .1s;
+      padding: 10px 22px; background: linear-gradient(135deg,#ff9800,#ffbd5d);
+      color: #fff; font-size: 13px; font-weight: 700; border-radius: 12px;
+      box-shadow: 0 4px 14px rgba(255,152,0,0.35); transition: transform .1s, opacity .1s;
     }
-    .fav-empty-cta:active { transform: translate(1px,1px); box-shadow: 1px 1px 0 #000; }
+    .fav-empty-cta:active { transform: scale(.97); opacity: .92; }
 
     @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
   </style>
@@ -371,9 +433,9 @@
     if (content) content.innerHTML =
       '<div style="display:flex;flex-direction:column;align-items:center;gap:12px;padding:48px 24px;text-align:center;">' +
       '<div style="font-size:48px;">🔒</div>' +
-      '<div style="font-size:15px;font-weight:700;color:#1F2937;">Login untuk melihat favorit</div>' +
-      '<div style="font-size:13px;color:#6B7280;line-height:1.5;">Simpan klinik favorit dan akses kapan saja setelah login.</div>' +
-      '<button onclick="location.href=\'login.html\'" style="margin-top:8px;padding:12px 28px;border-radius:12px;border:2px solid #000;background:linear-gradient(180deg,#FF9800,#FFD21F);font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;box-shadow:2px 2px 0 #000;color:#fff;">Masuk Sekarang</button>' +
+      '<div style="font-size:15px;font-weight:700;color:#fff;">Login untuk melihat favorit</div>' +
+      '<div style="font-size:13px;color:rgba(255,255,255,0.55);line-height:1.5;">Simpan klinik favorit dan akses kapan saja setelah login.</div>' +
+      '<button onclick="location.href=\'login.html\'" style="margin-top:8px;padding:12px 28px;border-radius:12px;border:none;background:linear-gradient(135deg,#ff9800,#ffbd5d);font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;box-shadow:0 4px 14px rgba(255,152,0,0.35);color:#fff;">Masuk Sekarang</button>' +
       '</div>';
     return;
   }
