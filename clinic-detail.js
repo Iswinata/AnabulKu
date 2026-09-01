@@ -600,7 +600,7 @@
       /* ── Photo ── */
       var hasFoto = !!doc.fotoDataUrl;
       var photoInner = hasFoto
-        ? '<div class="cd-doc-photo" style="background-image:url(' + esc(doc.fotoDataUrl) + ');background-size:cover;background-position:center;background-repeat:no-repeat;" aria-hidden="true"></div>'
+        ? '<div class="cd-doc-photo" style="background-image:url(\'' + doc.fotoDataUrl + '\');background-size:cover;background-position:center;background-repeat:no-repeat;" aria-hidden="true"></div>'
         : '<div class="cd-doc-photo cd-doc-photo--empty" aria-hidden="true">' +
             '<img src="lokasi%20icon.png" class="cd-doc-photo-icon" alt="" aria-hidden="true" />' +
           '</div>';

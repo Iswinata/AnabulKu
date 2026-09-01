@@ -101,10 +101,10 @@
 
     /* Foto thumbnail — use uploaded photo or logo if available */
     var photoStyle = "";
-    if (c.fotoDataUrl) {
-      photoStyle = ' style="background-image:url(' + esc(c.fotoDataUrl) + ');"';
-    } else if (c.logoDataUrl) {
-      photoStyle = ' style="background-image:url(' + esc(c.logoDataUrl) + ');"';
+    var _foto = c.fotoDataUrl || c.logoDataUrl || "";
+    if (_foto) {
+      /* Jangan esc() data URL — base64 tidak perlu di-escape dan esc() akan merusak karakter quote */
+      photoStyle = ' style="background-image:url(\'' + _foto + '\');"';
     }
 
     /* Alamat — prefer Google-geocoded formatted address, then manual entry, then kota/provinsi */
@@ -298,7 +298,7 @@
         listEl.innerHTML = filteredWithIdx.map(function(entry) {
           return cardHtml(entry.clinic, entry.idx, loc);
         }).join("");
-        noteEl.textContent = filteredWithIdx.length + " klinik mitra terdaftar";
+        noteEl.textContent = "";
 
         /* Bind tombol favorit */
         listEl.querySelectorAll('[data-fav-idx]').forEach(function(btn) {
@@ -385,10 +385,9 @@
     var href = "clinic-detail.html?id=" + idx;
 
     var photoStyle = "";
-    if (clinic.fotoDataUrl) {
-      photoStyle = ' style="background-image:url(' + esc(clinic.fotoDataUrl) + ');"';
-    } else if (clinic.logoDataUrl) {
-      photoStyle = ' style="background-image:url(' + esc(clinic.logoDataUrl) + ');"';
+    var _foto = clinic.fotoDataUrl || clinic.logoDataUrl || "";
+    if (_foto) {
+      photoStyle = ' style="background-image:url(\'' + _foto + '\');"';
     }
 
     var alamat = esc(clinic.formattedAddress || clinic.alamat || [clinic.kota, clinic.provinsi].filter(Boolean).join(", ") || "");

@@ -89,6 +89,9 @@
         jamTutup:      klinik.jamTutup      || list[idx].jamTutup,
         harisBuka:     klinik.harisBuka     || list[idx].harisBuka,
         namaOwner:     klinik.namaOwner     || list[idx].namaOwner,
+        /* Sync foto klinik — selalu pakai nilai terbaru (termasuk string kosong saat dihapus) */
+        fotoDataUrl:   klinik.fotoDataUrl !== undefined ? klinik.fotoDataUrl : (list[idx].fotoDataUrl || ''),
+        logoDataUrl:   klinik.logoDataUrl  || list[idx].logoDataUrl  || '',
         /* Pertahankan adminStatus dari admin — JANGAN timpa */
         adminStatus:   list[idx].adminStatus || klinik.adminStatus || 'pending',
         hewanDilayani: list[idx].hewanDilayani || klinik.hewanDilayani || [],
@@ -1486,11 +1489,100 @@
     return result;
   }
 
+  /* ── State foto klinik sementara ── */
+  let _profilFotoDataUrl = '';
+
+  function initProfilFotoUpload() {
+    const input       = document.getElementById('profilFotoInput');
+    const zone        = document.getElementById('profilFotoZone');
+    const preview     = document.getElementById('profilFotoPreview');
+    const thumb       = document.getElementById('profilFotoThumb');
+    const placeholder = document.getElementById('profilFotoPlaceholder');
+    const btnHapus    = document.getElementById('profilFotoHapus');
+
+    function showPreview(dataUrl) {
+      thumb.src = dataUrl;
+      preview.hidden      = false;
+      placeholder.hidden  = true;
+      btnHapus.hidden     = false;
+      _profilFotoDataUrl  = dataUrl;
+    }
+
+    function clearPreview() {
+      thumb.src = '';
+      preview.hidden      = true;
+      placeholder.hidden  = false;
+      btnHapus.hidden     = true;
+      _profilFotoDataUrl  = '';
+      input.value         = '';
+    }
+
+    input.addEventListener('change', () => {
+      const file = input.files[0];
+      if (!file) return;
+      if (file.size > 2 * 1024 * 1024) {
+        showToast('Foto terlalu besar. Maks 2MB.', 'error');
+        input.value = '';
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = (e) => showPreview(e.target.result);
+      reader.readAsDataURL(file);
+    });
+
+    btnHapus.addEventListener('click', (e) => {
+      e.preventDefault();
+      clearPreview();
+    });
+
+    /* Drag-and-drop support */
+    zone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      zone.style.borderColor = '#FF9800';
+      zone.style.background  = '#fff7ed';
+    });
+    zone.addEventListener('dragleave', () => {
+      zone.style.borderColor = '';
+      zone.style.background  = '';
+    });
+    zone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      zone.style.borderColor = '';
+      zone.style.background  = '';
+      const file = e.dataTransfer.files[0];
+      if (!file || !file.type.startsWith('image/')) return;
+      if (file.size > 2 * 1024 * 1024) {
+        showToast('Foto terlalu besar. Maks 2MB.', 'error');
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = (ev) => showPreview(ev.target.result);
+      reader.readAsDataURL(file);
+    });
+
+    /* Expose clearPreview agar loadProfil bisa memanggil saat reset */
+    initProfilFotoUpload._clear = clearPreview;
+    initProfilFotoUpload._show  = showPreview;
+  }
+
   function loadProfil() {
     document.getElementById('profilNama').value   = klinik.namaKlinik || '';
     document.getElementById('profilWA').value     = klinik.waKlinik   || '';
     document.getElementById('profilAlamat').value = klinik.alamat     || '';
     document.getElementById('profilKota').value   = klinik.kota       || '';
+
+    /* Init upload zone (sekali saja) lalu tampilkan foto tersimpan */
+    if (!initProfilFotoUpload._initialized) {
+      initProfilFotoUpload();
+      initProfilFotoUpload._initialized = true;
+    }
+    if (klinik.fotoDataUrl) {
+      _profilFotoDataUrl = klinik.fotoDataUrl;
+      initProfilFotoUpload._show(klinik.fotoDataUrl);
+    } else {
+      _profilFotoDataUrl = '';
+      initProfilFotoUpload._clear();
+    }
 
     /* Init toggle listeners lalu isi jadwal */
     initProfilJadwalToggles();
@@ -1498,10 +1590,11 @@
   }
 
   document.getElementById('btnSimpanProfil').addEventListener('click', () => {
-    klinik.namaKlinik = document.getElementById('profilNama').value.trim();
-    klinik.waKlinik   = document.getElementById('profilWA').value.trim();
-    klinik.alamat     = document.getElementById('profilAlamat').value.trim();
-    klinik.kota       = document.getElementById('profilKota').value.trim();
+    klinik.namaKlinik  = document.getElementById('profilNama').value.trim();
+    klinik.waKlinik    = document.getElementById('profilWA').value.trim();
+    klinik.alamat      = document.getElementById('profilAlamat').value.trim();
+    klinik.kota        = document.getElementById('profilKota').value.trim();
+    klinik.fotoDataUrl = _profilFotoDataUrl;
 
     /* Simpan jadwal per hari */
     const jadwal = readProfilJadwal();
@@ -1577,6 +1670,9 @@
           googleRating:  match.googleRating  || null,
           adminStatus:   match.adminStatus   || match.status || '',
           _mitraId:      match.id            || '',
+          /* Pertahankan foto dari namespace storage (klinik), fallback ke mitraKlinik[] */
+          fotoDataUrl:   klinik.fotoDataUrl  || match.fotoDataUrl  || '',
+          logoDataUrl:   klinik.logoDataUrl  || match.logoDataUrl  || '',
         });
         LS.set('anabulku_klinik', klinik);
 

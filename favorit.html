@@ -273,8 +273,9 @@
   function cardHtml(c, idx) {
     var href = 'clinic-detail.html?id=' + idx;
     var photoStyle = '', photoIcon = '<span style="font-size:26px" aria-hidden="true">🏥</span>';
-    if (c.fotoDataUrl || c.logoDataUrl) {
-      photoStyle = 'background-image:url(' + esc(c.fotoDataUrl || c.logoDataUrl) + ');background-size:cover;background-position:center;';
+    var _foto = c.fotoDataUrl || c.logoDataUrl || '';
+    if (_foto) {
+      photoStyle = 'background-image:url(\'' + _foto + '\');background-size:cover;background-position:center;';
       photoIcon = '';
     }
     var alamat = esc(c.formattedAddress || c.alamat || [c.kota, c.provinsi].filter(Boolean).join(', ') || '');
@@ -322,7 +323,6 @@
     }
     if (filtered.length === 0) {
       container.innerHTML =
-        '<div class="fav-count">Menampilkan <span>0</span> dari ' + favIds.length + ' favorit</div>' +
         '<div class="fav-empty" style="padding-top:32px">' +
           '<div class="fav-empty-icon" style="font-size:28px">🔍</div>' +
           '<div class="fav-empty-title">Tidak ada di kategori ini</div>' +
@@ -331,7 +331,6 @@
       return;
     }
     container.innerHTML =
-      '<div class="fav-count">Menampilkan <span>' + filtered.length + '</span> klinik favorit</div>' +
       '<div class="fav-list">' + filtered.map(function(item){ return cardHtml(item.clinic, item.idx); }).join('') + '</div>' +
       '<div style="height:12px"></div>';
 

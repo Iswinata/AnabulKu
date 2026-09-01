@@ -17,10 +17,7 @@
       -webkit-text-size-adjust: 100%;
       -webkit-font-smoothing: antialiased;
     }
-    body {
-      display: flex;
-      justify-content: center;
-    }
+    body { display: flex; justify-content: center; }
     button { font-family: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
 
     /* ── Shell ── */
@@ -31,7 +28,7 @@
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      box-shadow: 0 0 40px -10px rgba(0,0,0,.18);
+      box-shadow: 0 0 40px -10px rgba(0,0,0,.22);
     }
 
     /* ── Topbar ── */
@@ -39,7 +36,7 @@
       flex-shrink: 0;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
       padding: 16px 20px 12px;
       background: #fcece3;
     }
@@ -48,11 +45,13 @@
       place-items: center;
       width: 36px; height: 36px;
       border-radius: 10px;
-      border: 1.5px solid #E5E7EB;
+      border: 1.5px solid #000;
       background: #fff;
-      box-shadow: 1px 1px 0 #000;
+      box-shadow: 2px 2px 0 #000;
       color: #374151;
+      transition: transform .1s, box-shadow .1s;
     }
+    .btn-back:active { transform: translate(1px,1px); box-shadow: 1px 1px 0 #000; }
     .btn-back svg { width: 16px; height: 16px; }
     .topbar-title {
       font-size: 16px;
@@ -61,124 +60,123 @@
       letter-spacing: -.3px;
     }
 
-    /* ── Scroll body ── */
+    /* ── Sembunyikan global bottomnav di halaman ini ── */
+    .bottomnav { display: none !important; }
+
+
     .scroll-body {
       flex: 1;
       overflow-y: auto;
-      padding: 4px 20px 24px;
+      padding: 10px 14px 24px;
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 10px;
     }
 
     /* ── Section title ── */
     .sec-title {
-      font-size: 10.5px;
+      font-size: 10px;
       font-weight: 700;
       color: #a36233;
       text-transform: uppercase;
       letter-spacing: .07em;
-      margin-bottom: -4px;
+      margin-bottom: 0;
+      padding-top: 2px;
     }
 
     /* ── Order summary card ── */
     .order-card {
-      background: linear-gradient(90deg, #ffd28f 0%, #ff9800 124.36%);
-      border-radius: 13px;
-      box-shadow: 2px 2px 0 #000;
-      padding: 14px 14px 16px;
-      position: relative;
+      background: #fff;
+      border-radius: 14px;
+      border: 1.5px solid #000;
+      box-shadow: 3px 3px 0 #000;
       overflow: hidden;
     }
-    .order-card::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: url("Banner1.png") center / cover;
-      mix-blend-mode: soft-light;
-      opacity: 0.9;
-      pointer-events: none;
+    .order-card-header {
+      background: linear-gradient(90deg, #ff9800 0%, #ffbc59 100%);
+      padding: 12px 16px;
     }
-    .order-card-inner { position: relative; z-index: 1; }
-
     .order-klinik {
-      font-size: 12px;
-      font-weight: 700;
+      font-size: 12.5px;
+      font-weight: 800;
       color: #fff;
-      margin-bottom: 2px;
+      margin: 0 0 1px;
+      word-break: break-word;
     }
     .order-dokter {
       font-size: 11px;
-      color: #ffeed5;
-      margin-bottom: 10px;
+      color: rgba(255,255,255,.85);
+      margin: 0;
     }
-    .order-rows {
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-    }
+    .order-card-body { padding: 0 0 14px; }
+    .order-rows { display: flex; flex-direction: column; gap: 0; }
     .order-row {
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      font-size: 11.5px;
+      gap: 8px;
+      padding: 10px 14px;
+      border-bottom: 1px solid #F3F4F6;
     }
-    .order-row-key { color: rgba(255,255,255,0.75); }
+    .order-row:last-child { border-bottom: none; }
+    .order-row .info-col {
+      flex: 1;
+      min-width: 0;
+    }
+    .order-row .info-icon {
+      flex-shrink: 0;
+    }
+    .order-row-key {
+      color: #9CA3AF;
+      flex: 0 0 90px;
+      font-size: 12px;
+      font-weight: 500;
+      word-break: break-word;
+    }
     .order-row-val {
       font-weight: 700;
-      color: #fff;
+      color: #111827;
+      font-size: 12px;
+      flex: 1;
+      min-width: 0;
+      word-break: break-word;
+      overflow-wrap: anywhere;
+      text-align: right;
     }
-    .order-row-val.chip {
-      background: rgba(255,255,255,0.2);
-      border-radius: 20px;
-      padding: 2px 9px;
-      font-size: 11px;
-    }
-    .order-divider {
-      height: 1px;
-      background: rgba(255,255,255,0.3);
-      margin: 8px 0;
-    }
+    .order-row-val.chip { background: none; border-radius: 0; padding: 0; font-size: 12px; }
+    .order-divider { height: 1px; background: #E5E7EB; margin: 4px 14px; }
     .order-total-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      padding: 10px 16px 4px;
     }
-    .order-total-key {
-      font-size: 12px;
-      font-weight: 600;
-      color: #ffeed5;
-    }
-    .order-total-val {
-      font-size: 16px;
-      font-weight: 800;
-      color: #fff;
-    }
+    .order-total-key { font-size: 12px; font-weight: 600; color: #6B7280; }
+    .order-total-val { font-size: 18px; font-weight: 800; color: #FF9800; word-break: break-word; overflow-wrap: anywhere; }
 
-    /* ── Info card (putih) ── */
+    /* ── Info card ── */
     .info-card {
       background: #fff;
-      border-radius: 13px;
-      box-shadow: 2px 2px 0 #000;
-      border: 1.5px solid #E5E7EB;
+      border-radius: 14px;
+      border: 1.5px solid #000;
+      box-shadow: 3px 3px 0 #000;
       overflow: hidden;
     }
     .info-row {
       display: flex;
       align-items: center;
       gap: 10px;
-      padding: 11px 14px;
+      padding: 10px 14px;
       border-bottom: 1px solid #F3F4F6;
     }
     .info-row:last-child { border-bottom: none; }
     .info-icon {
-      width: 32px; height: 32px;
-      border-radius: 8px;
+      width: 28px; height: 28px;
+      border-radius: 7px;
       background: #FFF7ED;
       display: grid;
       place-items: center;
       flex-shrink: 0;
-      font-size: 15px;
+      font-size: 13px;
     }
     .info-col { flex: 1; min-width: 0; }
     .info-label {
@@ -189,27 +187,27 @@
       letter-spacing: .05em;
     }
     .info-val {
-      font-size: 13px;
+      font-size: 12.5px;
       font-weight: 700;
       color: #1F2937;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      word-break: break-word;
+      overflow-wrap: anywhere;
+      white-space: normal;
     }
 
     /* ── Payment method card ── */
     .method-card {
       background: #fff;
-      border-radius: 13px;
-      box-shadow: 2px 2px 0 #000;
-      border: 1.5px solid #E5E7EB;
+      border-radius: 14px;
+      border: 1.5px solid #000;
+      box-shadow: 3px 3px 0 #000;
       overflow: hidden;
     }
     .method-option {
       display: flex;
       align-items: center;
-      gap: 12px;
-      padding: 13px 14px;
+      gap: 10px;
+      padding: 11px 14px;
       border-bottom: 1px solid #F3F4F6;
       cursor: pointer;
       transition: background .12s;
@@ -219,25 +217,18 @@
     .method-option:hover { background: #FFF7ED; }
     .method-option.is-selected { background: #FFF7ED; }
     .method-icon {
-      width: 38px; height: 38px;
-      border-radius: 10px;
+      width: 32px; height: 32px;
+      border-radius: 8px;
       display: grid;
       place-items: center;
-      font-size: 18px;
+      font-size: 15px;
       flex-shrink: 0;
+      background: #F9FAFB;
       border: 1.5px solid #E5E7EB;
     }
-    .method-info { flex: 1; }
-    .method-name {
-      font-size: 13px;
-      font-weight: 700;
-      color: #1F2937;
-    }
-    .method-desc {
-      font-size: 11px;
-      color: #9CA3AF;
-      margin-top: 1px;
-    }
+    .method-info { flex: 1; min-width: 0; }
+    .method-name { font-size: 13px; font-weight: 700; color: #1F2937; word-break: break-word; }
+    .method-desc { font-size: 11px; color: #9CA3AF; margin-top: 1px; word-break: break-word; }
     .method-radio {
       width: 18px; height: 18px;
       border-radius: 50%;
@@ -247,9 +238,7 @@
       flex-shrink: 0;
       transition: border-color .12s;
     }
-    .method-option.is-selected .method-radio {
-      border-color: #FF9800;
-    }
+    .method-option.is-selected .method-radio { border-color: #FF9800; }
     .method-radio-dot {
       width: 9px; height: 9px;
       border-radius: 50%;
@@ -261,46 +250,39 @@
     /* ── Countdown timer card ── */
     .countdown-card {
       background: #fff;
-      border-radius: 13px;
-      box-shadow: 2px 2px 0 #000;
-      border: 1.5px solid #E5E7EB;
-      padding: 14px 16px;
+      border-radius: 14px;
+      border: 1.5px solid #000;
+      box-shadow: 3px 3px 0 #000;
+      padding: 12px 14px;
       display: flex;
       align-items: center;
       gap: 12px;
       transition: border-color .3s, background .3s;
     }
-    .countdown-card.is-urgent {
-      background: #FEF2F2;
-      border-color: #FCA5A5;
-    }
+    .countdown-card.is-urgent { background: #FEF2F2; border-color: #EF4444; }
     .countdown-icon {
-      width: 40px; height: 40px;
-      border-radius: 10px;
+      width: 34px; height: 34px;
+      border-radius: 8px;
       background: #FFF7ED;
       display: grid;
       place-items: center;
-      font-size: 18px;
+      font-size: 15px;
       flex-shrink: 0;
       transition: background .3s;
     }
-    .countdown-card.is-urgent .countdown-icon {
-      background: #FEE2E2;
-    }
+    .countdown-card.is-urgent .countdown-icon { background: #FEE2E2; }
     .countdown-info { flex: 1; }
     .countdown-label {
-      font-size: 10px;
+      font-size: 9.5px;
       font-weight: 700;
       color: #9CA3AF;
       text-transform: uppercase;
       letter-spacing: .06em;
-      margin-bottom: 2px;
+      margin-bottom: 1px;
     }
-    .countdown-card.is-urgent .countdown-label {
-      color: #DC2626;
-    }
+    .countdown-card.is-urgent .countdown-label { color: #DC2626; }
     #countdownTimer {
-      font-size: 22px;
+      font-size: 19px;
       font-weight: 800;
       color: #FF9800;
       letter-spacing: .02em;
@@ -311,32 +293,13 @@
       color: #DC2626;
       animation: pulse-red .7s ease-in-out infinite alternate;
     }
-    .countdown-sub {
-      font-size: 10.5px;
-      color: #9CA3AF;
-      margin-top: 2px;
-    }
-    .countdown-card.is-urgent .countdown-sub {
-      color: #EF4444;
-    }
+    .countdown-sub { font-size: 9.5px; color: #9CA3AF; margin-top: 1px; }
+    .countdown-card.is-urgent .countdown-sub { color: #EF4444; }
     @keyframes pulse-red {
       from { opacity: 1; }
       to   { opacity: .55; }
     }
 
-    /* ── Status card ── */
-    .status-card {
-      background: #FFFBEB;
-      border: 1.5px solid #FDE68A;
-      border-radius: 12px;
-      padding: 12px 14px;
-      display: flex;
-      gap: 10px;
-      align-items: flex-start;
-    }
-    .status-icon { font-size: 18px; flex-shrink: 0; }
-    .status-text { font-size: 12px; color: #78350F; line-height: 1.5; }
-    .status-text strong { font-weight: 700; }
 
     /* ── Expired overlay ── */
     .expired-overlay {
@@ -353,6 +316,8 @@
     .expired-sheet {
       background: #fff;
       border-radius: 20px;
+      border: 1.5px solid #000;
+      box-shadow: 4px 4px 0 #000;
       width: 100%;
       max-width: 340px;
       padding: 28px 24px 32px;
@@ -373,23 +338,13 @@
       font-size: 30px;
       margin: 0 auto 14px;
     }
-    .expired-title {
-      font-size: 18px;
-      font-weight: 800;
-      color: #111827;
-      margin-bottom: 8px;
-    }
-    .expired-sub {
-      font-size: 13px;
-      color: #6B7280;
-      line-height: 1.6;
-      margin-bottom: 20px;
-    }
+    .expired-title { font-size: 18px; font-weight: 800; color: #111827; margin-bottom: 8px; }
+    .expired-sub { font-size: 13px; color: #6B7280; line-height: 1.6; margin-bottom: 20px; }
     .btn-expired-home {
       width: 100%;
       height: 48px;
-      background: linear-gradient(180deg, #EF4444 0%, #F87171 100%);
-      border: none;
+      background: #EF4444;
+      border: 1.5px solid #000;
       border-radius: 12px;
       box-shadow: 2px 2px 0 #000;
       color: #fff;
@@ -400,15 +355,18 @@
       justify-content: center;
       gap: 8px;
       cursor: pointer;
+      transition: transform .1s, box-shadow .1s;
     }
     .btn-expired-home:active { transform: translate(1px,1px); box-shadow: 1px 1px 0 #000; }
 
     /* ── Footer action ── */
     .footer-action {
       flex-shrink: 0;
-      padding: 12px 20px 100px;
+      padding: 12px 16px max(env(safe-area-inset-bottom), 16px);
       background: #fcece3;
-      border-top: 1px solid #e5d5c8;
+      border-top: 1.5px solid #e5d5c8;
+      position: relative;
+      z-index: 60;
     }
     .total-row {
       display: flex;
@@ -416,27 +374,26 @@
       align-items: center;
       margin-bottom: 10px;
     }
-    .total-label { font-size: 12px; color: #6B7280; font-weight: 500; }
+    .total-label { font-size: 11px; color: #6B7280; font-weight: 500; }
     .total-amount { font-size: 18px; font-weight: 800; color: #FF9800; }
 
     .btn-pay {
       width: 100%;
       height: 52px;
-      background: linear-gradient(180deg, #ff9800 0%, #ffbc59 100%);
-      border: none;
-      border-radius: 13px;
-      box-shadow: 2px 2px 0 #000;
+      background: linear-gradient(180deg, #ff9800 0%, #ffb74d 100%);
+      border: 1.5px solid #000;
+      border-radius: 12px;
+      box-shadow: 3px 3px 0 #000;
       color: #fff;
       font-size: 15px;
-      font-weight: 700;
+      font-weight: 800;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
       transition: transform .1s, box-shadow .1s;
     }
-    .btn-pay:hover { background: linear-gradient(180deg, #fb8c00 0%, #ffa726 100%); }
-    .btn-pay:active { transform: translate(1px,1px); box-shadow: 1px 1px 0 #000; }
+    .btn-pay:active { transform: translate(1px,1px); box-shadow: 2px 2px 0 #000; }
     .btn-pay:disabled { opacity: .5; cursor: not-allowed; transform: none !important; }
 
     /* ── Success overlay ── */
@@ -453,6 +410,9 @@
     .success-sheet {
       background: #fff;
       border-radius: 20px 20px 0 0;
+      border-top: 1.5px solid #000;
+      border-left: 1.5px solid #000;
+      border-right: 1.5px solid #000;
       width: 100%;
       max-width: 393px;
       padding: 28px 24px 40px;
@@ -468,24 +428,14 @@
       background: linear-gradient(180deg, #ff9800 0%, #ffbc59 100%);
       border: 2px solid #000;
       border-radius: 50%;
-      box-shadow: 2px 2px 0 #000;
+      box-shadow: 3px 3px 0 #000;
       display: grid;
       place-items: center;
       font-size: 32px;
       margin: 0 auto 16px;
     }
-    .success-title {
-      font-size: 20px;
-      font-weight: 800;
-      color: #1F2937;
-      margin-bottom: 6px;
-    }
-    .success-sub {
-      font-size: 13px;
-      color: #6B7280;
-      line-height: 1.6;
-      margin-bottom: 24px;
-    }
+    .success-title { font-size: 20px; font-weight: 800; color: #1F2937; margin-bottom: 6px; }
+    .success-sub { font-size: 13px; color: #6B7280; line-height: 1.6; margin-bottom: 24px; }
     .success-ref {
       display: inline-block;
       background: #FFF7ED;
@@ -500,8 +450,8 @@
     .btn-home {
       width: 100%;
       height: 50px;
-      background: linear-gradient(180deg, #ff9800 0%, #ffbc59 100%);
-      border: none;
+      background: linear-gradient(180deg, #ff9800 0%, #ffb74d 100%);
+      border: 1.5px solid #000;
       border-radius: 12px;
       box-shadow: 2px 2px 0 #000;
       color: #fff;
@@ -511,6 +461,7 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
+      transition: transform .1s, box-shadow .1s;
     }
     .btn-home:active { transform: translate(1px,1px); box-shadow: 1px 1px 0 #000; }
 
@@ -528,15 +479,14 @@
     .leave-sheet {
       background: #fff;
       border-radius: 20px 20px 0 0;
+      border-top: 1.5px solid #000;
+      border-left: 1.5px solid #000;
+      border-right: 1.5px solid #000;
       width: 100%;
       max-width: 393px;
       padding: 28px 24px 40px;
       text-align: center;
       animation: slideUp .25s cubic-bezier(.34,1.2,.64,1) both;
-    }
-    @keyframes slideUp {
-      from { transform: translateY(100%); opacity: 0; }
-      to   { transform: translateY(0);    opacity: 1; }
     }
     .leave-icon {
       width: 64px; height: 64px;
@@ -548,99 +498,79 @@
       font-size: 28px;
       margin: 0 auto 14px;
     }
-    .leave-title {
-      font-size: 18px;
-      font-weight: 800;
-      color: #111827;
-      margin-bottom: 8px;
-    }
-    .leave-sub {
-      font-size: 13px;
-      color: #6B7280;
-      line-height: 1.6;
-      margin-bottom: 20px;
-    }
+    .leave-title { font-size: 18px; font-weight: 800; color: #111827; margin-bottom: 8px; }
+    .leave-sub { font-size: 13px; color: #6B7280; line-height: 1.6; margin-bottom: 20px; }
     .btn-leave-cancel {
       width: 100%;
       height: 48px;
-      background: linear-gradient(180deg, #EF4444 0%, #F87171 100%);
-      border: none;
+      background: #EF4444;
+      border: 1.5px solid #000;
       border-radius: 12px;
       box-shadow: 2px 2px 0 #000;
       color: #fff;
       font-size: 14px;
       font-weight: 700;
       margin-bottom: 10px;
+      transition: transform .1s, box-shadow .1s;
     }
     .btn-leave-cancel:active { transform: translate(1px,1px); box-shadow: 1px 1px 0 #000; }
     .btn-leave-stay {
       width: 100%;
       height: 48px;
-      background: linear-gradient(180deg, #ff9800 0%, #ffbc59 100%);
-      border: none;
+      background: linear-gradient(180deg, #ff9800 0%, #ffb74d 100%);
+      border: 1.5px solid #000;
       border-radius: 12px;
       box-shadow: 2px 2px 0 #000;
       color: #fff;
       font-size: 14px;
       font-weight: 700;
+      transition: transform .1s, box-shadow .1s;
     }
     .btn-leave-stay:active { transform: translate(1px,1px); box-shadow: 1px 1px 0 #000; }
 
     /* ── VA overlay ── */
     .va-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,.55);
-      z-index: 250;
-      align-items: flex-end;
-      justify-content: center;
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,.55); z-index: 250;
+      align-items: flex-end; justify-content: center;
     }
     .va-overlay.is-open { display: flex; }
     .va-sheet {
       background: #fff;
       border-radius: 20px 20px 0 0;
-      width: 100%;
-      max-width: 393px;
+      border-top: 1.5px solid #000;
+      border-left: 1.5px solid #000;
+      border-right: 1.5px solid #000;
+      width: 100%; max-width: 393px;
       padding: 28px 24px 44px;
       animation: slideUp .25s cubic-bezier(.34,1.2,.64,1) both;
     }
 
     /* ── QRIS overlay ── */
     .qris-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,.55);
-      z-index: 260;
-      align-items: flex-end;
-      justify-content: center;
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,.55); z-index: 260;
+      align-items: flex-end; justify-content: center;
     }
     .qris-overlay.is-open { display: flex; }
     .qris-sheet {
       background: #fff;
       border-radius: 20px 20px 0 0;
-      width: 100%;
-      max-width: 393px;
+      border-top: 1.5px solid #000;
+      border-left: 1.5px solid #000;
+      border-right: 1.5px solid #000;
+      width: 100%; max-width: 393px;
       padding: 24px 24px 44px;
       animation: slideUp .25s cubic-bezier(.34,1.2,.64,1) both;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
+      display: flex; flex-direction: column;
+      align-items: center; text-align: center;
+      overflow-y: auto; max-height: 92dvh;
     }
     .qris-timer {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      font-size: 11px;
-      font-weight: 600;
-      color: #92400E;
-      background: #FEF3C7;
-      border: 1px solid #FDE68A;
-      border-radius: 20px;
-      padding: 3px 10px;
-      margin-bottom: 14px;
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 11px; font-weight: 600; color: #92400E;
+      background: #FEF3C7; border: 1px solid #FDE68A;
+      border-radius: 20px; padding: 3px 10px; margin-bottom: 14px;
     }
     .qris-timer.urgent { color: #991B1B; background: #FEE2E2; border-color: #FECACA; }
     .qris-timer svg { flex-shrink: 0; }
@@ -648,189 +578,101 @@
     .qris-sub   { font-size: 12px; color: #9CA3AF; margin-bottom: 16px; }
     .qris-img-wrap {
       width: 220px; height: 220px;
-      border: 2px solid #000;
-      border-radius: 16px;
+      border: 2px solid #000; border-radius: 14px;
       box-shadow: 3px 3px 0 #000;
-      overflow: hidden;
-      margin: 0 auto 16px;
-      background: #fff;
-      display: grid;
-      place-items: center;
-      align-self: center;
+      overflow: hidden; margin: 0 auto 16px;
+      background: #fff; display: grid; place-items: center;
     }
-    .qris-img-wrap img { width: 100%; height: 100%; object-fit: contain; }
+    .qris-img-wrap img { width: 100%; height: 100%; object-fit: contain; display: block; }
     .btn-qris-download {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      width: 220px;
-      height: 40px;
-      background: #fff;
-      border: 1.5px solid #000;
-      border-radius: 10px;
-      box-shadow: 2px 2px 0 #000;
-      color: #111827;
-      font-size: 13px;
-      font-weight: 600;
-      font-family: inherit;
-      cursor: pointer;
-      margin: 0 auto 16px;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      width: 200px; height: 38px; background: #fff;
+      border: 1.5px solid #000; border-radius: 10px;
+      box-shadow: 2px 2px 0 #000; color: #111827;
+      font-size: 12.5px; font-weight: 600; font-family: inherit;
+      cursor: pointer; margin: 0 auto 16px;
       transition: transform .1s, box-shadow .1s;
     }
     .btn-qris-download:active { transform: translate(1px,1px); box-shadow: 1px 1px 0 #000; }
     .btn-qris-download svg { flex-shrink: 0; }
     .qris-info-rows {
-      width: 100%;
-      background: #F9FAFB;
-      border: 1.5px solid #E5E7EB;
-      border-radius: 12px;
-      overflow: hidden;
-      margin-bottom: 16px;
+      width: 100%; background: #F9FAFB;
+      border: 1.5px solid #E5E7EB; border-radius: 12px;
+      overflow: hidden; margin-bottom: 16px;
     }
     .qris-info-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 14px;
-      border-bottom: 1px solid #F3F4F6;
-      font-size: 12px;
+      display: flex; justify-content: space-between;
+      align-items: center; padding: 10px 14px;
+      border-bottom: 1px solid #F3F4F6; font-size: 12px;
     }
     .qris-info-row:last-child { border-bottom: none; }
-    .qris-info-key { color: #9CA3AF; font-weight: 500; text-align: left; }
-    .qris-info-val { color: #111827; font-weight: 700; text-align: right; }
-    .qris-note {
-      font-size: 11.5px;
-      color: #78350F;
-      background: #FFFBEB;
-      border: 1.5px solid #FDE68A;
-      border-radius: 10px;
-      padding: 10px 12px;
-      line-height: 1.6;
-      margin-bottom: 16px;
-      width: 100%;
-      text-align: left;
-    }
+    .qris-info-key { color: #9CA3AF; font-weight: 500; min-width: 0; }
+    .qris-info-val { color: #111827; font-weight: 700; text-align: right; min-width: 0; word-break: break-word; overflow-wrap: anywhere; }
     .btn-qris-ok {
-      width: 100%;
-      height: 50px;
-      background: linear-gradient(180deg, #ff9800 0%, #ffbc59 100%);
-      border: 1.5px solid #000;
-      border-radius: 13px;
-      box-shadow: 2px 2px 0 #000;
-      color: #fff;
-      font-size: 14px;
-      font-weight: 700;
-      font-family: inherit;
-      cursor: pointer;
-      transition: transform .1s, box-shadow .1s;
+      width: 100%; height: 50px;
+      background: linear-gradient(180deg, #ff9800 0%, #ffb74d 100%);
+      border: 1.5px solid #000; border-radius: 12px;
+      box-shadow: 2px 2px 0 #000; color: #fff;
+      font-size: 14px; font-weight: 700; font-family: inherit;
+      cursor: pointer; transition: transform .1s, box-shadow .1s;
     }
     .btn-qris-ok:active { transform: translate(1px,1px); box-shadow: 1px 1px 0 #000; }
-    .va-header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 20px;
-    }
+    .va-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
     .va-bank-icon {
-      width: 48px; height: 48px;
-      border-radius: 12px;
-      background: #FFF7ED;
-      border: 1.5px solid #FDE68A;
-      display: grid;
-      place-items: center;
-      font-size: 22px;
-      flex-shrink: 0;
+      width: 48px; height: 48px; border-radius: 12px;
+      background: #FFF7ED; border: 1.5px solid #FDE68A;
+      display: grid; place-items: center; font-size: 22px; flex-shrink: 0;
     }
-    .va-bank-name {
-      font-size: 16px;
-      font-weight: 800;
-      color: #111827;
-    }
-    .va-bank-sub {
-      font-size: 12px;
-      color: #9CA3AF;
-      margin-top: 2px;
-    }
+    .va-bank-name { font-size: 16px; font-weight: 800; color: #111827; }
+    .va-bank-sub  { font-size: 12px; color: #9CA3AF; margin-top: 2px; }
     .va-label {
-      font-size: 10.5px;
-      font-weight: 700;
-      color: #9CA3AF;
-      text-transform: uppercase;
-      letter-spacing: .06em;
-      margin-bottom: 6px;
+      font-size: 10.5px; font-weight: 700; color: #9CA3AF;
+      text-transform: uppercase; letter-spacing: .06em; margin-bottom: 6px;
     }
     .va-number-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: #F9FAFB;
-      border: 1.5px solid #E5E7EB;
-      border-radius: 12px;
-      padding: 12px 14px;
-      margin-bottom: 16px;
+      display: flex; align-items: center; gap: 10px;
+      background: #FFF7ED; border: 1.5px solid #000;
+      border-radius: 12px; box-shadow: 2px 2px 0 #000;
+      padding: 12px 14px; margin-bottom: 16px;
     }
     .va-number {
-      flex: 1;
-      font-size: 22px;
-      font-weight: 800;
-      color: #FF9800;
-      letter-spacing: .08em;
-      font-variant-numeric: tabular-nums;
+      flex: 1; font-size: 22px; font-weight: 800; color: #FF9800;
+      letter-spacing: .08em; font-variant-numeric: tabular-nums;
+      min-width: 0; word-break: break-all; overflow-wrap: anywhere;
     }
     .btn-copy {
-      height: 36px;
-      padding: 0 14px;
-      background: #fff;
-      border: 1.5px solid #E5E7EB;
-      border-radius: 8px;
-      box-shadow: 1px 1px 0 #000;
-      font-size: 12px;
-      font-weight: 700;
-      color: #374151;
-      white-space: nowrap;
+      height: 36px; padding: 0 14px; background: #fff;
+      border: 1.5px solid #000; border-radius: 8px;
+      box-shadow: 2px 2px 0 #000; font-size: 12px; font-weight: 700;
+      color: #374151; white-space: nowrap;
+      transition: transform .1s, box-shadow .1s;
     }
     .btn-copy:active { transform: translate(1px,1px); box-shadow: none; }
-    .btn-copy.copied { background: #ECFDF5; border-color: #6EE7B7; color: #059669; }
+    .btn-copy.copied { background: #ECFDF5; border-color: #6EE7B7; color: #059669; box-shadow: none; }
     .va-info-rows {
-      background: #F9FAFB;
-      border: 1.5px solid #E5E7EB;
-      border-radius: 12px;
-      overflow: hidden;
-      margin-bottom: 20px;
+      background: #F9FAFB; border: 1.5px solid #E5E7EB;
+      border-radius: 12px; overflow: hidden; margin-bottom: 20px;
     }
     .va-info-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 14px;
-      border-bottom: 1px solid #F3F4F6;
-      font-size: 12px;
+      display: flex; justify-content: space-between;
+      align-items: center; padding: 10px 14px;
+      border-bottom: 1px solid #F3F4F6; font-size: 12px;
     }
     .va-info-row:last-child { border-bottom: none; }
-    .va-info-key { color: #9CA3AF; font-weight: 500; }
-    .va-info-val { color: #111827; font-weight: 700; text-align: right; }
+    .va-info-key { color: #9CA3AF; font-weight: 500; min-width: 0; }
+    .va-info-val { color: #111827; font-weight: 700; text-align: right; min-width: 0; word-break: break-word; overflow-wrap: anywhere; }
     .va-note {
-      font-size: 11.5px;
-      color: #78350F;
-      background: #FFFBEB;
-      border: 1.5px solid #FDE68A;
-      border-radius: 10px;
-      padding: 10px 12px;
-      line-height: 1.6;
-      margin-bottom: 16px;
+      font-size: 11.5px; color: #78350F; background: #FFFBEB;
+      border: 1.5px solid #FDE68A; border-radius: 10px;
+      padding: 10px 12px; line-height: 1.6; margin-bottom: 16px;
     }
     .btn-paid {
-      width: 100%;
-      height: 52px;
+      width: 100%; height: 52px;
       background: linear-gradient(180deg, #22c55e 0%, #4ade80 100%);
-      border: none;
-      border-radius: 14px;
-      box-shadow: 2px 2px 0 #000;
-      color: #fff;
-      font-size: 15px;
-      font-weight: 800;
-      letter-spacing: -.2px;
+      border: 1.5px solid #000; border-radius: 12px;
+      box-shadow: 2px 2px 0 #000; color: #fff;
+      font-size: 15px; font-weight: 800; letter-spacing: -.2px;
+      transition: transform .1s, box-shadow .1s;
     }
     .btn-paid:active { transform: translate(1px,1px); box-shadow: 1px 1px 0 #000; }
   </style>
@@ -854,22 +696,46 @@
     <!-- Order summary -->
     <p class="sec-title">Ringkasan Booking</p>
     <div class="order-card">
-      <div class="order-card-inner">
+      <div class="order-card-header">
         <p class="order-klinik" id="payKlinik">—</p>
         <p class="order-dokter" id="payDokter">—</p>
-        <div class="order-rows">
+      </div>
+      <div class="order-card-body">
           <div class="order-row">
-            <span class="order-row-key">Tanggal</span>
-            <span class="order-row-val chip" id="payTanggal">—</span>
+            <div class="info-icon">📅</div>
+            <div class="info-col">
+              <p class="info-label">Tanggal</p>
+              <p class="info-val" id="payTanggal">—</p>
+            </div>
           </div>
           <div class="order-row">
-            <span class="order-row-key">Pukul</span>
-            <span class="order-row-val chip" id="payJam">—</span>
+            <div class="info-icon">🕐</div>
+            <div class="info-col">
+              <p class="info-label">Pukul</p>
+              <p class="info-val" id="payJam">—</p>
+            </div>
+            <div class="info-icon">🐾</div>
+            <div class="info-col">
+              <p class="info-label">Hewan</p>
+              <p class="info-val" id="payHewan">—</p>
+            </div>
           </div>
           <div class="order-row">
-            <span class="order-row-key">Hewan</span>
-            <span class="order-row-val" id="payHewan">—</span>
+            <div class="info-icon">💊</div>
+            <div class="info-col">
+              <p class="info-label">Biaya Layanan</p>
+              <p class="info-val" id="payBiaya">—</p>
+            </div>
+            <div class="info-icon" style="opacity:0.6;">🏷️</div>
+            <div class="info-col" style="opacity:0.6;">
+              <p class="info-label">Biaya Platform</p>
+              <p class="info-val">Rp 5.000</p>
+            </div>
           </div>
+        <div class="order-divider"></div>
+        <div class="order-total-row">
+          <span class="order-total-key">Total Bayar</span>
+          <span class="order-total-val" id="payTotal">—</span>
         </div>
       </div>
     </div>
@@ -903,15 +769,7 @@
     <!-- Metode pembayaran -->
     <p class="sec-title">Metode Pembayaran</p>
     <div class="method-card" id="methodCard">
-      <div class="method-option" data-method="transfer">
-        <div class="method-icon">🏦</div>
-        <div class="method-info">
-          <p class="method-name">Transfer Bank</p>
-          <p class="method-desc">BCA · Mandiri · BNI · BRI</p>
-        </div>
-        <div class="method-radio"><div class="method-radio-dot"></div></div>
-      </div>
-      <div class="method-option" data-method="qris">
+      <div class="method-option is-selected" data-method="qris">
         <div class="method-icon">📲</div>
         <div class="method-info">
           <p class="method-name">QRIS</p>
@@ -921,15 +779,25 @@
       </div>
     </div>
 
-    <!-- Catatan -->
-    <div class="status-card">
-      <span class="status-icon">⚠️</span>
-      <p class="status-text">
-        <strong>Pembayaran bersifat konfirmasi.</strong> Klinik akan menghubungi kamu via WhatsApp untuk verifikasi sebelum jadwal dikonfirmasi.
-      </p>
-    </div>
-
   </div><!-- /.scroll-body -->
+
+  <!-- ── Footer total + tombol bayar ── -->
+  <div class="footer-action" id="footerAction">
+    <div class="total-row" id="footerTotalRow" style="display:none;">
+      <div>
+        <div class="total-label">Total Estimasi</div>
+        <div class="total-amount" id="footerTotal">—</div>
+      </div>
+      <div style="text-align:right;">
+        <div class="total-label">Biaya Platform</div>
+        <div style="font-size:13px;font-weight:700;color:#6B7280;">Rp 5.000 ✓</div>
+      </div>
+    </div>
+    <button class="btn-pay" id="btnPay" type="button" disabled>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="18" height="18" aria-hidden="true"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+      Bayar Sekarang
+    </button>
+  </div>
 
   <!-- ── VA overlay ── -->
   <div class="va-overlay" id="vaOverlay" role="dialog" aria-modal="true" aria-labelledby="vaBankName">
@@ -958,6 +826,10 @@
         <div class="va-info-row">
           <span class="va-info-key">Jadwal</span>
           <span class="va-info-val" id="vaJadwal">—</span>
+        </div>
+        <div class="va-info-row">
+          <span class="va-info-key">Biaya Platform</span>
+          <span class="va-info-val" style="color:#9CA3AF;">Rp 5.000</span>
         </div>
         <div class="va-info-row">
           <span class="va-info-key">Total Bayar</span>
@@ -1000,6 +872,10 @@
         <div class="qris-info-row">
           <span class="qris-info-key">Jadwal</span>
           <span class="qris-info-val" id="qrisJadwal">—</span>
+        </div>
+        <div class="qris-info-row">
+          <span class="qris-info-key">Biaya Platform</span>
+          <span class="qris-info-val" style="color:#9CA3AF;">Rp 5.000</span>
         </div>
         <div class="qris-info-row">
           <span class="qris-info-key">Total Bayar</span>
@@ -1052,19 +928,6 @@
     </button>
   </nav>
 
-  <!-- Footer -->
-  <div class="footer-action">
-    <div class="total-row">
-      <span class="total-label">Total Estimasi</span>
-      <span class="total-amount" id="payTotal">—</span>
-    </div>
-    <button class="btn-pay" id="btnPay" type="button">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" width="18" height="18" aria-hidden="true">
-        <rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/>
-      </svg>
-      Bayar Sekarang
-    </button>
-  </div>
 
 </div><!-- /.app -->
 
@@ -1197,6 +1060,9 @@
     return d.toLocaleDateString("id-ID", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
   }
 
+  /* ── Konstanta biaya platform ── */
+  var BIAYA_PLATFORM = 5000;
+
   /* ── Format harga ── */
   function formatHarga(val) {
     if (!val) return "Konfirmasi klinik";
@@ -1219,17 +1085,31 @@
   setText("payNama",      pending.namaPemilik);
   setText("payNoHP",      pending.noHP);
   setText("payJenisHewan", pending.jenisHewan);
-  setText("payTotal",     formatHarga(pending.biaya));
+
+  /* Hitung total termasuk biaya platform */
+  var biayaNum   = parseInt(String(pending.biaya || "0").replace(/\D/g, ""), 10) || 0;
+  var totalBayar = biayaNum + BIAYA_PLATFORM;
+
+  setText("payBiaya", formatHarga(pending.biaya));
+  setText("payTotal", biayaNum > 0 ? "Rp " + totalBayar.toLocaleString("id-ID") : "Konfirmasi klinik");
 
   /* ── Pilih metode pembayaran ── */
-  var selectedMethod = null;
+  var selectedMethod = "qris";
   var options = document.querySelectorAll(".method-option");
   var btnPayEl = document.getElementById("btnPay");
 
-  /* Tombol disabled sampai user aktif memilih metode */
-  btnPayEl.disabled = true;
-  btnPayEl.style.opacity = "0.45";
-  btnPayEl.style.cursor  = "not-allowed";
+  /* QRIS sudah terpilih otomatis — aktifkan tombol dan tampilkan footer */
+  var footerTotalRow = document.getElementById("footerTotalRow");
+  var footerTotal    = document.getElementById("footerTotal");
+  if (footerTotalRow && footerTotal) {
+    footerTotal.textContent = biayaNum > 0
+      ? "Rp " + totalBayar.toLocaleString("id-ID")
+      : "Konfirmasi klinik";
+    footerTotalRow.style.display = "flex";
+  }
+  btnPayEl.disabled = false;
+  btnPayEl.style.opacity = "";
+  btnPayEl.style.cursor  = "";
 
   options.forEach(function(opt) {
     opt.addEventListener("click", function() {
@@ -1237,7 +1117,13 @@
       opt.classList.add("is-selected");
       selectedMethod = opt.getAttribute("data-method");
 
-      /* Aktifkan tombol setelah user memilih */
+      /* Tampilkan footer total dan aktifkan tombol */
+      if (footerTotalRow && footerTotal) {
+        footerTotal.textContent = biayaNum > 0
+          ? "Rp " + totalBayar.toLocaleString("id-ID")
+          : "Konfirmasi klinik";
+        footerTotalRow.style.display = "flex";
+      }
       btnPayEl.disabled = false;
       btnPayEl.style.opacity = "";
       btnPayEl.style.cursor  = "";
@@ -1331,7 +1217,7 @@
     document.getElementById("vaDokter").textContent    = pending.dokter      || "—";
     document.getElementById("vaJadwal").textContent    =
       (pending.tanggal || "—") + (pending.jam ? " · " + pending.jam : "");
-    document.getElementById("vaTotal").textContent     = formatRupiah(pending.biaya);
+    document.getElementById("vaTotal").textContent     = biayaNum > 0 ? "Rp " + totalBayar.toLocaleString("id-ID") : "Hubungi klinik";
 
     document.getElementById("vaOverlay").classList.add("is-open");
   }
@@ -1344,7 +1230,7 @@
     document.getElementById("qrisDokter").textContent = pending.dokter     || "—";
     document.getElementById("qrisJadwal").textContent =
       (pending.tanggal || "—") + (pending.jam ? " · " + pending.jam : "");
-    document.getElementById("qrisTotal").textContent  = formatRupiah(pending.biaya);
+    document.getElementById("qrisTotal").textContent  = biayaNum > 0 ? "Rp " + totalBayar.toLocaleString("id-ID") : "Hubungi klinik";
     document.getElementById("qrisOverlay").classList.add("is-open");
 
     /* ── Countdown 5 menit — tidak pernah reset ── */
@@ -1547,6 +1433,23 @@
     window.location.replace("home.html");
   });
 
+})();
+</script>
+
+<script>
+/* ── Force sembunyikan bottomnav dari halaman sebelumnya ── */
+(function hideNav() {
+  function removeNav() {
+    document.querySelectorAll('.bottomnav, .nav-spacer').forEach(function(el) {
+      el.style.setProperty('display', 'none', 'important');
+    });
+  }
+  removeNav();
+  document.addEventListener('DOMContentLoaded', removeNav);
+  window.addEventListener('load', removeNav);
+  /* Observer kalau ada yang diinject setelah load */
+  var obs = new MutationObserver(removeNav);
+  obs.observe(document.body, { childList: true, subtree: true });
 })();
 </script>
 </body>
