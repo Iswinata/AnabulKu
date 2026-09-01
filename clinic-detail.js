@@ -120,11 +120,15 @@
   /* ── Get booked slots for a specific doctor & date ── */
   function getBookedSlots(dokterNama, tanggal) {
     var bookings = loadBookings();
+    var now = Date.now();
     return bookings
       .filter(function(b) {
-        return b.dokter === dokterNama &&
-               b.tanggal === tanggal &&
-               (b.status === "menunggu" || b.status === "dikonfirmasi");
+        if (b.dokter !== dokterNama || b.tanggal !== tanggal) return false;
+        /* Slot sudah bebas kalau dibatalkan */
+        if (b.status === "dibatalkan") return false;
+        /* Slot sudah bebas kalau paymentDeadline expired (belum sempat dibatalkan) */
+        if (b.paymentDeadline && new Date(b.paymentDeadline).getTime() <= now) return false;
+        return b.status === "menunggu" || b.status === "dikonfirmasi";
       })
       .map(function(b) { return b.jam; });
   }
@@ -414,9 +418,11 @@
         keluhan:         keluhan,
         biaya:           clinic.hargaMulai || "",
         status:          "menunggu",
+        statusPembayaran: "menunggu_pembayaran",
         sumber:          "app_user",
         namaKlinik:      clinic.namaKlinik || "",
         createdAt:       new Date().toISOString(),
+        paymentDeadline: new Date(Date.now() + 5 * 60 * 1000).toISOString(),
       };
 
       saveBooking(booking);

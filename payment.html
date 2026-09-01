@@ -605,6 +605,127 @@
       padding: 28px 24px 44px;
       animation: slideUp .25s cubic-bezier(.34,1.2,.64,1) both;
     }
+
+    /* ── QRIS overlay ── */
+    .qris-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.55);
+      z-index: 260;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    .qris-overlay.is-open { display: flex; }
+    .qris-sheet {
+      background: #fff;
+      border-radius: 20px 20px 0 0;
+      width: 100%;
+      max-width: 393px;
+      padding: 24px 24px 44px;
+      animation: slideUp .25s cubic-bezier(.34,1.2,.64,1) both;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    .qris-timer {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #92400E;
+      background: #FEF3C7;
+      border: 1px solid #FDE68A;
+      border-radius: 20px;
+      padding: 3px 10px;
+      margin-bottom: 14px;
+    }
+    .qris-timer.urgent { color: #991B1B; background: #FEE2E2; border-color: #FECACA; }
+    .qris-timer svg { flex-shrink: 0; }
+    .qris-title { font-size: 16px; font-weight: 800; color: #111827; margin-bottom: 4px; }
+    .qris-sub   { font-size: 12px; color: #9CA3AF; margin-bottom: 16px; }
+    .qris-img-wrap {
+      width: 220px; height: 220px;
+      border: 2px solid #000;
+      border-radius: 16px;
+      box-shadow: 3px 3px 0 #000;
+      overflow: hidden;
+      margin: 0 auto 16px;
+      background: #fff;
+      display: grid;
+      place-items: center;
+      align-self: center;
+    }
+    .qris-img-wrap img { width: 100%; height: 100%; object-fit: contain; }
+    .btn-qris-download {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      width: 220px;
+      height: 40px;
+      background: #fff;
+      border: 1.5px solid #000;
+      border-radius: 10px;
+      box-shadow: 2px 2px 0 #000;
+      color: #111827;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      margin: 0 auto 16px;
+      transition: transform .1s, box-shadow .1s;
+    }
+    .btn-qris-download:active { transform: translate(1px,1px); box-shadow: 1px 1px 0 #000; }
+    .btn-qris-download svg { flex-shrink: 0; }
+    .qris-info-rows {
+      width: 100%;
+      background: #F9FAFB;
+      border: 1.5px solid #E5E7EB;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+    .qris-info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 14px;
+      border-bottom: 1px solid #F3F4F6;
+      font-size: 12px;
+    }
+    .qris-info-row:last-child { border-bottom: none; }
+    .qris-info-key { color: #9CA3AF; font-weight: 500; text-align: left; }
+    .qris-info-val { color: #111827; font-weight: 700; text-align: right; }
+    .qris-note {
+      font-size: 11.5px;
+      color: #78350F;
+      background: #FFFBEB;
+      border: 1.5px solid #FDE68A;
+      border-radius: 10px;
+      padding: 10px 12px;
+      line-height: 1.6;
+      margin-bottom: 16px;
+      width: 100%;
+      text-align: left;
+    }
+    .btn-qris-ok {
+      width: 100%;
+      height: 50px;
+      background: linear-gradient(180deg, #ff9800 0%, #ffbc59 100%);
+      border: 1.5px solid #000;
+      border-radius: 13px;
+      box-shadow: 2px 2px 0 #000;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      transition: transform .1s, box-shadow .1s;
+    }
+    .btn-qris-ok:active { transform: translate(1px,1px); box-shadow: 1px 1px 0 #000; }
     .va-header {
       display: flex;
       align-items: center;
@@ -782,7 +903,7 @@
     <!-- Metode pembayaran -->
     <p class="sec-title">Metode Pembayaran</p>
     <div class="method-card" id="methodCard">
-      <div class="method-option is-selected" data-method="transfer">
+      <div class="method-option" data-method="transfer">
         <div class="method-icon">🏦</div>
         <div class="method-info">
           <p class="method-name">Transfer Bank</p>
@@ -845,6 +966,48 @@
       </div>
       <p class="va-note">⚠️ Salin nomor VA di atas lalu lakukan transfer. Transaksi kamu akan berstatus <strong>pending</strong> hingga pembayaran diverifikasi oleh klinik dalam 10 menit.</p>
       <button class="btn-paid" id="btnPaid" type="button">🐱🐶 OK</button>
+    </div>
+  </div>
+
+  <!-- ── QRIS overlay ── -->
+  <div class="qris-overlay" id="qrisOverlay" role="dialog" aria-modal="true" aria-labelledby="qrisTitle">
+    <div class="qris-sheet">
+      <div class="qris-drag"></div>
+      <h2 class="qris-title" id="qrisTitle">Bayar dengan QRIS</h2>
+      <p class="qris-sub">Scan QR code di bawah menggunakan aplikasi e-wallet atau m-banking</p>
+      <div class="qris-timer" id="qrisTimer">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 15 15"/></svg>
+        <span id="qrisTimerText">05:00</span> · Kadaluarsa otomatis
+      </div>
+      <div class="qris-img-wrap">
+        <img id="qrisImg" src="qris.png" alt="QR Code Pembayaran QRIS AnabulKu" />
+      </div>
+      <button class="btn-qris-download" id="btnQrisDownload" type="button" aria-label="Download QR Code">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 3v13M7 11l5 5 5-5"/><rect x="3" y="19" width="18" height="2" rx="1"/>
+        </svg>
+        Simpan QR Code
+      </button>
+      <div class="qris-info-rows">
+        <div class="qris-info-row">
+          <span class="qris-info-key">Nama Klinik</span>
+          <span class="qris-info-val" id="qrisKlinik">—</span>
+        </div>
+        <div class="qris-info-row">
+          <span class="qris-info-key">Dokter</span>
+          <span class="qris-info-val" id="qrisDokter">—</span>
+        </div>
+        <div class="qris-info-row">
+          <span class="qris-info-key">Jadwal</span>
+          <span class="qris-info-val" id="qrisJadwal">—</span>
+        </div>
+        <div class="qris-info-row">
+          <span class="qris-info-key">Total Bayar</span>
+          <span class="qris-info-val" id="qrisTotal" style="color:#FF9800;">—</span>
+        </div>
+      </div>
+      <p class="qris-note">⚠️ Pastikan nominal yang dibayar sesuai. Transaksi kamu akan berstatus <strong>pending</strong> hingga pembayaran diverifikasi oleh klinik dalam 10 menit.</p>
+      <button class="btn-qris-ok" id="btnQrisOk" type="button">🐱🐶 OK, Sudah Bayar</button>
     </div>
   </div>
 
@@ -949,6 +1112,84 @@
     return;
   }
 
+  /* ── Set paymentDeadline segera saat halaman dibuka (5 menit dari sekarang)
+         agar timer jalan di riwayat.html meski user belum klik metode apapun ── */
+  var PAY_DURATION = 5 * 60 * 1000;
+  if (!pending.paymentDeadline) {
+    pending.paymentDeadline = new Date(Date.now() + PAY_DURATION).toISOString();
+    try { localStorage.setItem("anabulku_pending_payment", JSON.stringify(pending)); } catch(e) {}
+  }
+  /* Kalau deadline sudah lewat saat halaman dibuka, langsung batalkan dan redirect */
+  if (new Date(pending.paymentDeadline).getTime() <= Date.now()) {
+    cancelExpiredOnLoad();
+    window.location.replace("riwayat.html");
+    return;
+  }
+
+  /* ── Batalkan booking expired saat halaman pertama dibuka ── */
+  function cancelExpiredOnLoad() {
+    try {
+      var bks = JSON.parse(localStorage.getItem("anabulku_bookings")) || [];
+      var idx = bks.findIndex(function(b) { return b.id === pending.id; });
+      if (idx >= 0) {
+        cancelInAllStorage(bks[idx], "timeout");
+      } else {
+        cancelInAllStorage(pending, "timeout");
+      }
+      localStorage.removeItem("anabulku_pending_payment");
+    } catch(e) {}
+  }
+
+  /* ── Batalkan booking di SEMUA storage: global + namespace klinik + mitraKlinik.bookedSlots ── */
+  function cancelInAllStorage(booking, reason) {
+    if (!booking) return;
+    try {
+      /* 1. Global anabulku_bookings */
+      var bks = JSON.parse(localStorage.getItem("anabulku_bookings")) || [];
+      var gi = bks.findIndex(function(b) { return b.id === booking.id; });
+      if (gi >= 0) {
+        bks[gi].status = "dibatalkan";
+        bks[gi].statusPembayaran = "dibatalkan";
+        bks[gi].cancelledReason = reason || "timeout";
+        localStorage.setItem("anabulku_bookings", JSON.stringify(bks));
+      }
+      /* 2. Namespace per klinik + mitraKlinik.bookedSlots */
+      var mitraList = JSON.parse(localStorage.getItem("mitraKlinik")) || [];
+      mitraList.forEach(function(k) {
+        if (!k.id) return;
+        var nsKey = "anabulku_bookings_" + k.id;
+        var nsRaw = localStorage.getItem(nsKey);
+        if (nsRaw) {
+          var nsBks = JSON.parse(nsRaw);
+          var ni = nsBks.findIndex(function(b) { return b.id === booking.id; });
+          if (ni >= 0) {
+            nsBks[ni].status = "dibatalkan";
+            nsBks[ni].statusPembayaran = "dibatalkan";
+            nsBks[ni].cancelledReason = reason || "timeout";
+            localStorage.setItem(nsKey, JSON.stringify(nsBks));
+          }
+        }
+        /* Bebaskan dari mitraKlinik.bookedSlots */
+        if (Array.isArray(k.bookedSlots)) {
+          var before = k.bookedSlots.length;
+          k.bookedSlots = k.bookedSlots.filter(function(s) {
+            return !(s.dokter === booking.dokter &&
+                     s.tanggal === booking.tanggal &&
+                     s.jam === booking.jam);
+          });
+          if (k.bookedSlots.length !== before) {
+            /* tulis balik mitraKlinik */
+            try {
+              var ml2 = JSON.parse(localStorage.getItem("mitraKlinik")) || [];
+              var mi2 = ml2.findIndex(function(x) { return x.id === k.id; });
+              if (mi2 >= 0) { ml2[mi2].bookedSlots = k.bookedSlots; localStorage.setItem("mitraKlinik", JSON.stringify(ml2)); }
+            } catch(e2) {}
+          }
+        }
+      });
+    } catch(e) {}
+  }
+
   /* ── Format tanggal lokal ── */
   function formatTanggal(iso) {
     if (!iso) return "—";
@@ -981,13 +1222,25 @@
   setText("payTotal",     formatHarga(pending.biaya));
 
   /* ── Pilih metode pembayaran ── */
-  var selectedMethod = "transfer";
+  var selectedMethod = null;
   var options = document.querySelectorAll(".method-option");
+  var btnPayEl = document.getElementById("btnPay");
+
+  /* Tombol disabled sampai user aktif memilih metode */
+  btnPayEl.disabled = true;
+  btnPayEl.style.opacity = "0.45";
+  btnPayEl.style.cursor  = "not-allowed";
+
   options.forEach(function(opt) {
     opt.addEventListener("click", function() {
       options.forEach(function(o) { o.classList.remove("is-selected"); });
       opt.classList.add("is-selected");
       selectedMethod = opt.getAttribute("data-method");
+
+      /* Aktifkan tombol setelah user memilih */
+      btnPayEl.disabled = false;
+      btnPayEl.style.opacity = "";
+      btnPayEl.style.cursor  = "";
     });
   });
 
@@ -995,39 +1248,8 @@
 
   /* ── Batalkan booking (dipanggil saat user konfirmasi keluar) ── */
   function cancelBooking() {
-    try {
-      var bookings = JSON.parse(localStorage.getItem("anabulku_bookings")) || [];
-      var idx = bookings.findIndex(function(b) { return b.id === pending.id; });
-      if (idx >= 0) {
-        bookings[idx].status = "dibatalkan";
-        bookings[idx].statusPembayaran = "dibatalkan";
-        bookings[idx].cancelledReason = "user_leave";
-      }
-      localStorage.setItem("anabulku_bookings", JSON.stringify(bookings));
-
-      /* Juga update di namespace klinik jika ada */
-      if (pending.namaKlinik) {
-        try {
-          var klinikList = JSON.parse(localStorage.getItem("mitraKlinik")) || [];
-          klinikList.forEach(function(k) {
-            if (k.namaKlinik === pending.namaKlinik && k.id) {
-              var key = "anabulku_bookings_" + k.id;
-              var bksKlinik = JSON.parse(localStorage.getItem(key)) || [];
-              var ki = bksKlinik.findIndex(function(b) { return b.id === pending.id; });
-              if (ki >= 0) {
-                bksKlinik[ki].status = "dibatalkan";
-                bksKlinik[ki].statusPembayaran = "dibatalkan";
-                bksKlinik[ki].cancelledReason = "user_leave";
-                localStorage.setItem(key, JSON.stringify(bksKlinik));
-              }
-            }
-          });
-        } catch (e2) { /* silent */ }
-      }
-
-      /* Hapus pending */
-      localStorage.removeItem("anabulku_pending_payment");
-    } catch (e) { /* silent */ }
+    cancelInAllStorage(pending, "user_leave");
+    localStorage.removeItem("anabulku_pending_payment");
   }
 
   /* ── Leave overlay ── */
@@ -1114,6 +1336,108 @@
     document.getElementById("vaOverlay").classList.add("is-open");
   }
 
+  /* ── Tampilkan QRIS overlay ── */
+  var qrisCountdownInterval = null;
+
+  function showQrisOverlay() {
+    document.getElementById("qrisKlinik").textContent = pending.namaKlinik || "—";
+    document.getElementById("qrisDokter").textContent = pending.dokter     || "—";
+    document.getElementById("qrisJadwal").textContent =
+      (pending.tanggal || "—") + (pending.jam ? " · " + pending.jam : "");
+    document.getElementById("qrisTotal").textContent  = formatRupiah(pending.biaya);
+    document.getElementById("qrisOverlay").classList.add("is-open");
+
+    /* ── Countdown 5 menit — tidak pernah reset ── */
+    var DURATION = 5 * 60 * 1000; /* ms */
+    var timerEl   = document.getElementById("qrisTimer");
+    var timerText = document.getElementById("qrisTimerText");
+
+    /* Simpan deadline ke localStorage agar riwayat bisa baca */
+    var stored = null;
+    try { stored = JSON.parse(localStorage.getItem("anabulku_pending_payment")); } catch(e) {}
+    if (stored && !stored.paymentDeadline) {
+      stored.paymentDeadline = new Date(Date.now() + DURATION).toISOString();
+      try { localStorage.setItem("anabulku_pending_payment", JSON.stringify(stored)); } catch(e) {}
+    }
+    var deadline = stored && stored.paymentDeadline ? new Date(stored.paymentDeadline).getTime() : Date.now() + DURATION;
+
+    function updateTimer() {
+      var remaining = Math.max(0, deadline - Date.now());
+      var totalSec  = Math.ceil(remaining / 1000);
+      var m = Math.floor(totalSec / 60);
+      var s = totalSec % 60;
+      timerText.textContent = (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s;
+      if (remaining <= 60000) {
+        timerEl.classList.add("urgent");
+      } else {
+        timerEl.classList.remove("urgent");
+      }
+      if (remaining <= 0) {
+        clearInterval(qrisCountdownInterval);
+        qrisCountdownInterval = null;
+        document.getElementById("qrisOverlay").classList.remove("is-open");
+        /* Batalkan booking di semua storage + bebaskan slot */
+        cancelInAllStorage(pending, "timeout");
+        localStorage.removeItem("anabulku_pending_payment");
+        alert("⏰ Waktu pembayaran habis. Booking dibatalkan dan jadwal kembali tersedia.");
+        window.location.replace("riwayat.html");
+      }
+    }
+
+    if (qrisCountdownInterval) clearInterval(qrisCountdownInterval);
+    timerEl.classList.remove("urgent");
+    updateTimer();
+    qrisCountdownInterval = setInterval(updateTimer, 1000);
+  }
+
+  /* ── Tombol OK QRIS — sudah bayar, tunggu konfirmasi admin ── */
+  document.getElementById("btnQrisOk").addEventListener("click", function() {
+    if (qrisCountdownInterval) { clearInterval(qrisCountdownInterval); qrisCountdownInterval = null; }
+    /* Tandai booking sebagai menunggu konfirmasi admin */
+    try {
+      var bookings = JSON.parse(localStorage.getItem("anabulku_bookings")) || [];
+      var idx = bookings.findIndex(function(b) { return b.id === pending.id; });
+      if (idx >= 0) {
+        bookings[idx].statusPembayaran  = "menunggu_konfirmasi";
+        bookings[idx].metodePembayaran  = selectedMethod;
+        /* paymentDeadline tetap — tidak di-reset */
+      }
+      localStorage.setItem("anabulku_bookings", JSON.stringify(bookings));
+      /* Update pending_payment juga agar timer di riwayat tetap akurat */
+      var stored = JSON.parse(localStorage.getItem("anabulku_pending_payment")) || null;
+      if (stored && stored.id === pending.id) {
+        stored.statusPembayaran = "menunggu_konfirmasi";
+        stored.metodePembayaran = selectedMethod;
+        localStorage.setItem("anabulku_pending_payment", JSON.stringify(stored));
+      }
+    } catch(e) {}
+    document.getElementById("qrisOverlay").classList.remove("is-open");
+    window.location.replace("home.html");
+  });
+
+  /* ── Tombol Download QRIS ── */
+  document.getElementById("btnQrisDownload").addEventListener("click", function() {
+    var img = document.getElementById("qrisImg");
+    var canvas = document.createElement("canvas");
+    canvas.width  = img.naturalWidth  || img.width;
+    canvas.height = img.naturalHeight || img.height;
+    var ctx = canvas.getContext("2d");
+    ctx.drawImage(img, 0, 0);
+    try {
+      var link = document.createElement("a");
+      link.download = "qris-anabulku.png";
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+    } catch (e) {
+      /* Fallback: buka gambar di tab baru jika canvas terkena CORS */
+      var a = document.createElement("a");
+      a.href = img.src;
+      a.download = "qris-anabulku.png";
+      a.target = "_blank";
+      a.click();
+    }
+  });
+
   /* ── Salin VA number ── */
   document.getElementById("btnCopyVA").addEventListener("click", function() {
     var btn   = document.getElementById("btnCopyVA");
@@ -1138,7 +1462,16 @@
     }, 2000);
   });
 
-  /* ── Tombol Bayar Sekarang → tampil VA overlay ── */
+
+  /* ── Mode Lihat Pembayaran dari riwayat ── */
+  if (new URLSearchParams(window.location.search).get('view') === '1' && pending._viewMetode) {
+    selectedMethod = pending._viewMetode;
+    options.forEach(function(o) {
+      o.classList.toggle('is-selected', o.getAttribute('data-method') === selectedMethod);
+    });
+    if (selectedMethod === 'qris') { showQrisOverlay(); } else { showVAOverlay(); }
+  }
+  /* ── Tombol Bayar Sekarang → tampil VA / QRIS overlay ── */
   document.getElementById("btnPay").addEventListener("click", function() {
     if (selectedMethod === "tunai" || selectedMethod === "bayar_ditempat") {
       /* Metode tunai — langsung proses tanpa VA */
@@ -1162,6 +1495,25 @@
         document.getElementById("successRef").textContent = "Kode Booking: " + ref;
         document.getElementById("successOverlay").classList.add("is-open");
       }, 900);
+    } else if (selectedMethod === "qris") {
+      /* Metode QRIS — tampilkan QRIS overlay */
+      try {
+        var bookings = JSON.parse(localStorage.getItem("anabulku_bookings")) || [];
+        var idx = bookings.findIndex(function(b) { return b.id === pending.id; });
+        if (idx >= 0) {
+          bookings[idx].metodePembayaran = selectedMethod;
+          bookings[idx].statusPembayaran = "menunggu_pembayaran";
+        }
+        localStorage.setItem("anabulku_bookings", JSON.stringify(bookings));
+
+        var pendingList = JSON.parse(localStorage.getItem("anabulku_pending_payment") || "[]");
+        if (!Array.isArray(pendingList)) pendingList = [];
+        if (!pendingList.find(function(p) { return p.bookingId === pending.id; })) {
+          pendingList.push({ bookingId: pending.id, time: new Date().toISOString() });
+          localStorage.setItem("anabulku_pending_payment", JSON.stringify(pendingList));
+        }
+      } catch (e) { /* silent */ }
+      showQrisOverlay();
     } else {
       /* Metode transfer / VA → update statusPembayaran dulu, lalu tampilkan VA overlay */
       try {

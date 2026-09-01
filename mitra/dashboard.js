@@ -187,6 +187,9 @@
      terlihat di dashboard tanpa mitra perlu reload manual. */
   function syncFromGlobalBookings() {
     try {
+      /* Auto-cancel booking yang paymentDeadline-nya sudah lewat */
+      cancelExpiredBookings();
+
       let globalBks = JSON.parse(localStorage.getItem('anabulku_bookings') || '[]');
       if (!Array.isArray(globalBks)) globalBks = [];
 
@@ -222,6 +225,48 @@
       if (mitraChanged) save();
       if (globalChanged) localStorage.setItem('anabulku_bookings', JSON.stringify(globalBks));
     } catch (_) { /* silent */ }
+  }
+
+  /* Auto-cancel booking yang paymentDeadline sudah lewat di namespace mitra ini.
+     Booking expired diubah ke "dibatalkan" dan slot jam dokter dibebaskan kembali. */
+  function cancelExpiredBookings() {
+    try {
+      const now = Date.now();
+      let changed = false;
+      bookings.forEach(function(b) {
+        if (!b.paymentDeadline) return;
+        if (b.status === 'dibatalkan' || b.status === 'selesai' || b.status === 'dikonfirmasi') return;
+        if (new Date(b.paymentDeadline).getTime() > now) return;
+        /* Deadline lewat — batalkan */
+        b.status = 'dibatalkan';
+        b.statusPembayaran = 'dibatalkan';
+        b.cancelledReason = 'timeout';
+        changed = true;
+        /* Bebaskan slot di mitraKlinik.bookedSlots */
+        try {
+          let ml = JSON.parse(localStorage.getItem('mitraKlinik') || '[]');
+          const mi = ml.findIndex(k => k.id === MITRA_ID);
+          if (mi >= 0 && Array.isArray(ml[mi].bookedSlots)) {
+            ml[mi].bookedSlots = ml[mi].bookedSlots.filter(s =>
+              !(s.dokter === b.dokter && s.tanggal === b.tanggal && s.jam === b.jam)
+            );
+            localStorage.setItem('mitraKlinik', JSON.stringify(ml));
+          }
+        } catch(_) {}
+        /* Bebaskan di global anabulku_bookings */
+        try {
+          let gBks = JSON.parse(localStorage.getItem('anabulku_bookings') || '[]');
+          const gi = gBks.findIndex(g => g.id === b.id);
+          if (gi >= 0) {
+            gBks[gi].status = 'dibatalkan';
+            gBks[gi].statusPembayaran = 'dibatalkan';
+            gBks[gi].cancelledReason = 'timeout';
+            localStorage.setItem('anabulku_bookings', JSON.stringify(gBks));
+          }
+        } catch(_) {}
+      });
+      if (changed) save();
+    } catch(_) { /* silent */ }
   }
 
   /* Badge HTML — status pembayaran */
