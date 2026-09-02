@@ -31,10 +31,10 @@
 
     var backdrop = document.createElement("div");
     backdrop.id = "cdGuestModal";
-    backdrop.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:flex-end;justify-content:center;z-index:9999;";
+    backdrop.style.cssText = "position:fixed;inset:0;background:rgba(10,8,30,0.80);backdrop-filter:blur(6px);display:flex;align-items:flex-end;justify-content:center;z-index:9999;";
 
     var sheet = document.createElement("div");
-    sheet.style.cssText = "background:#fff;width:100%;max-width:393px;border-radius:20px 20px 0 0;padding:28px 24px 32px;display:flex;flex-direction:column;align-items:center;gap:10px;box-shadow:0 -4px 24px rgba(0,0,0,.12);animation:modalSlideUp .25s ease both;";
+    sheet.style.cssText = "background:linear-gradient(160deg,#1e1942 0%,#0f0c29 100%);border:1px solid rgba(255,255,255,0.12);width:100%;max-width:393px;border-radius:24px 24px 0 0;padding:28px 24px 32px;display:flex;flex-direction:column;align-items:center;gap:10px;box-shadow:0 -8px 48px rgba(0,0,0,0.55);animation:modalSlideUp .25s ease both;";
     sheet.innerHTML =
       '<div style="font-size:44px;line-height:1;margin-bottom:4px;">🔒</div>' +
       '<div style="font-size:17px;font-weight:700;color:#1F2937;text-align:center;">Login Diperlukan</div>' +

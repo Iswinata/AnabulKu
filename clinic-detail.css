@@ -1,541 +1,271 @@
-/* ===================================================================
-   AnabulKu — Halaman Detail Klinik  |  Glassmorphism dark-navy
+﻿/* ===================================================================
+   AnabulKu — Detail Klinik  |  Dark-navy glassmorphism v2
+   Selaras dengan design system home.html
 =================================================================== */
 
 .cd-app { padding-bottom: 0; }
 
-/* ── Main clinic card ── */
+/* ── Back row ── */
+.cd-back-row { display:flex; align-items:center; gap:10px; margin-bottom:4px; }
+.cd-btn-back {
+  display:grid; place-items:center;
+  width:38px; height:38px; border-radius:12px;
+  background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15);
+  backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+  transition:background 0.15s, transform 0.1s; flex-shrink:0;
+}
+.cd-btn-back:active { transform:scale(0.93); }
+.cd-btn-back svg { width:18px; height:18px; }
+.cd-back-title { font-size:15px; font-weight:700; color:var(--white); letter-spacing:-0.2px; }
+
+/* ── Section header (sama dengan home) ── */
+.cd-section-header {
+  display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;
+}
+.cd-section-title {
+  font-size:14px; font-weight:700; color:var(--white);
+  letter-spacing:-0.1px; padding-left:10px; position:relative;
+}
+.cd-section-title::before {
+  content:''; position:absolute; left:0; top:50%; transform:translateY(-50%);
+  width:3px; height:14px; border-radius:2px; background:var(--orange);
+}
+
+/* ── Hero clinic card ── */
 .cd-main-card {
-  position: relative;
-  container-type: inline-size;
-  margin-top: 22px;
-  aspect-ratio: 349 / 113;
-  border-radius: 16px;
-  background: linear-gradient(135deg, rgba(255,152,0,0.85) 0%, rgba(255,189,93,0.70) 100%);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255,200,100,0.35);
-  box-shadow: 0 8px 28px rgba(255,152,0,0.25), inset 0 1px 0 rgba(255,255,255,0.20);
-  overflow: hidden;
-  isolation: isolate;
+  position:relative; margin-top:8px; border-radius:20px;
+  background:linear-gradient(135deg, rgba(255,152,0,0.90) 0%, rgba(255,189,93,0.75) 100%);
+  border:1px solid rgba(255,200,100,0.35);
+  box-shadow:0 10px 36px rgba(255,152,0,0.30), inset 0 1px 0 rgba(255,255,255,0.22);
+  overflow:hidden; isolation:isolate;
+  padding:16px; display:flex; align-items:center; gap:14px; min-height:110px;
 }
-
+.cd-main-card::before {
+  content:''; position:absolute; width:130px; height:130px; border-radius:9999px;
+  background:rgba(255,255,255,0.18); filter:blur(24px);
+  top:-40px; right:30px; pointer-events:none;
+}
+.cd-main-card::after {
+  content:''; position:absolute; width:80px; height:80px; border-radius:9999px;
+  background:rgba(255,255,255,0.10); filter:blur(16px);
+  bottom:-20px; left:10px; pointer-events:none;
+}
 .cd-main-card.cd-reverse {
-  background: linear-gradient(135deg, rgba(255,189,93,0.75) 0%, rgba(255,152,0,0.85) 100%);
+  background:linear-gradient(135deg, rgba(255,189,93,0.80) 0%, rgba(255,152,0,0.90) 100%);
 }
-
 .cd-main-photo {
-  position: absolute;
-  left: 2.87%; top: 7.96%;
-  width: 27.79%; height: 84.07%;
-  z-index: 1;
-  border-radius: 10px;
-  background: rgba(255,255,255,0.12) center / cover no-repeat;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-  border: 1px solid rgba(255,255,255,0.25);
+  width:80px; height:80px; flex-shrink:0; z-index:1; border-radius:14px;
+  background:rgba(255,255,255,0.15) center/cover no-repeat;
+  box-shadow:0 4px 16px rgba(0,0,0,0.22); border:2px solid rgba(255,255,255,0.30);
 }
-
-.cd-main-body {
-  position: absolute;
-  left: 34.1%; right: 3%; top: 13.7%;
-  z-index: 2;
-  display: flex; flex-direction: column;
-  gap: 2.3cqw;
-}
-
+.cd-main-body { flex:1; min-width:0; z-index:2; display:flex; flex-direction:column; gap:5px; }
 .cd-main-name {
-  color: #fff;
-  font-weight: 700; font-size: 4.31cqw; line-height: 1.1;
-  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
-  text-shadow: 0 1px 3px rgba(0,0,0,0.15);
+  color:#fff; font-weight:800; font-size:15px; line-height:1.2;
+  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+  text-shadow:0 1px 4px rgba(0,0,0,0.18);
 }
-
 .cd-main-addr {
-  color: rgba(255,255,255,0.85);
-  font-weight: 400; font-size: 3.01cqw; line-height: 1.15;
-  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  color:rgba(255,255,255,0.82); font-weight:400; font-size:11.5px; line-height:1.4;
+  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
 }
-
-.cd-main-meta { display: flex; align-items: center; gap: 4.6cqw; margin-top: 1.4cqw; }
-.cd-meta-chip { display: inline-flex; align-items: center; gap: 1.2cqw; }
-.cd-meta-ico  { width: 3.7cqw; height: 3.7cqw; flex: none; }
-.cd-meta-val  { color: #fff3d0; font-weight: 600; font-size: 3.66cqw; line-height: 1.1; }
+.cd-main-meta { display:flex; align-items:center; gap:8px; margin-top:4px; flex-wrap:wrap; }
+.cd-meta-chip {
+  display:inline-flex; align-items:center; gap:4px;
+  background:rgba(255,255,255,0.20); border:1px solid rgba(255,255,255,0.30);
 
 /* ── Date picker ── */
-.cd-date-section { margin-top: 20px; }
-
-.cd-date-strip {
-  display: grid; grid-template-columns: repeat(7,1fr);
-  gap: 6px; padding: 2px 0 6px;
-}
-
+.cd-date-section { margin-top:22px; }
+.cd-date-strip { display:grid; grid-template-columns:repeat(7,1fr); gap:6px; padding:2px 0 4px; }
 .cd-day-btn {
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 5px; width: 100%; height: 60px; padding: 8px 4px;
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.15);
-  border-radius: 12px; cursor: pointer;
-  font-family: 'Poppins', sans-serif;
-  transition: background 0.15s, border-color 0.15s, transform 0.1s;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:4px; width:100%; height:58px; padding:6px 2px;
+  background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.12);
+  border-radius:14px; cursor:pointer; font-family:'Poppins',sans-serif;
+  transition:background 0.15s, border-color 0.15s, transform 0.1s;
 }
-.cd-day-btn:hover:not(.is-active) {
-  border-color: rgba(255,152,0,0.45);
-  background: rgba(255,152,0,0.12);
-}
-.cd-day-btn:active { transform: scale(0.96); }
-
+.cd-day-btn:hover:not(.is-active) { border-color:rgba(255,152,0,0.45); background:rgba(255,152,0,0.10); }
+.cd-day-btn:active { transform:scale(0.94); }
 .cd-day-btn.is-active {
-  background: linear-gradient(180deg, rgba(255,152,0,0.85) 0%, rgba(255,189,93,0.75) 100%);
-  border-color: rgba(255,152,0,0.7);
-  box-shadow: 0 4px 14px rgba(255,152,0,0.30);
+  background:linear-gradient(160deg, rgba(255,152,0,0.90) 0%, rgba(255,189,93,0.80) 100%);
+  border-color:rgba(255,152,0,0.70); box-shadow:0 4px 14px rgba(255,152,0,0.30);
 }
-
-.cd-day-letter {
-  font-size: 11px; font-weight: 600;
-  color: rgba(255,255,255,0.50);
-  line-height: 1; text-transform: uppercase; letter-spacing: 0.02em;
-}
-.cd-day-btn.is-active .cd-day-letter { color: rgba(255,255,255,0.90); }
-
-.cd-day-num {
-  font-size: 16px; font-weight: 700;
-  color: rgba(255,255,255,0.85);
-  line-height: 1;
-}
-.cd-day-btn.is-active .cd-day-num { color: #fff; }
+.cd-day-letter { font-size:10px; font-weight:600; color:rgba(255,255,255,0.45); line-height:1; text-transform:uppercase; letter-spacing:0.03em; }
+.cd-day-btn.is-active .cd-day-letter { color:rgba(255,255,255,0.88); }
+.cd-day-num { font-size:15px; font-weight:700; color:rgba(255,255,255,0.80); line-height:1; }
+.cd-day-btn.is-active .cd-day-num { color:#fff; }
 
 /* ── Doctor section ── */
-.cd-doctor-section { margin-top: 20px; }
-
-.cd-doctor-scroll {
-  display: flex; gap: 10px;
-  overflow-x: auto; padding-bottom: 4px;
-  scrollbar-width: none;
-}
-.cd-doctor-scroll::-webkit-scrollbar { display: none; }
-
-.cd-doctor-card {
-  flex: none; width: 120px;
-  background: rgba(255,255,255,0.10);
-  border: 1px solid rgba(255,255,255,0.18);
-  border-radius: 14px; padding: 14px 10px;
-  display: flex; flex-direction: column; align-items: center; gap: 7px;
-  cursor: pointer;
-  transition: background 0.15s, border-color 0.15s, transform 0.1s;
-}
-.cd-doctor-card:hover { background: rgba(255,255,255,0.16); border-color: rgba(255,152,0,0.40); }
-.cd-doctor-card:active { transform: scale(0.97); }
-.cd-doctor-card.is-active {
-  background: rgba(255,152,0,0.20);
-  border-color: rgba(255,152,0,0.65);
-  box-shadow: 0 4px 16px rgba(255,152,0,0.25);
-}
-
-.cd-doctor-photo {
-  width: 52px; height: 52px; border-radius: 50%;
-  object-fit: cover;
-  background: rgba(255,255,255,0.10);
-  border: 2px solid rgba(255,255,255,0.20);
-}
-.cd-doctor-card.is-active .cd-doctor-photo { border-color: rgba(255,152,0,0.70); }
-
-.cd-doctor-name {
-  font-size: 11px; font-weight: 700;
-  color: #fff; text-align: center; line-height: 1.2;
-  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
-}
-
-.cd-doctor-spec {
-  font-size: 10px; font-weight: 400;
-  color: rgba(255,255,255,0.55); text-align: center; line-height: 1.2;
-}
-
-/* ── Time slot grid ── */
-.cd-time-section { margin-top: 18px; }
-
-.cd-time-grid {
-  display: grid; grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
-}
-
-.cd-time-slot {
-  padding: 10px 4px;
-  border-radius: 10px;
-  border: 1px solid rgba(255,255,255,0.15);
-  background: rgba(255,255,255,0.08);
-  font-family: 'Poppins', sans-serif;
-  font-size: 12px; font-weight: 600;
-  color: rgba(255,255,255,0.70);
-  text-align: center; cursor: pointer;
-  transition: background 0.12s, border-color 0.12s, transform 0.1s;
-}
-.cd-time-slot:hover:not(.past):not(.booked) {
-  background: rgba(255,152,0,0.18);
-  border-color: rgba(255,152,0,0.50);
-}
-.cd-time-slot:active:not(.past):not(.booked) { transform: scale(0.96); }
-
-/* Available */
-.cd-time-slot.available {
-  background: rgba(255,255,255,0.08);
-  border-color: rgba(255,255,255,0.18);
-  color: rgba(255,255,255,0.75);
-}
-
-/* Selected */
-.cd-time-slot.selected {
-  background: linear-gradient(180deg, rgba(255,152,0,0.9) 0%, rgba(255,189,93,0.85) 100%);
-  border-color: rgba(255,152,0,0.80);
-  color: #fff;
-  box-shadow: 0 4px 14px rgba(255,152,0,0.30);
-}
-
-/* Row tombol Pilih Layanan */
-.cd-time-action-row {
-  position: relative; z-index: 1;
-  display: flex; justify-content: flex-end;
-  margin-top: 8px;
-}
-
-/* Pilih Layanan CTA */
-.cd-pilih-btn {
-  display: inline-flex; align-items: center; justify-content: center;
-  min-width: 110px; height: 34px; padding: 0 16px;
-  background: linear-gradient(135deg, #ff9800 0%, #ffbd5d 100%);
-  border: none; border-radius: 10px;
-  box-shadow: 0 4px 14px rgba(255,152,0,0.35);
-  font-family: 'Poppins', sans-serif;
-  font-size: 12px; font-weight: 700; color: #fff;
-  cursor: pointer;
-  transition: transform 0.1s, opacity 0.1s;
-}
-.cd-pilih-btn:hover  { opacity: 0.90; }
-.cd-pilih-btn:active { transform: scale(0.97); opacity: 0.85; }
-
-/* Empty / no-data states */
-.cd-no-doctors {
-  text-align: center;
-  color: rgba(255,255,255,0.40);
-  font-size: 13px; padding: 24px 0;
-}
-
-.cd-no-doctors-day {
-  display: flex; flex-direction: column; align-items: center;
-  gap: 10px; padding: 32px 16px; text-align: center;
-}
-.cd-no-doctors-day p {
-  color: rgba(255,255,255,0.40);
-  font-size: 13px; font-weight: 500; margin: 0;
-}
-
-/* Day tag today */
-.cd-day-tag.is-today {
-  background: rgba(255,152,0,0.30);
-  color: #ffbd5d; font-weight: 700;
-  border-color: rgba(255,152,0,0.60);
-}
-
-/* Sesi group */
-.cd-sesi-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
-.cd-sesi-group:last-child { margin-bottom: 0; }
-
-.cd-sesi-group-header {
-  display: inline-flex; align-items: center; gap: 5px;
-  font-size: 9.5px; font-weight: 700;
-  color: #ffbd5d; letter-spacing: 0.05em; text-transform: uppercase;
-  background: rgba(255,152,0,0.15);
-  border-radius: 20px; padding: 2px 9px;
-  width: fit-content;
-  border: 1px solid rgba(255,152,0,0.25);
-}
-
-/* Slot states */
-.cd-time-slot.past {
-  background: rgba(255,255,255,0.04) !important;
-  color: rgba(255,255,255,0.20) !important;
-  box-shadow: none !important;
-  cursor: not-allowed !important;
-  text-decoration: line-through;
-}
-
-.cd-time-slot.booked {
-  background: rgba(239,68,68,0.12) !important;
-  color: rgba(239,68,68,0.70) !important;
-  border-color: rgba(239,68,68,0.25) !important;
-  cursor: not-allowed !important;
-}
-.cd-time-slot.booked::after { content: " ✕"; font-size: 9px; opacity: 0.8; }
-
-.cd-day-num {
-  font-size: 16px;
-  font-weight: 700;
-  color: #111827;
-  line-height: 1;
-}
-.cd-day-btn.is-active .cd-day-num { color: #fff; }
-
-/* ── Doctor Cards ── */
-.cd-doctors {
-  margin-top: 18px;
-  display: flex; flex-direction: column; gap: 14px;
-}
-
+.cd-doctor-section { margin-top:22px; }
 .cd-doc-card {
-  position: relative;
-  container-type: inline-size;
-  border-radius: 16px;
-  background: rgba(255,255,255,0.10);
-  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255,255,255,0.18);
-  box-shadow: 0 4px 20px rgba(0,0,0,0.20);
-  overflow: hidden; isolation: isolate;
-  padding: 12px 12px 12px;
+  background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.12);
+  border-radius:18px; overflow:hidden; margin-bottom:12px; transition:border-color 0.15s;
 }
-
-.cd-doc-card::before { display: none; }
-
-.cd-doc-inner {
-  position: relative; z-index: 1;
-  display: flex; gap: 12px;
-}
-
+.cd-doc-card:last-child { margin-bottom:0; }
+.cd-doc-card:hover { border-color:rgba(255,152,0,0.28); }
+.cd-doc-inner { display:flex; gap:14px; padding:14px 14px 0; }
 .cd-doc-photo {
-  flex: none; width: 90px; height: 88px;
-  border-radius: 12px;
-  background: rgba(255,255,255,0.08) center / cover no-repeat;
-  border: 1.5px solid rgba(255,255,255,0.20);
-  overflow: hidden; position: relative;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  width:68px; height:68px; border-radius:14px; flex-shrink:0;
+  background:rgba(255,255,255,0.10) center/cover no-repeat;
+  border:1.5px solid rgba(255,255,255,0.18);
 }
-
-.cd-doc-photo--empty {
-  background: rgba(255,152,0,0.12);
-  display: flex; align-items: flex-end; justify-content: center;
-}
-
-.cd-doc-photo-icon {
-  display: block; width: 72px; height: 72px; object-fit: contain;
-}
-
-.cd-doc-info {
-  flex: 1; min-width: 0;
-  display: flex; flex-direction: column; gap: 3px;
-}
-
-.cd-doc-name {
-  color: #fff; font-weight: 700;
-  font-size: 3.53cqw; line-height: 1.15;
-  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
-}
-
-.cd-doc-spec {
-  color: rgba(255,255,255,0.55); font-weight: 400;
-  font-size: 3.01cqw; line-height: 1.2;
-}
-
-.cd-doc-hours {
-  display: inline-flex; align-items: center; gap: 4px; margin-top: 2px;
-  font-size: 3.01cqw; font-weight: 600; color: #ffbd5d; line-height: 1.2;
-}
-
-.cd-doc-sched-label {
-  color: rgba(255,255,255,0.45); font-weight: 400;
-  font-size: 3.01cqw; margin-top: 4px;
-}
-
-.cd-doc-days {
-  display: flex; flex-wrap: wrap; gap: 5px; margin-top: 3px;
-}
-
+.cd-doc-photo--empty { display:grid; place-items:center; background:rgba(255,152,0,0.10); border-color:rgba(255,152,0,0.22); }
+.cd-doc-photo-icon { width:28px; height:28px; opacity:0.40; filter:invert(1); }
+.cd-doc-info { flex:1; min-width:0; display:flex; flex-direction:column; gap:3px; }
+.cd-doc-name { font-size:13.5px; font-weight:700; color:var(--white); line-height:1.25; margin:0; }
+.cd-doc-spec { font-size:11px; font-weight:600; color:rgba(255,152,0,0.90); margin:0; }
+.cd-doc-hours { font-size:11px; color:rgba(255,255,255,0.50); margin:2px 0 0; }
+.cd-doc-sched-label { font-size:10px; font-weight:600; color:rgba(255,255,255,0.38); text-transform:uppercase; letter-spacing:0.05em; margin:5px 0 3px; }
+.cd-doc-days { display:flex; flex-wrap:wrap; gap:4px; }
 .cd-day-tag {
-  display: inline-flex; align-items: center; justify-content: center;
-  min-width: 43px; height: 16px; padding: 0 6px;
-  background: rgba(255,152,0,0.25);
-  border: 1px solid rgba(255,152,0,0.50);
-  border-radius: 8px;
-  font-family: 'Poppins', sans-serif;
-  font-size: 7.5px; font-weight: 600; color: #ffbd5d;
-  white-space: nowrap;
+  display:inline-block; padding:2px 7px; border-radius:20px; font-size:10px; font-weight:600;
+  background:rgba(255,255,255,0.07); color:rgba(255,255,255,0.50); border:1px solid rgba(255,255,255,0.11);
 }
+.cd-day-tag.is-today { background:rgba(255,152,0,0.20); color:rgba(255,210,100,0.95); border-color:rgba(255,152,0,0.38); }
+.cd-doc-divider { height:1px; background:rgba(255,255,255,0.07); margin:12px 14px 0; }
 
-.cd-doc-divider {
-  position: relative; z-index: 1;
-  height: 1px; background: rgba(255,255,255,0.10); margin: 10px 0;
-}
-
-.cd-time-row {
-  position: relative; z-index: 1;
-  display: flex; flex-direction: column; gap: 8px;
-}
-
-.cd-sesi-block { display: flex; flex-direction: column; gap: 6px; }
-
-.cd-sesi-header { display: flex; align-items: center; gap: 6px; }
-
-.cd-sesi-num {
-  display: inline-flex; align-items: center; justify-content: center;
-  height: 16px; padding: 0 7px;
-  background: rgba(255,152,0,0.25);
-  border-radius: 20px; border: 1px solid rgba(255,152,0,0.40);
-  font-size: 9px; font-weight: 700; color: #ffbd5d;
-  letter-spacing: 0.04em; text-transform: uppercase; white-space: nowrap;
-}
-
-.cd-sesi-range {
-  font-size: 10px; font-weight: 600;
-  color: #fff3e0;
-  letter-spacing: 0.01em;
-}
-
-/* Header untuk sesi tunggal — range saja, tanpa "Sesi 1" */
-.cd-sesi-header--single .cd-sesi-range {
-  font-size: 9px;
-  color: rgba(255,255,255,0.7);
-}
-
-/* Grid slot dalam satu sesi */
-.cd-sesi-slots {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  align-items: center;
-}
-
-/* Tombol Pilih Layanan di baris terakhir setelah semua sesi */
-.cd-sesi-slots:last-child {
-  align-items: center;
-}
-
+/* ── Time slots ── */
+.cd-time-row { padding:12px 14px 0; }
+.cd-sesi-group { margin-bottom:10px; }
+.cd-sesi-group:last-child { margin-bottom:0; }
+.cd-sesi-group-header { font-size:10.5px; font-weight:600; color:rgba(255,255,255,0.38); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:7px; }
+.cd-sesi-slots { display:flex; flex-wrap:wrap; gap:6px; }
 .cd-time-slot {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 52px;
-  height: 28px;
-  padding: 0 10px;
-  border-radius: 8px;
-  box-shadow: 1px 1px 0 #000;
-  font-family: 'Poppins', sans-serif;
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  border: none;
-  transition: transform 0.1s, box-shadow 0.1s;
+  padding:6px 13px; border-radius:20px; font-size:12px; font-weight:600;
+  font-family:'Poppins',sans-serif; cursor:pointer; border:1.5px solid transparent;
+  transition:background 0.13s, border-color 0.13s, transform 0.1s; line-height:1.2;
 }
-.cd-time-slot:active { transform: translate(1px,1px); box-shadow: none; }
-
-/* Available slot */
-.cd-time-slot.available {
-  background: #ffeed5;
-  color: #A36233;
-}
-.cd-time-slot.available:hover {
-  background: #ffe0b2;
-}
-
-/* Selected slot */
+.cd-time-slot.available { background:rgba(255,255,255,0.07); border-color:rgba(255,255,255,0.14); color:rgba(255,255,255,0.80); }
+.cd-time-slot.available:hover { background:rgba(255,152,0,0.15); border-color:rgba(255,152,0,0.45); color:#fff; }
+.cd-time-slot.available:active { transform:scale(0.94); }
 .cd-time-slot.selected {
-  background: linear-gradient(180deg, #ff9800 0%, #ffbc59 100%);
-  color: #fff;
-  box-shadow: 1px 1px 0 rgba(0,0,0,0.5);
+  background:linear-gradient(135deg, rgba(255,152,0,0.90) 0%, rgba(255,189,93,0.80) 100%);
+  border-color:rgba(255,152,0,0.70); color:#fff; box-shadow:0 3px 12px rgba(255,152,0,0.30);
 }
+.cd-time-slot.booked { background:rgba(255,255,255,0.03); border-color:rgba(255,255,255,0.06); color:rgba(255,255,255,0.22); text-decoration:line-through; cursor:not-allowed; }
+.cd-time-slot.past  { background:rgba(255,255,255,0.02); border-color:rgba(255,255,255,0.05); color:rgba(255,255,255,0.16); cursor:not-allowed; }
+.cd-no-slots { display:flex; align-items:center; gap:8px; padding:12px 0; color:rgba(255,255,255,0.32); font-size:12px; }
 
-/* Row tombol Pilih Layanan — di bawah semua sesi */
-.cd-time-action-row {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 8px;
-}
-
-/* "Pilih Layanan" CTA */
+/* ── Pilih Layanan button ── */
+.cd-time-action-row { padding:12px 14px 14px; display:flex; justify-content:flex-end; }
 .cd-pilih-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 110px;
-  height: 30px;
-  padding: 0 14px;
-  background: linear-gradient(180deg, #ff9800 0%, #ffbc59 100%);
-  border-radius: 8px;
-  box-shadow: 0 4px 14px rgba(255,152,0,0.35);
-  font-family: 'Poppins', sans-serif;
-  font-size: 12px; font-weight: 700; color: #fff;
-  cursor: pointer;
-  transition: transform 0.1s, opacity 0.1s;
-}
-.cd-pilih-btn:hover  { opacity: 0.90; }
-.cd-pilih-btn:active { transform: scale(0.97); opacity: 0.85; }
-
-.cd-no-doctors { text-align: center; color: rgba(255,255,255,0.40); font-size: 13px; padding: 24px 0; }
-
-.cd-no-doctors-day {
-  display: flex; flex-direction: column; align-items: center;
-  gap: 10px; padding: 32px 16px; text-align: center;
-}
-.cd-no-doctors-day p { color: rgba(255,255,255,0.40); font-size: 13px; font-weight: 500; margin: 0; }
-
-.cd-day-tag.is-today {
-  background: rgba(255,152,0,0.35);
-  color: #fff;
-  font-weight: 700;
-  border-color: #FF9800;
+  display:inline-flex; align-items:center; gap:6px; padding:9px 22px;
+  border-radius:20px; background:linear-gradient(135deg,#FF9800 0%,#FFB74D 100%);
+  border:none; color:#fff; font-size:12.5px; font-weight:700; font-family:'Poppins',sans-serif;
+  box-shadow:0 4px 16px rgba(255,152,0,0.35); cursor:pointer;
+  transition:opacity 0.15s, transform 0.1s, box-shadow 0.15s;
 }
 
-/* ===================================================================
-   Sesi group — label header + jam per-jam di bawahnya
-=================================================================== */
-
-/* Satu blok sesi (header + grid jam) */
-.cd-sesi-group {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-bottom: 10px;
+/* ── Booking modal — bottom-sheet ── */
+.cd-booking-modal-backdrop {
+  position:fixed; inset:0; background:rgba(10,8,30,0.72);
+  backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px);
+  z-index:200; display:flex; align-items:flex-end; justify-content:center;
+  animation:cd-fade-in 0.18s ease;
 }
-.cd-sesi-group:last-child { margin-bottom: 0; }
-
-/* Header label sesi — "SESI 1 · 08:00–12:00" */
-.cd-sesi-group-header {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 9.5px;
-  font-weight: 700;
-  color: #A36233;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  background: rgba(255,255,255,0.2);
-  border-radius: 20px;
-  padding: 2px 9px;
-  width: fit-content;
-  box-shadow: 1px 1px 0 rgba(0,0,0,0.15);
+@keyframes cd-fade-in { from{opacity:0} to{opacity:1} }
+.cd-booking-modal {
+  width:100%; max-width:393px;
+  background:linear-gradient(160deg,#1e1942 0%,#0f0c29 100%);
+  border:1px solid rgba(255,255,255,0.12); border-radius:24px 24px 0 0;
+  box-shadow:0 -8px 48px rgba(0,0,0,0.55);
+  max-height:90dvh; display:flex; flex-direction:column; overflow:hidden;
+  animation:cd-slide-up 0.25s cubic-bezier(0.34,1.1,0.64,1);
 }
-
-/* ===================================================================
-   Slot jam — override untuk state .past dan .booked
-   (.available dan .selected sudah ada di CSS sebelumnya)
-=================================================================== */
-
-/* Jam sudah lewat — gelap / nonaktif */
-.cd-time-slot.past {
-  background: rgba(0, 0, 0, 0.18) !important;
-  color: rgba(255,255,255,0.35) !important;
-  box-shadow: none !important;
-  cursor: not-allowed !important;
-  text-decoration: line-through;
+@keyframes cd-slide-up { from{transform:translateY(100%);opacity:0.5} to{transform:translateY(0);opacity:1} }
+.cd-booking-modal::before {
+  content:''; display:block; width:36px; height:4px; border-radius:2px;
+  background:rgba(255,255,255,0.20); margin:12px auto 0; flex-shrink:0;
 }
+.cd-modal-header {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:14px 20px 12px; border-bottom:1px solid rgba(255,255,255,0.08); flex-shrink:0;
+}
+.cd-modal-title { font-size:15px; font-weight:700; color:var(--white); letter-spacing:-0.2px; }
+.cd-modal-close {
+  width:32px; height:32px; border-radius:9999px;
+  background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.13);
+  color:rgba(255,255,255,0.58); font-size:16px; display:grid; place-items:center;
+  cursor:pointer; transition:background 0.13s; line-height:1;
+}
+.cd-modal-close:hover { background:rgba(255,255,255,0.14); color:#fff; }
+.cd-modal-body {
+  overflow-y:auto; -webkit-overflow-scrolling:touch;
+  padding:16px 20px; display:flex; flex-direction:column; gap:13px; flex:1;
+}
+.cd-modal-info {
+  background:rgba(255,152,0,0.10); border:1px solid rgba(255,152,0,0.22);
+  border-radius:12px; padding:10px 14px; display:flex; flex-direction:column; gap:2px;
+}
+.cd-modal-info p { margin:0; font-size:12px; color:rgba(255,255,255,0.72); line-height:1.45; }
+.cd-modal-info p strong { color:rgba(255,210,100,0.95); font-weight:700; }
+.cd-modal-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.cd-modal-field { display:flex; flex-direction:column; gap:5px; }
+.cd-modal-label { font-size:10.5px; font-weight:600; color:rgba(255,255,255,0.50); text-transform:uppercase; letter-spacing:0.04em; }
+.cd-modal-input {
+  background:rgba(255,255,255,0.07); border:1.5px solid rgba(255,255,255,0.13);
+  border-radius:12px; padding:10px 13px; color:var(--white);
+  font-size:13px; font-family:'Poppins',sans-serif; font-weight:500;
+  width:100%; outline:none; transition:border-color 0.15s, background 0.15s;
+  -webkit-appearance:none; appearance:none;
+}
+.cd-modal-input::placeholder { color:rgba(255,255,255,0.26); }
+.cd-modal-input:focus { border-color:rgba(255,152,0,0.60); background:rgba(255,255,255,0.10); }
+.cd-modal-input option { background:#1e1942; color:#fff; }
+textarea.cd-modal-input { resize:none; line-height:1.5; min-height:64px; }
+.cd-modal-error {
+  font-size:12px; color:#FF7C7C; padding:8px 12px; border-radius:10px;
+  background:rgba(255,80,80,0.10); border:1px solid rgba(255,80,80,0.22); margin:0;
+}
+.cd-modal-footer {
+  display:grid; grid-template-columns:1fr 2fr; gap:10px;
+  padding:14px 20px calc(14px + env(safe-area-inset-bottom));
+  border-top:1px solid rgba(255,255,255,0.08); flex-shrink:0;
+}
+.cd-modal-btn-cancel {
+  padding:12px; border-radius:14px; background:rgba(255,255,255,0.07);
+  border:1.5px solid rgba(255,255,255,0.13); color:rgba(255,255,255,0.62);
+  font-size:13px; font-weight:600; font-family:'Poppins',sans-serif;
+  cursor:pointer; transition:background 0.13s;
+}
+.cd-modal-btn-cancel:hover { background:rgba(255,255,255,0.12); }
+.cd-modal-btn-submit {
+  padding:12px; border-radius:14px;
+  background:linear-gradient(135deg,#FF9800 0%,#FFB74D 100%);
+  border:none; color:#fff; font-size:13px; font-weight:700; font-family:'Poppins',sans-serif;
+  box-shadow:0 4px 18px rgba(255,152,0,0.35); cursor:pointer;
+  transition:opacity 0.13s, transform 0.1s;
+}
+.cd-modal-btn-submit:hover { opacity:0.91; }
+.cd-modal-btn-submit:active { transform:scale(0.97); }
 
-/* Jam sudah dibooking — merah muda */
-.cd-time-slot.booked {
-  background: rgba(239, 68, 68, 0.15) !important;
-  color: #ef4444 !important;
-  box-shadow: 1px 1px 0 rgba(239,68,68,0.4) !important;
-  cursor: not-allowed !important;
+/* ── Toast ── */
+.cd-toast {
+  position:fixed; bottom:calc(80px + env(safe-area-inset-bottom));
+  left:50%; transform:translateX(-50%) translateY(20px);
+  background:rgba(22,18,55,0.95); border:1px solid rgba(255,255,255,0.14);
+  backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
+  color:#fff; font-size:13px; font-weight:600; padding:10px 20px;
+  border-radius:20px; box-shadow:0 6px 24px rgba(0,0,0,0.40);
+  z-index:300; opacity:0; transition:opacity 0.25s, transform 0.25s;
+  white-space:nowrap; pointer-events:none;
 }
-.cd-time-slot.booked::after {
-  content: " ✕";
-  font-size: 9px;
-  opacity: 0.8;
+.cd-toast--visible { opacity:1; transform:translateX(-50%) translateY(0); }
+
+/* ── Scroll wrapper ── */
+.cd-scroll {
+  flex:1; min-height:0; overflow-y:auto; -webkit-overflow-scrolling:touch;
+  padding:0 16px calc(32px + env(safe-area-inset-bottom));
 }
+.nav-spacer { height:72px; }
+
+@media (prefers-reduced-motion:reduce) { *, *::before, *::after { transition:none !important; animation:none !important; } }
+
+.cd-pilih-btn:hover { opacity:0.90; box-shadow:0 6px 22px rgba(255,152,0,0.45); }
+.cd-pilih-btn:active { transform:scale(0.95); }
+.cd-no-doctors-day { display:flex; flex-direction:column; align-items:center; gap:10px; padding:32px 24px; color:rgba(255,255,255,0.32); font-size:12.5px; text-align:center; }
+.cd-no-doctors-day p { margin:0; }
+
+  border-radius:20px; padding:3px 9px;
+}
+.cd-meta-ico  { width:13px; height:13px; flex:none; }
+.cd-meta-val  { color:#fff; font-weight:700; font-size:11.5px; line-height:1; }

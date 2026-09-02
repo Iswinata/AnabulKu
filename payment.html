@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="theme-color" content="#fcece3" />
+  <meta name="theme-color" content="#0f1923" />
   <title>Pembayaran — AnabulKu</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -13,7 +13,7 @@
     html, body {
       height: 100%;
       font-family: "Poppins", system-ui, sans-serif;
-      background: #e7dbd0;
+      background: #0a1118;
       -webkit-text-size-adjust: 100%;
       -webkit-font-smoothing: antialiased;
     }
@@ -25,11 +25,11 @@
       width: 100%; max-width: 393px;
       height: 100vh;
       height: 100dvh;
-      background: #fcece3;
+      background: linear-gradient(160deg, #0f1923 0%, #1a2535 60%, #0f1923 100%);
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      box-shadow: 0 0 40px -10px rgba(0,0,0,.22);
+      box-shadow: 0 0 60px rgba(0,0,0,.7);
       position: relative;
     }
 
@@ -40,31 +40,31 @@
       align-items: center;
       gap: 12px;
       padding: 16px 20px 12px;
-      background: #fcece3;
+      background: rgba(255,255,255,.04);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,.08);
     }
     .btn-back {
       display: grid;
       place-items: center;
       width: 36px; height: 36px;
       border-radius: 10px;
-      border: 1.5px solid #000;
-      background: #fff;
-      box-shadow: 2px 2px 0 #000;
-      color: #374151;
-      transition: transform .1s, box-shadow .1s;
+      border: 1px solid rgba(255,255,255,.15);
+      background: rgba(255,255,255,.08);
+      color: #e2e8f0;
+      transition: transform .1s, background .15s;
     }
-    .btn-back:active { transform: translate(1px,1px); box-shadow: 1px 1px 0 #000; }
+    .btn-back:active { transform: translate(1px,1px); background: rgba(255,255,255,.14); }
     .btn-back svg { width: 16px; height: 16px; }
     .topbar-title {
       font-size: 16px;
       font-weight: 800;
-      color: #1F2937;
+      color: #f1f5f9;
       letter-spacing: -.3px;
     }
 
     /* ── Sembunyikan global bottomnav di halaman ini ── */
     .bottomnav { display: none !important; }
-
 
     .scroll-body {
       flex: 1;
@@ -81,7 +81,7 @@
     .sec-title {
       font-size: 10px;
       font-weight: 700;
-      color: #a36233;
+      color: rgba(255,152,0,.75);
       text-transform: uppercase;
       letter-spacing: .07em;
       margin-bottom: 0;
@@ -90,14 +90,14 @@
 
     /* ── Order summary card ── */
     .order-card {
-      background: #fff;
+      background: rgba(255,255,255,.06);
       border-radius: 14px;
-      border: 1.5px solid #000;
-      box-shadow: 3px 3px 0 #000;
+      border: 1px solid rgba(255,255,255,.12);
+      backdrop-filter: blur(16px);
       overflow: hidden;
     }
     .order-card-header {
-      background: linear-gradient(90deg, #ff9800 0%, #ffbc59 100%);
+      background: linear-gradient(90deg, rgba(255,152,0,.85) 0%, rgba(255,188,89,.85) 100%);
       padding: 14px 16px;
       min-height: 56px;
     }
@@ -120,7 +120,7 @@
       align-items: flex-start;
       gap: 10px;
       padding: 10px 14px;
-      border-bottom: 1px solid #F3F4F6;
+      border-bottom: 1px solid rgba(255,255,255,.07);
     }
     .order-row:last-child { border-bottom: none; }
     .order-row .info-col {
@@ -135,7 +135,7 @@
       margin-top: 1px;
     }
     .order-row-key {
-      color: #9CA3AF;
+      color: rgba(255,255,255,.45);
       font-size: 11px;
       font-weight: 500;
       word-break: break-word;
@@ -143,7 +143,7 @@
     }
     .order-row-val {
       font-weight: 700;
-      color: #111827;
+      color: #f1f5f9;
       font-size: 12.5px;
       min-width: 0;
       word-break: break-word;
@@ -152,22 +152,22 @@
       line-height: 1.4;
     }
     .order-row-val.chip { background: none; border-radius: 0; padding: 0; font-size: 12px; }
-    .order-divider { height: 1px; background: #E5E7EB; margin: 4px 14px; }
+    .order-divider { height: 1px; background: rgba(255,255,255,.08); margin: 4px 14px; }
     .order-total-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding: 12px 16px 12px;
     }
-    .order-total-key { font-size: 12px; font-weight: 600; color: #6B7280; }
+    .order-total-key { font-size: 12px; font-weight: 600; color: rgba(255,255,255,.5); }
     .order-total-val { font-size: 18px; font-weight: 800; color: #FF9800; word-break: break-word; overflow-wrap: anywhere; }
 
     /* ── Info card ── */
     .info-card {
-      background: #fff;
+      background: rgba(255,255,255,.06);
       border-radius: 14px;
-      border: 1.5px solid #000;
-      box-shadow: 3px 3px 0 #000;
+      border: 1px solid rgba(255,255,255,.12);
+      backdrop-filter: blur(16px);
       overflow: hidden;
     }
     .info-row {
@@ -175,13 +175,13 @@
       align-items: flex-start;
       gap: 10px;
       padding: 11px 14px;
-      border-bottom: 1px solid #F3F4F6;
+      border-bottom: 1px solid rgba(255,255,255,.07);
     }
     .info-row:last-child { border-bottom: none; }
     .info-icon {
       width: 28px; height: 28px;
       border-radius: 7px;
-      background: #FFF7ED;
+      background: rgba(255,152,0,.15);
       display: grid;
       place-items: center;
       flex-shrink: 0;
@@ -192,14 +192,14 @@
     .info-label {
       font-size: 10px;
       font-weight: 600;
-      color: #9CA3AF;
+      color: rgba(255,255,255,.4);
       text-transform: uppercase;
       letter-spacing: .05em;
     }
     .info-val {
       font-size: 12.5px;
       font-weight: 700;
-      color: #1F2937;
+      color: #f1f5f9;
       word-break: break-word;
       overflow-wrap: anywhere;
       white-space: normal;
@@ -207,10 +207,10 @@
 
     /* ── Payment method card ── */
     .method-card {
-      background: #fff;
+      background: rgba(255,255,255,.06);
       border-radius: 14px;
-      border: 1.5px solid #000;
-      box-shadow: 3px 3px 0 #000;
+      border: 1px solid rgba(255,255,255,.12);
+      backdrop-filter: blur(16px);
       overflow: hidden;
     }
     .method-option {
@@ -218,14 +218,14 @@
       align-items: center;
       gap: 10px;
       padding: 11px 14px;
-      border-bottom: 1px solid #F3F4F6;
+      border-bottom: 1px solid rgba(255,255,255,.07);
       cursor: pointer;
       transition: background .12s;
       position: relative;
     }
     .method-option:last-child { border-bottom: none; }
-    .method-option:hover { background: #FFF7ED; }
-    .method-option.is-selected { background: #FFF7ED; }
+    .method-option:hover { background: rgba(255,152,0,.08); }
+    .method-option.is-selected { background: rgba(255,152,0,.12); }
     .method-icon {
       width: 32px; height: 32px;
       border-radius: 8px;
@@ -233,16 +233,16 @@
       place-items: center;
       font-size: 15px;
       flex-shrink: 0;
-      background: #F9FAFB;
-      border: 1.5px solid #E5E7EB;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.12);
     }
     .method-info { flex: 1; min-width: 0; }
-    .method-name { font-size: 13px; font-weight: 700; color: #1F2937; word-break: break-word; }
-    .method-desc { font-size: 11px; color: #9CA3AF; margin-top: 1px; word-break: break-word; }
+    .method-name { font-size: 13px; font-weight: 700; color: #f1f5f9; word-break: break-word; }
+    .method-desc { font-size: 11px; color: rgba(255,255,255,.45); margin-top: 1px; word-break: break-word; }
     .method-radio {
       width: 18px; height: 18px;
       border-radius: 50%;
-      border: 2px solid #D1D5DB;
+      border: 2px solid rgba(255,255,255,.25);
       display: grid;
       place-items: center;
       flex-shrink: 0;
@@ -259,38 +259,38 @@
 
     /* ── Countdown timer card ── */
     .countdown-card {
-      background: #fff;
+      background: rgba(255,255,255,.06);
       border-radius: 14px;
-      border: 1.5px solid #000;
-      box-shadow: 3px 3px 0 #000;
+      border: 1px solid rgba(255,255,255,.12);
+      backdrop-filter: blur(16px);
       padding: 12px 14px;
       display: flex;
       align-items: center;
       gap: 12px;
       transition: border-color .3s, background .3s;
     }
-    .countdown-card.is-urgent { background: #FEF2F2; border-color: #EF4444; }
+    .countdown-card.is-urgent { background: rgba(239,68,68,.12); border-color: rgba(239,68,68,.5); }
     .countdown-icon {
       width: 34px; height: 34px;
       border-radius: 8px;
-      background: #FFF7ED;
+      background: rgba(255,152,0,.15);
       display: grid;
       place-items: center;
       font-size: 15px;
       flex-shrink: 0;
       transition: background .3s;
     }
-    .countdown-card.is-urgent .countdown-icon { background: #FEE2E2; }
+    .countdown-card.is-urgent .countdown-icon { background: rgba(239,68,68,.2); }
     .countdown-info { flex: 1; min-width: 0; }
     .countdown-label {
       font-size: 9.5px;
       font-weight: 700;
-      color: #9CA3AF;
+      color: rgba(255,255,255,.45);
       text-transform: uppercase;
       letter-spacing: .06em;
       margin-bottom: 1px;
     }
-    .countdown-card.is-urgent .countdown-label { color: #DC2626; }
+    .countdown-card.is-urgent .countdown-label { color: #f87171; }
     #countdownTimer {
       font-size: 19px;
       font-weight: 800;
@@ -300,11 +300,11 @@
       line-height: 1.1;
     }
     #countdownTimer.is-urgent {
-      color: #DC2626;
+      color: #f87171;
       animation: pulse-red .7s ease-in-out infinite alternate;
     }
-    .countdown-sub { font-size: 9.5px; color: #9CA3AF; margin-top: 1px; }
-    .countdown-card.is-urgent .countdown-sub { color: #EF4444; }
+    .countdown-sub { font-size: 9.5px; color: rgba(255,255,255,.4); margin-top: 1px; }
+    .countdown-card.is-urgent .countdown-sub { color: #f87171; }
     @keyframes pulse-red {
       from { opacity: 1; }
       to   { opacity: .55; }
@@ -316,7 +316,7 @@
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,.6);
+      background: rgba(0,0,0,.7);
       z-index: 200;
       align-items: center;
       justify-content: center;
@@ -324,10 +324,10 @@
     }
     .expired-overlay.is-open { display: flex; }
     .expired-sheet {
-      background: #fff;
+      background: rgba(20,28,40,.95);
+      backdrop-filter: blur(24px);
       border-radius: 20px;
-      border: 1.5px solid #000;
-      box-shadow: 4px 4px 0 #000;
+      border: 1px solid rgba(239,68,68,.3);
       width: 100%;
       max-width: 340px;
       padding: 28px 24px 32px;
@@ -340,23 +340,23 @@
     }
     .expired-emoji {
       width: 68px; height: 68px;
-      background: #FEE2E2;
-      border: 2px solid #FCA5A5;
+      background: rgba(239,68,68,.15);
+      border: 2px solid rgba(239,68,68,.4);
       border-radius: 50%;
       display: grid;
       place-items: center;
       font-size: 30px;
       margin: 0 auto 14px;
     }
-    .expired-title { font-size: 18px; font-weight: 800; color: #111827; margin-bottom: 8px; }
-    .expired-sub { font-size: 13px; color: #6B7280; line-height: 1.6; margin-bottom: 20px; }
+    .expired-title { font-size: 18px; font-weight: 800; color: #f1f5f9; margin-bottom: 8px; }
+    .expired-sub { font-size: 13px; color: rgba(255,255,255,.55); line-height: 1.6; margin-bottom: 20px; }
     .btn-expired-home {
       width: 100%;
       height: 48px;
       background: #EF4444;
-      border: 1.5px solid #000;
+      border: none;
       border-radius: 12px;
-      box-shadow: 2px 2px 0 #000;
+      box-shadow: 0 4px 16px rgba(239,68,68,.3);
       color: #fff;
       font-size: 14px;
       font-weight: 700;
@@ -365,16 +365,17 @@
       justify-content: center;
       gap: 8px;
       cursor: pointer;
-      transition: transform .1s, box-shadow .1s;
+      transition: transform .1s, opacity .15s;
     }
-    .btn-expired-home:active { transform: translate(1px,1px); box-shadow: 1px 1px 0 #000; }
+    .btn-expired-home:active { transform: translateY(1px); opacity: .85; }
 
     /* ── Footer action ── */
     .footer-action {
       flex-shrink: 0;
       padding: 12px 16px max(env(safe-area-inset-bottom), 16px);
-      background: #fcece3;
-      border-top: 1.5px solid #e5d5c8;
+      background: rgba(255,255,255,.04);
+      backdrop-filter: blur(12px);
+      border-top: 1px solid rgba(255,255,255,.08);
       position: relative;
       z-index: 60;
     }
@@ -384,16 +385,16 @@
       align-items: center;
       margin-bottom: 10px;
     }
-    .total-label { font-size: 11px; color: #6B7280; font-weight: 500; }
+    .total-label { font-size: 11px; color: rgba(255,255,255,.5); font-weight: 500; }
     .total-amount { font-size: 18px; font-weight: 800; color: #FF9800; }
 
     .btn-pay {
       width: 100%;
       height: 52px;
       background: linear-gradient(180deg, #ff9800 0%, #ffb74d 100%);
-      border: 1.5px solid #000;
+      border: none;
       border-radius: 12px;
-      box-shadow: 3px 3px 0 #000;
+      box-shadow: 0 4px 24px rgba(255,152,0,.35);
       color: #fff;
       font-size: 15px;
       font-weight: 800;
@@ -401,10 +402,10 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
-      transition: transform .1s, box-shadow .1s;
+      transition: transform .1s, box-shadow .1s, opacity .15s;
     }
-    .btn-pay:active { transform: translate(1px,1px); box-shadow: 2px 2px 0 #000; }
-    .btn-pay:disabled { opacity: .5; cursor: not-allowed; transform: none !important; }
+    .btn-pay:active { transform: translateY(1px); box-shadow: 0 2px 12px rgba(255,152,0,.25); }
+    .btn-pay:disabled { opacity: .4; cursor: not-allowed; transform: none !important; }
 
     /* ── Success overlay ── */
     .success-overlay {
