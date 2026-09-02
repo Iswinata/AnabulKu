@@ -186,8 +186,8 @@ img { display:block; max-width:100%; }
 
 /* ===== Section title ===== */
 .section-title {
-  font-size:15px; font-weight:800; color:#fff;
-  letter-spacing:0.01em; margin-bottom:14px;
+  font-size:13px; font-weight:700; color:rgba(255,255,255,0.80);
+  letter-spacing:0.02em; margin-bottom:14px;
 }
 
 /* ===== Category grid ===== */
