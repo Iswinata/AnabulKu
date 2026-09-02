@@ -383,20 +383,12 @@
       display: grid; place-items: center; overflow: hidden; flex-shrink: 0;
     }
     .pc-qris-frame img { width: 180px; height: 180px; object-fit: contain; display: block; }
-    .pc-qris-label { font-size: 11px; color: rgba(255,255,255,0.45); text-align: center; line-height: 1.6; }
     .pc-qris-amount {
       font-size: 20px; font-weight: 800; color: #fff;
       background: rgba(255,152,0,0.18); border: 1px solid rgba(255,152,0,0.40);
       border-radius: 10px; padding: 6px 18px;
     }
-    .pc-apps { display: flex; gap: 5px; flex-wrap: wrap; justify-content: center; }
-    .pc-app  {
-      font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.65);
-      background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 99px; padding: 3px 8px;
-    }
-
-    /* Badge status */
+    .pc-qris-frame {
     .pc-badge {
       font-size: 10px; font-weight: 700; padding: 3px 10px;
       border-radius: 99px; border: 1px solid; align-self: center;
@@ -1247,17 +1239,9 @@
       payHtml=
         '<div class="pc-badge '+badgeCls+'">'+badgeTxt+'</div>'+
         '<div class="pc-qris-frame">'+
-          '<img src="qris.png" alt="QR Code Pembayaran">'+
+          '<img src="Qris.png" alt="QR Code Pembayaran">'+
         '</div>'+
-        (hargaTxt?'<div class="pc-qris-amount">'+hargaTxt+'</div>':'')+
-        '<div class="pc-apps">'+
-          '<span class="pc-app">GoPay</span>'+
-          '<span class="pc-app">OVO</span>'+
-          '<span class="pc-app">DANA</span>'+
-          '<span class="pc-app">m-Banking</span>'+
-          '<span class="pc-app">ShopeePay</span>'+
-        '</div>'+
-        '<div class="pc-qris-label">Buka aplikasi dompet digital atau m-Banking,<br>pilih Scan QR, lalu arahkan ke kode di atas.</div>';
+        (hargaTxt?'<div class="pc-qris-amount">'+hargaTxt+'</div>':'');
 
     } else if(metode==='cash'){
       payHtml=
