@@ -4,7 +4,7 @@
 .py-app { display:flex; flex-direction:column; overflow:hidden; }
 
 .py-topbar {
-  flex-shrink:0; display:flex; align-items:center; justify-content:space-between;
+  flex-shrink:0; display:flex; align-items:flex-start; justify-content:space-between;
   margin: -20px -18px 0;
   padding: 18px 18px 14px;
   background: transparent;
@@ -14,17 +14,17 @@
   display:grid; place-items:center; width:38px; height:38px;
   border-radius:12px; border:1px solid rgba(255,255,255,0.18);
   background:rgba(255,255,255,0.10); color:#f1f5f9; transition:background .15s;
+  flex-shrink:0;
 }
 .py-btn-back:active { background:rgba(255,255,255,0.20); }
 .py-btn-back svg { width:18px; height:18px; }
-.py-topbar-title-wrap { display:flex; flex-direction:column; align-items:center; gap:2px; }
+.py-topbar-title-wrap { display:flex; flex-direction:column; align-items:flex-start; gap:3px; flex:1; padding: 0 12px; }
 .py-topbar-title { font-size:15px; font-weight:700; color:#f1f5f9; }
 .py-topbar-sub { font-size:11px; color:rgba(255,255,255,0.45); font-weight:500; }
 
 .py-scroll {
   flex:1; min-height:0; overflow-y:auto; -webkit-overflow-scrolling:touch;
-  /* padding kiri-kanan 0 — ikut padding .app (18px) */
-  padding: 14px 0 100px;
+  padding: 14px 0 24px;
   display:flex; flex-direction:column; gap:14px;
 }
 
@@ -66,7 +66,7 @@
 .py-total-amount { font-size:18px; font-weight:800; color:#ff9800; }
 
 .py-countdown {
-  display: inline-flex; align-items: center; gap: 8px;
+  display: inline-flex; align-items: center; gap: 6px;
   background: rgba(255,152,0,0.10); border: 1px solid rgba(255,152,0,0.28);
   border-radius: 20px; padding: 5px 12px 5px 10px;
   width: fit-content; transition: background .3s, border-color .3s;
