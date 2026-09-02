@@ -436,26 +436,26 @@ img { display:block; max-width:100%; }
 .groom-price { font-size:11px; font-weight:600; color:var(--orange-l); }
 
 /* ===== Bottom nav ===== */
-.nav-spacer { height:72px; }
+.nav-spacer { height:96px; }
 
 .bottomnav {
   position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  width: 100%;
-  height: 64px;
-  background: rgba(15, 12, 41, 0.96);
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 40px);
+  max-width: 353px;
+  height: 62px;
+  background: rgba(20,18,40,0.78);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-top: 1px solid rgba(255, 255, 255, 0.10);
-  border-radius: 0;
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 22px;
   display: flex;
   align-items: center;
   justify-content: space-around;
-  padding: 0 4px;
-  padding-bottom: env(safe-area-inset-bottom);
-  box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.40);
+  padding: 0 8px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.10);
   z-index: 999;
 }
 
@@ -463,22 +463,22 @@ img { display:block; max-width:100%; }
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 3px;
-  padding: 8px 16px;
-  border-radius: 12px;
+  gap: 4px;
+  padding: 8px 14px;
+  border-radius: 14px;
   transition: background 0.15s, transform 0.12s;
-  flex: 1;
+  min-width: 56px;
 }
 .nav-btn svg { width: 22px; height: 22px; }
 .nav-btn svg circle,
 .nav-btn svg path,
 .nav-btn svg polyline,
 .nav-btn svg line,
-.nav-btn svg rect { stroke: rgba(255,255,255,0.38); transition: stroke 0.15s; }
+.nav-btn svg rect { stroke: rgba(255,255,255,0.40); transition: stroke 0.15s; }
 
-.nav-btn:active { transform: scale(0.90); }
+.nav-btn:active { transform: scale(0.92); }
 
-.nav-label { font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.38); transition: color 0.15s; }
+.nav-label { font-size: 9.5px; font-weight: 600; color: rgba(255,255,255,0.40); transition: color 0.15s; }
 
 .nav-btn.is-active { background: transparent; }
 .nav-btn.is-active svg circle,
