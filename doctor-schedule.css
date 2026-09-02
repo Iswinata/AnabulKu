@@ -182,7 +182,10 @@
 .ds-modal-field select option { background: #12102e; color: #fff; }
 .ds-modal-field textarea { resize: none; min-height: 68px; }
 
-.ds-modal-field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.ds-modal-field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; min-width: 0; }
+.ds-modal-field-row .ds-modal-field { min-width: 0; }
+.ds-modal-field-row .ds-modal-field input,
+.ds-modal-field-row .ds-modal-field select { width: 100%; min-width: 0; box-sizing: border-box; }
 
 /* confirm button */
 .ds-modal-confirm {
