@@ -286,9 +286,11 @@
         +'<div class="ds-modal-divider"></div>'
         +'<div class="ds-modal-field"><label for="dsNamaPemilik">Nama Pemilik</label><input id="dsNamaPemilik" type="text" placeholder="Nama lengkap pemilik hewan" autocomplete="name" value="'+esc(userNama)+'"/></div>'
         +'<div class="ds-modal-field"><label for="dsNoHpPemilik">Nomor HP</label><input id="dsNoHpPemilik" type="tel" placeholder="08xxxxxxxxxx" autocomplete="tel" value="'+esc(userHp)+'"/></div>'
-        +'<div class="ds-modal-field"><label for="dsNamaHewan">Nama Hewan</label><input id="dsNamaHewan" type="text" placeholder="Nama hewan peliharaan"/></div>'
+        +'<div class="ds-modal-field-row">'
+        +'<div class="ds-modal-field"><label for="dsNamaHewan">Nama Hewan</label><input id="dsNamaHewan" type="text" placeholder="Nama hewan"/></div>'
         +'<div class="ds-modal-field"><label for="dsJenisHewan">Jenis Hewan</label>'
           +'<select id="dsJenisHewan">'+hewanOptions+'</select></div>'
+        +'</div>'
         +'<div class="ds-modal-field"><label for="dsKeluhan">Keluhan</label><textarea id="dsKeluhan" placeholder="Jelaskan keluhan hewan kamu…"></textarea></div>'
         +'<button class="ds-modal-confirm" type="button" id="dsConfirmBtn">Konfirmasi Booking</button>'
       +'</div></div>';

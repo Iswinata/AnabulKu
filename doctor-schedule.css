@@ -182,6 +182,8 @@
 .ds-modal-field select option { background: #12102e; color: #fff; }
 .ds-modal-field textarea { resize: none; min-height: 68px; }
 
+.ds-modal-field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
 /* confirm button */
 .ds-modal-confirm {
   width: 100%; padding: 12px; margin-top: 2px;
