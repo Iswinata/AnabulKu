@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0f0c29" />
+  <title>AnabulKu — Masuk</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --orange:   #ff9800;
+      --orange-d: #f57c00;
+      --orange-l: #ffbd5d;
+      --red:      #ef4444;
+      --white:    #fff;
+      --gb-md:    rgba(255,255,255,0.13);
+      --gbd:      rgba(255,255,255,0.18);
+      --blur-sm:  blur(10px);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; height: 100dvh; -webkit-text-size-adjust: 100%; }
+
+    body {
+      font-family: "Poppins", system-ui, sans-serif;
+      background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+      background-attachment: fixed;
+      display: flex; justify-content: center;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    button { font-family: inherit; border: none; background: none; cursor: pointer; color: inherit; -webkit-tap-highlight-color: transparent; }
+    a { -webkit-tap-highlight-color: transparent; color: inherit; }
+
+    .app {
+      width: 100%; max-width: 393px;
+      height: 100vh; height: 100dvh;
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+      border-left: 1px solid var(--gbd); border-right: 1px solid var(--gbd);
+      padding: 0 20px 16px;
+      display: flex; flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.26);
+    }
+
+    .page-header { padding: 20px 0 10px; flex-shrink: 0; }
+
+    .brand-row {
+      display: flex; align-items: center; gap: 8px;
+      margin-bottom: 12px; text-decoration: none;
+      color: var(--white); cursor: pointer;
+    }
+    .brand-icon {
+      width: 34px; height: 34px;
+      background: linear-gradient(135deg, #ff9800 0%, #ffbd5d 100%);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(255,152,0,0.4);
+      display: grid; place-items: center;
+      font-size: 16px; flex-shrink: 0;
+    }
+    .brand-name { font-size: 17px; font-weight: 800; color: var(--white); letter-spacing: -.3px; }
+
+    .page-title { font-size: 22px; font-weight: 800; color: var(--white); line-height: 1.2; letter-spacing: -.5px; margin-bottom: 4px; }
+    .page-title span { color: var(--orange-l); }
+    .page-sub { font-size: 12.5px; color: rgba(255,255,255,0.55); line-height: 1.5; }
+
+    .section-title { font-size: 11px; font-weight: 700; color: var(--orange-l); text-transform: uppercase; letter-spacing: .07em; margin-bottom: 8px; }
+
+    .form-card {
+      background: var(--gb-md);
+      backdrop-filter: var(--blur-sm); -webkit-backdrop-filter: var(--blur-sm);
+      border: 1px solid var(--gbd);
+      border-radius: 18px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.18);
+      padding: 16px; margin-bottom: 10px; flex-shrink: 0;
+    }
+
+    .field { margin-bottom: 13px; }
+    .field:last-child { margin-bottom: 0; }
+
+    .field-label {
+      display: block;
+      font-size: 11px; font-weight: 700;
+      color: rgba(255,255,255,0.65);
+      text-transform: uppercase; letter-spacing: .05em;
+      margin-bottom: 5px;
+    }
+
+    .field-input {
+      width: 100%; padding: 11px 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.08);
+      color: #fff; font-size: 13.5px; font-weight: 500;
+      font-family: inherit; outline: none;
+      transition: border-color .15s, background .15s;
+      -webkit-appearance: none;
+    }
+    .field-input::placeholder { color: rgba(255,255,255,0.30); }
+    .field-input:focus { border-color: rgba(255,152,0,0.6); background: rgba(255,255,255,0.12); }
+    .field-input.is-error { border-color: rgba(239,68,68,0.7); background: rgba(239,68,68,0.08); }
+
+    .field-hint { font-size: 11px; color: rgba(255,255,255,0.40); margin-top: 4px; display: block; }
+    .field-hint.is-error { color: #fca5a5; }
+
+    .pw-wrap { position: relative; }
+    .pw-wrap .field-input { padding-right: 42px; }
+    .pw-toggle {
+      position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+      display: grid; place-items: center; width: 24px; height: 24px;
+      color: rgba(255,255,255,0.40);
+    }
+    .pw-toggle svg { width: 16px; height: 16px; }
+
+    .check-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 4px; }
+    .check-label { display: flex; align-items: center; gap: 6px; font-size: 12px; color: rgba(255,255,255,0.60); cursor: pointer; user-select: none; }
+    .check-label input[type="checkbox"] { width: 14px; height: 14px; accent-color: #ff9800; }
+    .forgot-link { font-size: 12px; font-weight: 600; color: #ffbd5d; text-decoration: none; }
+
+    .btn-cta {
+      width: 100%; padding: 14px; border-radius: 14px;
+      background: linear-gradient(135deg, #ff9800 0%, #ffbd5d 100%);
+      color: #fff; font-size: 14px; font-weight: 700;
+      font-family: inherit; cursor: pointer; border: none;
+      box-shadow: 0 6px 20px rgba(255,152,0,0.38);
+      transition: transform .1s, opacity .1s;
+    }
+    .btn-cta:disabled { opacity: .7; }
+    .btn-cta:active   { transform: scale(.97); opacity: .92; }
+
+    .or-divider {
+      display: flex; align-items: center; gap: 10px;
+      margin: 12px 0; font-size: 12px; color: rgba(255,255,255,0.30); font-weight: 500;
+    }
+    .or-divider::before,.or-divider::after { content:''; flex:1; height:1px; background: rgba(255,255,255,0.10); }
+
+    .btn-oauth {
+      width: 100%; padding: 12px 14px; border-radius: 14px;
+      background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.16);
+      color: #fff; font-size: 13px; font-weight: 600;
+      font-family: inherit; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      transition: background .15s, transform .1s;
+    }
+    .btn-oauth:hover  { background: rgba(255,255,255,0.13); }
+    .btn-oauth:active { transform: scale(.97); }
+    .btn-oauth img { width: 18px; height: 18px; }
+
+    .register-link { text-align: center; font-size: 13px; color: rgba(255,255,255,0.50); flex-shrink: 0; padding-top: 4px; }
+    .register-link a { color: #ffbd5d; font-weight: 700; }
+
+    .footer-note { text-align: center; font-size: 11.5px; color: rgba(255,255,255,0.28); flex-shrink: 0; padding: 8px 0 4px; }
+    .footer-note a { color: rgba(255,255,255,0.45); }
+
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      20%,60%  { transform: translateX(-5px); }
+      40%,80%  { transform: translateX(5px); }
+    }
+    @media (prefers-reduced-motion:reduce) { *{transition:none!important;animation:none!important;} }
+      margin-bottom: 6px;
+    }
+
+    .input-wrap { position: relative; }
+
+    .input-icon {
+      position: absolute; left: 12px; top: 50%;
+      transform: translateY(-50%);
+      width: 16px; height: 16px;
+      color: rgba(255,255,255,0.35); pointer-events: none;
+    }
+
+    .field-input {
+      width: 100%; height: 50px;
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 12px;
+      background: rgba(255,255,255,0.08);
+      padding: 0 44px 0 40px;
+      font-size: 14px; font-family: inherit;
+      color: #fff; outline: none;
+      transition: border-color .15s, background .15s;
+      -webkit-appearance: none;
+    }
+    .field-input.no-right-pad { padding-right: 14px; }
+    .field-input:focus { border-color: rgba(255,152,0,0.65); background: rgba(255,255,255,0.13); }
+    .field-input.is-error { border-color: rgba(239,68,68,0.7); background: rgba(239,68,68,0.08); }
+    .field-input::placeholder { color: rgba(255,255,255,0.30); font-size: 13px; }
+
+    .toggle-pass {
+      position: absolute; right: 11px; top: 50%;
+      transform: translateY(-50%);
+      padding: 4px; color: rgba(255,255,255,0.40);
+      display: flex; align-items: center; transition: color .15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .toggle-pass svg { width: 17px; height: 17px; }
+    .toggle-pass:hover { color: rgba(255,255,255,0.70); }
+
+    .opts { display: flex; align-items: center; justify-content: space-between; margin-top: 14px; }
+    .check-wrap { display: flex; align-items: center; gap: 6px; cursor: pointer; user-select: none; }
+    .check-wrap input { width: 14px; height: 14px; accent-color: #ff9800; cursor: pointer; }
+    .check-label { font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.65); }
+    .forgot { font-size: 12px; font-weight: 600; color: #ffbd5d; text-decoration: none; }
+
+    .btn-primary {
+      width: 100%; height: 48px; flex-shrink: 0;
+      background: linear-gradient(135deg, #ff9800 0%, #ffbd5d 100%);
+      color: #fff; border: none; border-radius: 14px;
+      box-shadow: 0 6px 20px rgba(255,152,0,0.38);
+      font-size: 14px; font-weight: 700; font-family: inherit;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      transition: transform .1s, opacity .1s; margin-bottom: 10px;
+    }
+    .btn-primary:active { transform: scale(.97); opacity: .92; }
+    .btn-primary:disabled { opacity: .6; cursor: not-allowed; transform: none !important; }
+
+    .register-row {
+      display: flex; align-items: center; gap: 10px;
+      background: rgba(255,255,255,0.09); border: 1px solid rgba(255,255,255,0.16);
+      border-radius: 14px; box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+      padding: 11px 14px; text-decoration: none; color: #fff;
+      transition: background .15s, transform .1s; margin-bottom: 10px; flex-shrink: 0;
+    }
+    .register-row:hover { background: rgba(255,255,255,0.14); }
+    .register-row:active { transform: scale(.98); }
+
+    .mitra-row {
+      display: flex; align-items: center; gap: 10px;
+      background: rgba(14,165,233,0.12); border: 1px solid rgba(14,165,233,0.30);
+      border-radius: 14px; box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+      padding: 11px 14px; text-decoration: none; color: #fff;
+      transition: background .15s, transform .1s; margin-bottom: 10px; flex-shrink: 0;
+    }
+    .mitra-row:hover { background: rgba(14,165,233,0.20); }
+    .mitra-row:active { transform: scale(.98); }
+
+    .mr-icon {
+      width: 36px; height: 36px; flex-shrink: 0;
+      background: linear-gradient(135deg, #0ea5e9 0%, #38bdf8 100%);
+      border: 1px solid rgba(255,255,255,0.25); border-radius: 50%;
+      box-shadow: 0 3px 10px rgba(14,165,233,0.4);
+      display: grid; place-items: center; font-size: 16px;
+    }
+    .mr-arrow {
+      flex: none; width: 28px; height: 28px; border-radius: 50%;
+      background: rgba(14,165,233,0.30); border: 1px solid rgba(14,165,233,0.50);
+      display: grid; place-items: center; color: #fff;
+    }
+    .mr-arrow svg { width: 13px; height: 13px; }
+
+    .rr-icon {
+      width: 36px; height: 36px; flex-shrink: 0;
+      background: linear-gradient(135deg, #ff9800 0%, #ffbd5d 100%);
+      border: 1px solid rgba(255,255,255,0.25); border-radius: 50%;
+      box-shadow: 0 3px 10px rgba(255,152,0,0.4);
+      display: grid; place-items: center; font-size: 16px;
+    }
+    .rr-text { flex: 1; min-width: 0; }
+    .rr-title { font-size: 13px; font-weight: 700; color: #fff; line-height: 1.3; }
+    .rr-sub   { font-size: 11px; color: rgba(255,255,255,0.50); margin-top: 2px; }
+    .rr-arrow {
+      flex: none; width: 28px; height: 28px; border-radius: 50%;
+      background: rgba(255,152,0,0.25); border: 1px solid rgba(255,152,0,0.45);
+      display: grid; place-items: center; color: #fff;
+    }
+    .rr-arrow svg { width: 13px; height: 13px; }
+
+    .divider {
+      display: flex; align-items: center; gap: 8px;
+      margin: 2px 0 10px; flex-shrink: 0;
+    }
+    .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.12); }
+    .divider-text { font-size: 11px; color: rgba(255,255,255,0.40); font-weight: 700; white-space: nowrap; }
+
+    .footer-note {
+      text-align: center; font-size: 11px;
+      color: rgba(255,255,255,0.35); margin-top: auto; padding-top: 6px; flex-shrink: 0;
+    }
+    .footer-note a { color: rgba(255,255,255,0.55); font-weight: 600; text-decoration: none; }
+
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      20%,60%  { transform: translateX(-6px); }
+      40%,80%  { transform: translateX(6px); }
+    }
+    @media (max-width: 340px) { .app { padding-left: 14px; padding-right: 14px; } }
+    @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+  </style>
+  <link rel="stylesheet" href="glass-theme.css" />
+</head>
+<body>
+<div class="app">
+
+  <!-- Page header -->
+  <div class="page-header">
+    <a href="home.html" class="brand-row" aria-label="Kembali ke Beranda">
+      <div class="brand-icon">🐾</div>
+      <span class="brand-name">AnabulKu</span>
+    </a>
+    <h1 class="page-title">Halo,<br><span>Selamat Datang!</span></h1>
+
+  </div>
+
+  <!-- Form card -->
+  <p class="section-title">Masuk ke akun</p>
+  <div class="form-card" id="formCard">
+    <form id="loginForm" novalidate>
+
+      <div class="field">
+        <label class="field-label" for="fIdentifier">Email / Username</label>
+        <div class="input-wrap">
+          <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+          </svg>
+          <input class="field-input no-right-pad" type="text" id="fIdentifier"
+            placeholder="email atau username kamu" autocomplete="username" required />
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="fPass">Kata Sandi</label>
+        <div class="input-wrap">
+          <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+            <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+          <input class="field-input" type="password" id="fPass"
+            placeholder="kata sandi kamu" autocomplete="current-password" required />
+          <button type="button" class="toggle-pass" id="togglePass" aria-label="Tampilkan kata sandi" tabindex="-1">
+            <svg id="eyeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+              <circle cx="12" cy="12" r="3"/>
+              <line id="eyeSlash" x1="2" y1="2" x2="22" y2="22"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="opts">
+        <label class="check-wrap">
+          <input type="checkbox" id="rememberMe" />
+          <span class="check-label">Ingat saya</span>
+        </label>
+        <a href="#" class="forgot">Lupa kata sandi?</a>
+      </div>
+    </form>
+  </div>
+
+  <button class="btn-primary" type="submit" form="loginForm" id="btnLogin">
+    <span id="btnText">Masuk Sekarang</span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true" width="16" height="16">
+      <path d="M5 12h14M12 5l7 7-7 7"/>
+    </svg>
+  </button>
+
+  <div class="divider"><span class="divider-text">Belum punya akun?</span></div>
+
+  <a class="register-row" href="register.html">
+    <div class="rr-icon">🐾</div>
+    <div class="rr-text">
+      <p class="rr-title">Daftar gratis sekarang</p>
+      <p class="rr-sub">Bergabung dan rawat hewan kesayanganmu</p>
+    </div>
+    <div class="rr-arrow">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true">
+        <path d="M5 12h14M12 5l7 7-7 7"/>
+      </svg>
+    </div>
+  </a>
+
+  <div class="divider"><span class="divider-text">Punya klinik hewan?</span></div>
+
+  <a class="mitra-row" href="mitra/daftar.html">
+    <div class="mr-icon">🏥</div>
+    <div class="rr-text">
+      <p class="rr-title">Daftar Mitra Klinik</p>
+      <p class="rr-sub">Bergabung dan kelola klinik hewan kamu</p>
+    </div>
+    <div class="mr-arrow">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true">
+        <path d="M5 12h14M12 5l7 7-7 7"/>
+      </svg>
+    </div>
+  </a>
+
+  <p class="footer-note">Tim internal? <a href="admin-login.html">Panel Admin →</a></p>
+
+</div>
+
+<script>
+(function () {
+  'use strict';
+  const LS = {
+    get: (k, d) => { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } },
+    set: (k, v) => localStorage.setItem(k, JSON.stringify(v)),
+  };
+
+  const sess = LS.get('anabulku_user_session', {});
+  if (sess && sess.loggedIn) window.location.replace('home.html');
+
+  const saved = localStorage.getItem('anabulku_user_remember');
+  if (saved) {
+    document.getElementById('fIdentifier').value = saved;
+    document.getElementById('rememberMe').checked = true;
+  }
+
+  /* Toggle password — satu ikon mata */
+  const passInput  = document.getElementById('fPass');
+  const eyeSlash   = document.getElementById('eyeSlash');
+
+  document.getElementById('togglePass').addEventListener('mousedown', e => e.preventDefault());
+  document.getElementById('togglePass').addEventListener('click', () => {
+    const isHidden = passInput.type === 'password';
+    passInput.type = isHidden ? 'text' : 'password';
+    eyeSlash.style.display = isHidden ? 'none' : '';
+    document.getElementById('togglePass').setAttribute('aria-label',
+      isHidden ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi');
+  });
+
+  function markErr(id) {
+    const el = document.getElementById(id);
+    el.classList.add('is-error');
+    el.addEventListener('input', () => el.classList.remove('is-error'), { once: true });
+  }
+
+  function shake() {
+    const c = document.getElementById('formCard');
+    c.style.animation = 'none'; c.offsetHeight;
+    c.style.animation = 'shake .4s ease';
+  }
+
+  document.getElementById('loginForm').addEventListener('submit', e => {
+    e.preventDefault();
+    const id   = document.getElementById('fIdentifier').value.trim();
+    const pass = document.getElementById('fPass').value;
+    const btn  = document.getElementById('btnLogin');
+    const txt  = document.getElementById('btnText');
+
+    document.getElementById('fIdentifier').classList.remove('is-error');
+    document.getElementById('fPass').classList.remove('is-error');
+
+    let err = false;
+    if (!id)   { markErr('fIdentifier'); err = true; }
+    if (!pass) { markErr('fPass');       err = true; }
+    if (err)   { shake(); return; }
+
+    txt.textContent = 'Memproses…'; btn.disabled = true;
+
+    setTimeout(() => {
+      const users = LS.get('anabulku_users', []);
+      const user  = users.find(u => (u.email === id || u.username === id) && u.password === pass);
+      if (user) {
+        if (document.getElementById('rememberMe').checked) {
+          localStorage.setItem('anabulku_user_remember', id);
+        } else {
+          localStorage.removeItem('anabulku_user_remember');
+        }
+        LS.set('anabulku_user_session', {
+          loggedIn: true, nama: user.nama, email: user.email,
+          username: user.username, noHp: user.noHp || '',
+          kota: user.kota || '', role: user.role || 'user',
+          createdAt: user.createdAt || null,
+        });
+        localStorage.setItem('anabulku_notifications', JSON.stringify([]));
+        window.location.href = 'home.html';
+      } else {
+        markErr('fIdentifier'); markErr('fPass');
+        shake();
+        txt.textContent = 'Masuk Sekarang'; btn.disabled = false;
+      }
+    }, 400);
+  });
+
+  setTimeout(() => document.getElementById('fIdentifier').focus(), 150);
+})();
+</script>
+</body>
+</html>

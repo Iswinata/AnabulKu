@@ -1,0 +1,1483 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0f1923" />
+  <title>Pembayaran — AnabulKu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      height: 100%;
+      font-family: "Poppins", system-ui, sans-serif;
+      background: #0a1118;
+      -webkit-text-size-adjust: 100%;
+      -webkit-font-smoothing: antialiased;
+    }
+    body { display: flex; justify-content: center; align-items: flex-start; }
+    button { font-family: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+
+    /* ── Shell ── */
+    .app {
+      width: 100%; max-width: 393px;
+      height: 100vh;
+      height: 100dvh;
+      background: linear-gradient(160deg, #0f1923 0%, #1a2535 60%, #0f1923 100%);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 0 60px rgba(0,0,0,.7);
+      position: relative;
+    }
+
+    /* ── Topbar ── */
+    .topbar {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 20px 12px;
+      background: rgba(255,255,255,.04);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .btn-back {
+      display: grid;
+      place-items: center;
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,.15);
+      background: rgba(255,255,255,.08);
+      color: #e2e8f0;
+      transition: transform .1s, background .15s;
+    }
+    .btn-back:active { transform: translate(1px,1px); background: rgba(255,255,255,.14); }
+    .btn-back svg { width: 16px; height: 16px; }
+    .topbar-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: #f1f5f9;
+      letter-spacing: -.3px;
+    }
+
+    /* ── Sembunyikan global bottomnav di halaman ini ── */
+    .bottomnav { display: none !important; }
+
+    .scroll-body {
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 10px 14px 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* ── Section title ── */
+    .sec-title {
+      font-size: 10px;
+      font-weight: 700;
+      color: rgba(255,152,0,.75);
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      margin-bottom: 0;
+      padding-top: 2px;
+    }
+
+    /* ── Order summary card ── */
+    .order-card {
+      background: rgba(255,255,255,.06);
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.12);
+      backdrop-filter: blur(16px);
+      overflow: hidden;
+    }
+    .order-card-header {
+      background: linear-gradient(90deg, rgba(255,152,0,.85) 0%, rgba(255,188,89,.85) 100%);
+      padding: 14px 16px;
+      min-height: 56px;
+    }
+    .order-klinik {
+      font-size: 12.5px;
+      font-weight: 800;
+      color: #fff;
+      margin: 0 0 1px;
+      word-break: break-word;
+    }
+    .order-dokter {
+      font-size: 11px;
+      color: rgba(255,255,255,.85);
+      margin: 0;
+    }
+    .order-card-body { padding: 0 0 16px; }
+    .order-rows { display: flex; flex-direction: column; gap: 0; }
+    .order-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px 14px;
+      border-bottom: 1px solid rgba(255,255,255,.07);
+    }
+    .order-row:last-child { border-bottom: none; }
+    .order-row .info-col {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+    .order-row .info-icon {
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .order-row-key {
+      color: rgba(255,255,255,.45);
+      font-size: 11px;
+      font-weight: 500;
+      word-break: break-word;
+      line-height: 1.4;
+    }
+    .order-row-val {
+      font-weight: 700;
+      color: #f1f5f9;
+      font-size: 12.5px;
+      min-width: 0;
+      word-break: break-word;
+      overflow-wrap: anywhere;
+      white-space: normal;
+      line-height: 1.4;
+    }
+    .order-row-val.chip { background: none; border-radius: 0; padding: 0; font-size: 12px; }
+    .order-divider { height: 1px; background: rgba(255,255,255,.08); margin: 4px 14px; }
+    .order-total-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px 12px;
+    }
+    .order-total-key { font-size: 12px; font-weight: 600; color: rgba(255,255,255,.5); }
+    .order-total-val { font-size: 18px; font-weight: 800; color: #FF9800; word-break: break-word; overflow-wrap: anywhere; }
+
+    /* ── Info card ── */
+    .info-card {
+      background: rgba(255,255,255,.06);
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.12);
+      backdrop-filter: blur(16px);
+      overflow: hidden;
+    }
+    .info-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 11px 14px;
+      border-bottom: 1px solid rgba(255,255,255,.07);
+    }
+    .info-row:last-child { border-bottom: none; }
+    .info-icon {
+      width: 28px; height: 28px;
+      border-radius: 7px;
+      background: rgba(255,152,0,.15);
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      font-size: 13px;
+      margin-top: 1px;
+    }
+    .info-col { flex: 1; min-width: 0; }
+    .info-label {
+      font-size: 10px;
+      font-weight: 600;
+      color: rgba(255,255,255,.4);
+      text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+    .info-val {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #f1f5f9;
+      word-break: break-word;
+      overflow-wrap: anywhere;
+      white-space: normal;
+    }
+
+    /* ── Payment method card ── */
+    .method-card {
+      background: rgba(255,255,255,.06);
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.12);
+      backdrop-filter: blur(16px);
+      overflow: hidden;
+    }
+    .method-option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 14px;
+      border-bottom: 1px solid rgba(255,255,255,.07);
+      cursor: pointer;
+      transition: background .12s;
+      position: relative;
+    }
+    .method-option:last-child { border-bottom: none; }
+    .method-option:hover { background: rgba(255,152,0,.08); }
+    .method-option.is-selected { background: rgba(255,152,0,.12); }
+    .method-icon {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      font-size: 15px;
+      flex-shrink: 0;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.12);
+    }
+    .method-info { flex: 1; min-width: 0; }
+    .method-name { font-size: 13px; font-weight: 700; color: #f1f5f9; word-break: break-word; }
+    .method-desc { font-size: 11px; color: rgba(255,255,255,.45); margin-top: 1px; word-break: break-word; }
+    .method-radio {
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,.25);
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      transition: border-color .12s;
+    }
+    .method-option.is-selected .method-radio { border-color: #FF9800; }
+    .method-radio-dot {
+      width: 9px; height: 9px;
+      border-radius: 50%;
+      background: #FF9800;
+      display: none;
+    }
+    .method-option.is-selected .method-radio-dot { display: block; }
+
+    /* ── Countdown timer card ── */
+    .countdown-card {
+      background: rgba(255,255,255,.06);
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.12);
+      backdrop-filter: blur(16px);
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: border-color .3s, background .3s;
+    }
+    .countdown-card.is-urgent { background: rgba(239,68,68,.12); border-color: rgba(239,68,68,.5); }
+    .countdown-icon {
+      width: 34px; height: 34px;
+      border-radius: 8px;
+      background: rgba(255,152,0,.15);
+      display: grid;
+      place-items: center;
+      font-size: 15px;
+      flex-shrink: 0;
+      transition: background .3s;
+    }
+    .countdown-card.is-urgent .countdown-icon { background: rgba(239,68,68,.2); }
+    .countdown-info { flex: 1; min-width: 0; }
+    .countdown-label {
+      font-size: 9.5px;
+      font-weight: 700;
+      color: rgba(255,255,255,.45);
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      margin-bottom: 1px;
+    }
+    .countdown-card.is-urgent .countdown-label { color: #f87171; }
+    #countdownTimer {
+      font-size: 19px;
+      font-weight: 800;
+      color: #FF9800;
+      letter-spacing: .02em;
+      font-variant-numeric: tabular-nums;
+      line-height: 1.1;
+    }
+    #countdownTimer.is-urgent {
+      color: #f87171;
+      animation: pulse-red .7s ease-in-out infinite alternate;
+    }
+    .countdown-sub { font-size: 9.5px; color: rgba(255,255,255,.4); margin-top: 1px; }
+    .countdown-card.is-urgent .countdown-sub { color: #f87171; }
+    @keyframes pulse-red {
+      from { opacity: 1; }
+      to   { opacity: .55; }
+    }
+
+
+    /* ── Expired overlay ── */
+    .expired-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.7);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .expired-overlay.is-open { display: flex; }
+    .expired-sheet {
+      background: rgba(20,28,40,.95);
+      backdrop-filter: blur(24px);
+      border-radius: 20px;
+      border: 1px solid rgba(239,68,68,.3);
+      width: 100%;
+      max-width: 340px;
+      padding: 28px 24px 32px;
+      text-align: center;
+      animation: scaleIn .25s cubic-bezier(.34,1.2,.64,1) both;
+    }
+    @keyframes scaleIn {
+      from { transform: scale(.85); opacity: 0; }
+      to   { transform: scale(1);   opacity: 1; }
+    }
+    .expired-emoji {
+      width: 68px; height: 68px;
+      background: rgba(239,68,68,.15);
+      border: 2px solid rgba(239,68,68,.4);
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 30px;
+      margin: 0 auto 14px;
+    }
+    .expired-title { font-size: 18px; font-weight: 800; color: #f1f5f9; margin-bottom: 8px; }
+    .expired-sub { font-size: 13px; color: rgba(255,255,255,.55); line-height: 1.6; margin-bottom: 20px; }
+    .btn-expired-home {
+      width: 100%;
+      height: 48px;
+      background: #EF4444;
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(239,68,68,.3);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: transform .1s, opacity .15s;
+    }
+    .btn-expired-home:active { transform: translateY(1px); opacity: .85; }
+
+    /* ── Footer action ── */
+    .footer-action {
+      flex-shrink: 0;
+      padding: 12px 16px max(env(safe-area-inset-bottom), 16px);
+      background: rgba(255,255,255,.04);
+      backdrop-filter: blur(12px);
+      border-top: 1px solid rgba(255,255,255,.08);
+      position: relative;
+      z-index: 60;
+    }
+    .total-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .total-label { font-size: 11px; color: rgba(255,255,255,.5); font-weight: 500; }
+    .total-amount { font-size: 18px; font-weight: 800; color: #FF9800; }
+
+    .btn-pay {
+      width: 100%;
+      height: 52px;
+      background: linear-gradient(180deg, #ff9800 0%, #ffb74d 100%);
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 4px 24px rgba(255,152,0,.35);
+      color: #fff;
+      font-size: 15px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: transform .1s, box-shadow .1s, opacity .15s;
+    }
+    .btn-pay:active { transform: translateY(1px); box-shadow: 0 2px 12px rgba(255,152,0,.25); }
+    .btn-pay:disabled { opacity: .4; cursor: not-allowed; transform: none !important; }
+
+    /* ── Success overlay ── */
+    .success-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.55);
+      z-index: 100;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    .success-overlay.is-open { display: flex; }
+    .success-sheet {
+      background: #fff;
+      border-radius: 20px 20px 0 0;
+      border-top: 1.5px solid #000;
+      border-left: 1.5px solid #000;
+      border-right: 1.5px solid #000;
+      width: 100%;
+      max-width: 393px;
+      max-height: 92dvh;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 28px 24px max(env(safe-area-inset-bottom), 40px);
+      text-align: center;
+      animation: slideUp .3s cubic-bezier(.34,1.2,.64,1) both;
+    }
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to   { transform: translateY(0); }
+    }
+    .success-emoji {
+      width: 72px; height: 72px;
+      background: linear-gradient(180deg, #ff9800 0%, #ffbc59 100%);
+      border: 2px solid #000;
+      border-radius: 50%;
+      box-shadow: 3px 3px 0 #000;
+      display: grid;
+      place-items: center;
+      font-size: 32px;
+      margin: 0 auto 16px;
+    }
+    .success-title { font-size: 20px; font-weight: 800; color: #1F2937; margin-bottom: 6px; }
+    .success-sub { font-size: 13px; color: #6B7280; line-height: 1.6; margin-bottom: 24px; }
+    .success-ref {
+      display: inline-block;
+      background: #FFF7ED;
+      border: 1.5px solid #FED7AA;
+      border-radius: 8px;
+      padding: 6px 14px;
+      font-size: 12px;
+      color: #92400E;
+      font-weight: 600;
+      margin-bottom: 24px;
+    }
+    .btn-home {
+      width: 100%;
+      height: 50px;
+      background: linear-gradient(180deg, #ff9800 0%, #ffb74d 100%);
+      border: 1.5px solid #000;
+      border-radius: 12px;
+      box-shadow: 2px 2px 0 #000;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: transform .1s, box-shadow .1s;
+    }
+    .btn-home:active { transform: translate(1px,1px); box-shadow: 1px 1px 0 #000; }
+
+    /* ── Leave confirmation overlay ── */
+    .leave-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.55);
+      z-index: 300;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    .leave-overlay.is-open { display: flex; }
+    .leave-sheet {
+      background: #fff;
+      border-radius: 20px 20px 0 0;
+      border-top: 1.5px solid #000;
+      border-left: 1.5px solid #000;
+      border-right: 1.5px solid #000;
+      width: 100%;
+      max-width: 393px;
+      max-height: 92dvh;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 28px 24px max(env(safe-area-inset-bottom), 40px);
+      text-align: center;
+      animation: slideUp .25s cubic-bezier(.34,1.2,.64,1) both;
+    }
+    .leave-icon {
+      width: 64px; height: 64px;
+      background: #FEF3C7;
+      border: 2px solid #FCD34D;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 28px;
+      margin: 0 auto 14px;
+    }
+    .leave-title { font-size: 18px; font-weight: 800; color: #111827; margin-bottom: 8px; }
+    .leave-sub { font-size: 13px; color: #6B7280; line-height: 1.6; margin-bottom: 20px; }
+    .btn-leave-cancel {
+      width: 100%;
+      height: 48px;
+      background: #EF4444;
+      border: 1.5px solid #000;
+      border-radius: 12px;
+      box-shadow: 2px 2px 0 #000;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      transition: transform .1s, box-shadow .1s;
+    }
+    .btn-leave-cancel:active { transform: translate(1px,1px); box-shadow: 1px 1px 0 #000; }
+    .btn-leave-stay {
+      width: 100%;
+      height: 48px;
+      background: linear-gradient(180deg, #ff9800 0%, #ffb74d 100%);
+      border: 1.5px solid #000;
+      border-radius: 12px;
+      box-shadow: 2px 2px 0 #000;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 700;
+      transition: transform .1s, box-shadow .1s;
+    }
+    .btn-leave-stay:active { transform: translate(1px,1px); box-shadow: 1px 1px 0 #000; }
+
+    /* ── VA overlay ── */
+    .va-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,.55); z-index: 250;
+      align-items: flex-end; justify-content: center;
+    }
+    .va-overlay.is-open { display: flex; }
+    .va-sheet {
+      background: #fff;
+      border-radius: 20px 20px 0 0;
+      border-top: 1.5px solid #000;
+      border-left: 1.5px solid #000;
+      border-right: 1.5px solid #000;
+      width: 100%; max-width: 393px;
+      padding: 28px 24px max(env(safe-area-inset-bottom), 44px);
+      animation: slideUp .25s cubic-bezier(.34,1.2,.64,1) both;
+      overflow-y: auto;
+      max-height: 92dvh;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* ── QRIS overlay ── */
+    .qris-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,.55); z-index: 260;
+      align-items: flex-end; justify-content: center;
+    }
+    .qris-overlay.is-open { display: flex; }
+    .qris-sheet {
+      background: #fff;
+      border-radius: 20px 20px 0 0;
+      border-top: 1.5px solid #000;
+      border-left: 1.5px solid #000;
+      border-right: 1.5px solid #000;
+      width: 100%; max-width: 393px;
+      padding: 24px 24px 44px;
+      animation: slideUp .25s cubic-bezier(.34,1.2,.64,1) both;
+      display: flex; flex-direction: column;
+      align-items: center; text-align: center;
+      overflow-y: auto;
+      max-height: 92dvh;
+      -webkit-overflow-scrolling: touch;
+    }
+    .qris-timer {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 11px; font-weight: 600; color: #92400E;
+      background: #FEF3C7; border: 1px solid #FDE68A;
+      border-radius: 20px; padding: 3px 10px; margin-bottom: 14px;
+    }
+    .qris-timer.urgent { color: #991B1B; background: #FEE2E2; border-color: #FECACA; }
+    .qris-timer svg { flex-shrink: 0; }
+    .qris-title { font-size: 16px; font-weight: 800; color: #111827; margin-bottom: 4px; }
+    .qris-sub   { font-size: 12px; color: #9CA3AF; margin-bottom: 16px; }
+    .qris-img-wrap {
+      width: min(220px, 72vw); height: min(220px, 72vw);
+      border: 2px solid #000; border-radius: 14px;
+      box-shadow: 3px 3px 0 #000;
+      overflow: hidden; margin: 0 auto 16px;
+      background: #fff; display: grid; place-items: center;
+    }
+    .qris-img-wrap img { width: 100%; height: 100%; object-fit: contain; display: block; }
+    .btn-qris-download {
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      width: 200px; height: 38px; background: #fff;
+      border: 1.5px solid #000; border-radius: 10px;
+      box-shadow: 2px 2px 0 #000; color: #111827;
+      font-size: 12.5px; font-weight: 600; font-family: inherit;
+      cursor: pointer; margin: 0 auto 16px;
+      transition: transform .1s, box-shadow .1s;
+    }
+    .btn-qris-download:active { transform: translate(1px,1px); box-shadow: 1px 1px 0 #000; }
+    .btn-qris-download svg { flex-shrink: 0; }
+    .qris-info-rows {
+      width: 100%; background: #F9FAFB;
+      border: 1.5px solid #E5E7EB; border-radius: 12px;
+      overflow: hidden; margin-bottom: 16px;
+    }
+    .qris-info-row {
+      display: flex; justify-content: space-between;
+      align-items: center; padding: 10px 14px;
+      border-bottom: 1px solid #F3F4F6; font-size: 12px;
+    }
+    .qris-info-row:last-child { border-bottom: none; }
+    .qris-info-key { color: #9CA3AF; font-weight: 500; min-width: 0; }
+    .qris-info-val { color: #111827; font-weight: 700; text-align: right; min-width: 0; word-break: break-word; overflow-wrap: anywhere; }
+    .btn-qris-ok {
+      width: 100%; height: 50px;
+      background: linear-gradient(180deg, #ff9800 0%, #ffb74d 100%);
+      border: 1.5px solid #000; border-radius: 12px;
+      box-shadow: 2px 2px 0 #000; color: #fff;
+      font-size: 14px; font-weight: 700; font-family: inherit;
+      cursor: pointer; transition: transform .1s, box-shadow .1s;
+    }
+    .btn-qris-ok:active { transform: translate(1px,1px); box-shadow: 1px 1px 0 #000; }
+    .va-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+    .va-bank-icon {
+      width: 48px; height: 48px; border-radius: 12px;
+      background: #FFF7ED; border: 1.5px solid #FDE68A;
+      display: grid; place-items: center; font-size: 22px; flex-shrink: 0;
+    }
+    .va-bank-name { font-size: 16px; font-weight: 800; color: #111827; }
+    .va-bank-sub  { font-size: 12px; color: #9CA3AF; margin-top: 2px; }
+    .va-label {
+      font-size: 10.5px; font-weight: 700; color: #9CA3AF;
+      text-transform: uppercase; letter-spacing: .06em; margin-bottom: 6px;
+    }
+    .va-number-row {
+      display: flex; align-items: center; gap: 10px;
+      background: #FFF7ED; border: 1.5px solid #000;
+      border-radius: 12px; box-shadow: 2px 2px 0 #000;
+      padding: 12px 14px; margin-bottom: 16px;
+    }
+    .va-number {
+      flex: 1; font-size: 22px; font-weight: 800; color: #FF9800;
+      letter-spacing: .08em; font-variant-numeric: tabular-nums;
+      min-width: 0; word-break: break-all; overflow-wrap: anywhere;
+    }
+    .btn-copy {
+      height: 36px; padding: 0 14px; background: #fff;
+      border: 1.5px solid #000; border-radius: 8px;
+      box-shadow: 2px 2px 0 #000; font-size: 12px; font-weight: 700;
+      color: #374151; white-space: nowrap;
+      transition: transform .1s, box-shadow .1s;
+    }
+    .btn-copy:active { transform: translate(1px,1px); box-shadow: none; }
+    .btn-copy.copied { background: #ECFDF5; border-color: #6EE7B7; color: #059669; box-shadow: none; }
+    .va-info-rows {
+      background: #F9FAFB; border: 1.5px solid #E5E7EB;
+      border-radius: 12px; overflow: hidden; margin-bottom: 20px;
+    }
+    .va-info-row {
+      display: flex; justify-content: space-between;
+      align-items: center; padding: 10px 14px;
+      border-bottom: 1px solid #F3F4F6; font-size: 12px;
+    }
+    .va-info-row:last-child { border-bottom: none; }
+    .va-info-key { color: #9CA3AF; font-weight: 500; min-width: 0; }
+    .va-info-val { color: #111827; font-weight: 700; text-align: right; min-width: 0; word-break: break-word; overflow-wrap: anywhere; }
+    .va-note {
+      font-size: 11.5px; color: #78350F; background: #FFFBEB;
+      border: 1.5px solid #FDE68A; border-radius: 10px;
+      padding: 10px 12px; line-height: 1.6; margin-bottom: 16px;
+    }
+    .btn-paid {
+      width: 100%; height: 52px;
+      background: linear-gradient(180deg, #22c55e 0%, #4ade80 100%);
+      border: 1.5px solid #000; border-radius: 12px;
+      box-shadow: 2px 2px 0 #000; color: #fff;
+      font-size: 15px; font-weight: 800; letter-spacing: -.2px;
+      transition: transform .1s, box-shadow .1s;
+    }
+    .btn-paid:active { transform: translate(1px,1px); box-shadow: 1px 1px 0 #000; }
+  </style>
+  <link rel="stylesheet" href="glass-theme.css" />
+</head>
+<body>
+<div class="app">
+
+  <!-- Topbar -->
+  <div class="topbar">
+    <button class="btn-back" id="btnBack" type="button" aria-label="Kembali">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true">
+        <path d="M19 12H5M12 5l-7 7 7 7"/>
+      </svg>
+    </button>
+    <span class="topbar-title">Konfirmasi Pembayaran</span>
+  </div>
+
+  <!-- Scroll body -->
+  <div class="scroll-body">
+
+    <!-- Order summary -->
+    <p class="sec-title">Ringkasan Booking</p>
+    <div class="order-card">
+      <div class="order-card-header">
+        <p class="order-klinik" id="payKlinik">—</p>
+        <p class="order-dokter" id="payDokter">—</p>
+      </div>
+      <div class="order-card-body">
+          <div class="order-row">
+            <div class="info-icon">📅</div>
+            <div class="info-col">
+              <p class="info-label">Tanggal</p>
+              <p class="info-val" id="payTanggal">—</p>
+            </div>
+          </div>
+          <div class="order-row">
+            <div class="info-icon">🕐</div>
+            <div class="info-col">
+              <p class="info-label">Pukul</p>
+              <p class="info-val" id="payJam">—</p>
+            </div>
+          </div>
+          <div class="order-row">
+            <div class="info-icon">🐾</div>
+            <div class="info-col">
+              <p class="info-label">Hewan</p>
+              <p class="info-val" id="payHewan">—</p>
+            </div>
+          </div>
+          <div class="order-row">
+            <div class="info-icon">💊</div>
+            <div class="info-col">
+              <p class="info-label">Biaya Layanan</p>
+              <p class="info-val" id="payBiaya">—</p>
+            </div>
+          </div>
+          <div class="order-row">
+            <div class="info-icon" style="opacity:0.6;">🏷️</div>
+            <div class="info-col" style="opacity:0.6;">
+              <p class="info-label">Biaya Platform</p>
+              <p class="info-val">Rp 5.000</p>
+            </div>
+          </div>
+        <div class="order-divider"></div>
+        <div class="order-total-row">
+          <span class="order-total-key">Total Bayar</span>
+          <span class="order-total-val" id="payTotal">—</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pemilik info -->
+    <p class="sec-title">Data Pemilik</p>
+    <div class="info-card">
+      <div class="info-row">
+        <div class="info-icon">👤</div>
+        <div class="info-col">
+          <p class="info-label">Nama Pemilik</p>
+          <p class="info-val" id="payNama">—</p>
+        </div>
+      </div>
+      <div class="info-row">
+        <div class="info-icon">📱</div>
+        <div class="info-col">
+          <p class="info-label">No. WhatsApp</p>
+          <p class="info-val" id="payNoHP">—</p>
+        </div>
+      </div>
+      <div class="info-row">
+        <div class="info-icon">🐾</div>
+        <div class="info-col">
+          <p class="info-label">Jenis Hewan</p>
+          <p class="info-val" id="payJenisHewan">—</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Metode pembayaran -->
+    <p class="sec-title">Metode Pembayaran</p>
+    <div class="method-card" id="methodCard">
+      <div class="method-option is-selected" data-method="qris">
+        <div class="method-icon">📲</div>
+        <div class="method-info">
+          <p class="method-name">QRIS</p>
+          <p class="method-desc">Scan QR — semua e-wallet</p>
+        </div>
+        <div class="method-radio"><div class="method-radio-dot"></div></div>
+      </div>
+    </div>
+
+  </div><!-- /.scroll-body -->
+
+  <!-- ── Footer total + tombol bayar ── -->
+  <div class="footer-action" id="footerAction">
+    <div class="total-row" id="footerTotalRow" style="display:none;">
+      <div>
+        <div class="total-label">Total Estimasi</div>
+        <div class="total-amount" id="footerTotal">—</div>
+      </div>
+      <div style="text-align:right;">
+        <div class="total-label">Biaya Platform</div>
+        <div style="font-size:13px;font-weight:700;color:#6B7280;">Rp 5.000 ✓</div>
+      </div>
+    </div>
+    <button class="btn-pay" id="btnPay" type="button" disabled>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="18" height="18" aria-hidden="true"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+      Bayar Sekarang
+    </button>
+  </div>
+
+  <!-- ── VA overlay ── -->
+  <div class="va-overlay" id="vaOverlay" role="dialog" aria-modal="true" aria-labelledby="vaBankName">
+    <div class="va-sheet">
+      <div class="va-header">
+        <div class="va-bank-icon" id="vaBankIcon">🏦</div>
+        <div>
+          <p class="va-bank-name" id="vaBankName">Virtual Account</p>
+          <p class="va-bank-sub" id="vaBankSub">Transfer ke nomor berikut</p>
+        </div>
+      </div>
+      <p class="va-label">Nomor Virtual Account</p>
+      <div class="va-number-row">
+        <span class="va-number" id="vaNumber">—</span>
+        <button class="btn-copy" id="btnCopyVA" type="button">Salin</button>
+      </div>
+      <div class="va-info-rows">
+        <div class="va-info-row">
+          <span class="va-info-key">Nama Klinik</span>
+          <span class="va-info-val" id="vaKlinik">—</span>
+        </div>
+        <div class="va-info-row">
+          <span class="va-info-key">Dokter</span>
+          <span class="va-info-val" id="vaDokter">—</span>
+        </div>
+        <div class="va-info-row">
+          <span class="va-info-key">Jadwal</span>
+          <span class="va-info-val" id="vaJadwal">—</span>
+        </div>
+        <div class="va-info-row">
+          <span class="va-info-key">Biaya Platform</span>
+          <span class="va-info-val" style="color:#9CA3AF;">Rp 5.000</span>
+        </div>
+        <div class="va-info-row">
+          <span class="va-info-key">Total Bayar</span>
+          <span class="va-info-val" id="vaTotal" style="color:#FF9800;">—</span>
+        </div>
+      </div>
+      <p class="va-note">⚠️ Salin nomor VA di atas lalu lakukan transfer. Transaksi kamu akan berstatus <strong>pending</strong> hingga pembayaran diverifikasi oleh klinik dalam 10 menit.</p>
+      <button class="btn-paid" id="btnPaid" type="button">🐱🐶 OK</button>
+    </div>
+  </div>
+
+  <!-- ── QRIS overlay ── -->
+  <div class="qris-overlay" id="qrisOverlay" role="dialog" aria-modal="true" aria-labelledby="qrisTitle">
+    <div class="qris-sheet">
+      <div class="qris-drag"></div>
+      <h2 class="qris-title" id="qrisTitle">Bayar dengan QRIS</h2>
+      <p class="qris-sub">Scan QR code di bawah menggunakan aplikasi e-wallet atau m-banking</p>
+      <div class="qris-timer" id="qrisTimer">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 15 15"/></svg>
+        <span id="qrisTimerText">05:00</span> · Kadaluarsa otomatis
+      </div>
+      <div class="qris-img-wrap">
+        <img id="qrisImg" src="qris.png" alt="QR Code Pembayaran QRIS AnabulKu" />
+      </div>
+      <button class="btn-qris-download" id="btnQrisDownload" type="button" aria-label="Download QR Code">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 3v13M7 11l5 5 5-5"/><rect x="3" y="19" width="18" height="2" rx="1"/>
+        </svg>
+        Simpan QR Code
+      </button>
+      <div class="qris-info-rows">
+        <div class="qris-info-row">
+          <span class="qris-info-key">Nama Klinik</span>
+          <span class="qris-info-val" id="qrisKlinik">—</span>
+        </div>
+        <div class="qris-info-row">
+          <span class="qris-info-key">Dokter</span>
+          <span class="qris-info-val" id="qrisDokter">—</span>
+        </div>
+        <div class="qris-info-row">
+          <span class="qris-info-key">Jadwal</span>
+          <span class="qris-info-val" id="qrisJadwal">—</span>
+        </div>
+        <div class="qris-info-row">
+          <span class="qris-info-key">Biaya Platform</span>
+          <span class="qris-info-val" style="color:#9CA3AF;">Rp 5.000</span>
+        </div>
+        <div class="qris-info-row">
+          <span class="qris-info-key">Total Bayar</span>
+          <span class="qris-info-val" id="qrisTotal" style="color:#FF9800;">—</span>
+        </div>
+      </div>
+      <p class="qris-note">⚠️ Pastikan nominal yang dibayar sesuai. Transaksi kamu akan berstatus <strong>pending</strong> hingga pembayaran diverifikasi oleh klinik dalam 10 menit.</p>
+      <button class="btn-qris-ok" id="btnQrisOk" type="button">🐱🐶 OK, Sudah Bayar</button>
+    </div>
+  </div>
+
+  <!-- ── Overlay konfirmasi keluar ── -->
+  <div class="leave-overlay" id="leaveOverlay" role="dialog" aria-modal="true" aria-labelledby="leaveTitle">
+    <div class="leave-sheet">
+      <div class="leave-icon">🚪</div>
+      <p class="leave-title" id="leaveTitle">Tinggalkan Halaman?</p>
+      <p class="leave-sub">Booking kamu belum dibayar. Yakin ingin meninggalkan halaman ini?</p>
+      <button class="btn-leave-cancel" id="btnLeaveCancel" type="button">Batalkan Booking</button>
+      <button class="btn-leave-stay" id="btnLeaveStay" type="button">Lanjutkan Pembayaran</button>
+    </div>
+  </div>
+
+  <!-- Bottom navigation -->
+  <nav style="position:fixed;left:50%;transform:translateX(-50%);bottom:20px;z-index:50;width:min(100% - 32px,361px);height:64px;background:#fff;border:2px solid #000;box-shadow:2px 2px 0 #000;border-radius:30px;display:flex;align-items:center;justify-content:space-around;padding:0 10px;font-family:'Poppins',sans-serif;" aria-label="Navigasi utama">
+    <button onclick="location.href='home.html'" type="button" aria-label="Beranda" style="flex:1;height:54px;border:none;background:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22" aria-hidden="true">
+        <path d="M12 3 2.4 11.1a1 1 0 0 0 .65 1.76H4.5V20a1 1 0 0 0 1 1H9.5v-5.5h5V21H18.5a1 1 0 0 0 1-1v-7.14h1.45a1 1 0 0 0 .65-1.76L12 3z"/>
+      </svg>
+      <span style="font-size:9.5px;font-weight:600;color:#9CA3AF;line-height:1;">Beranda</span>
+    </button>
+    <button type="button" aria-label="Riwayat Booking" onclick="location.href='riwayat.html'" style="flex:1;height:54px;border:none;background:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#F97316" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22" aria-hidden="true">
+        <path d="M12 8v4l3 3"/>
+        <circle cx="12" cy="12" r="9"/>
+      </svg>
+      <span style="font-size:9.5px;font-weight:600;color:#F97316;line-height:1;">Riwayat</span>
+    </button>
+    <button type="button" aria-label="Favorit" style="flex:1;height:54px;border:none;background:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22" aria-hidden="true">
+        <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/>
+      </svg>
+      <span style="font-size:9.5px;font-weight:600;color:#9CA3AF;line-height:1;">Favorit</span>
+    </button>
+    <button type="button" aria-label="Profil" style="flex:1;height:54px;border:none;background:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22" aria-hidden="true">
+        <circle cx="12" cy="8" r="4"/>
+        <path d="M5 20a7 7 0 0 1 14 0"/>
+      </svg>
+      <span style="font-size:9.5px;font-weight:600;color:#9CA3AF;line-height:1;">Profil</span>
+    </button>
+  </nav>
+
+
+</div><!-- /.app -->
+
+<!-- Expired overlay -->
+<div class="expired-overlay" id="expiredOverlay" role="alertdialog" aria-modal="true" aria-labelledby="expiredTitle">
+  <div class="expired-sheet">
+    <div class="expired-emoji">⏰</div>
+    <h2 class="expired-title" id="expiredTitle">Waktu Habis!</h2>
+    <p class="expired-sub">Batas waktu pembayaran telah habis. Booking kamu otomatis dibatalkan. Silakan buat booking baru.</p>
+    <button class="btn-expired-home" id="btnExpiredHome" type="button">
+      Kembali ke Beranda
+    </button>
+  </div>
+</div>
+
+<!-- Success overlay -->
+<div class="success-overlay" id="successOverlay" role="dialog" aria-modal="true" aria-labelledby="successTitle">
+  <div class="success-sheet">
+    <div class="success-emoji">🎉</div>
+    <h2 class="success-title" id="successTitle">Booking Berhasil!</h2>
+    <p class="success-sub">Pembayaran kamu sudah tercatat. Klinik akan segera menghubungi kamu untuk konfirmasi jadwal.</p>
+    <div class="success-ref" id="successRef">—</div>
+    <button class="btn-home" id="btnHome" type="button">
+      Kembali ke Beranda
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" width="15" height="15" aria-hidden="true">
+        <path d="M5 12h14M12 5l7 7-7 7"/>
+      </svg>
+    </button>
+  </div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ── Baca pending booking dari localStorage ── */
+  var pending = null;
+  try {
+    pending = JSON.parse(localStorage.getItem("anabulku_pending_payment")) || null;
+  } catch (e) { pending = null; }
+
+  /* Kalau tidak ada pending, redirect ke home */
+  if (!pending) {
+    window.location.replace("home.html");
+    return;
+  }
+
+  /* ── Set paymentDeadline segera saat halaman dibuka (5 menit dari sekarang)
+         agar timer jalan di riwayat.html meski user belum klik metode apapun ── */
+  var PAY_DURATION = 5 * 60 * 1000;
+  if (!pending.paymentDeadline) {
+    pending.paymentDeadline = new Date(Date.now() + PAY_DURATION).toISOString();
+    try { localStorage.setItem("anabulku_pending_payment", JSON.stringify(pending)); } catch(e) {}
+  }
+  /* Kalau deadline sudah lewat saat halaman dibuka, langsung batalkan dan redirect */
+  if (new Date(pending.paymentDeadline).getTime() <= Date.now()) {
+    cancelExpiredOnLoad();
+    window.location.replace("riwayat.html");
+    return;
+  }
+
+  /* ── Batalkan booking expired saat halaman pertama dibuka ── */
+  function cancelExpiredOnLoad() {
+    try {
+      var bks = JSON.parse(localStorage.getItem("anabulku_bookings")) || [];
+      var idx = bks.findIndex(function(b) { return b.id === pending.id; });
+      if (idx >= 0) {
+        cancelInAllStorage(bks[idx], "timeout");
+      } else {
+        cancelInAllStorage(pending, "timeout");
+      }
+      localStorage.removeItem("anabulku_pending_payment");
+    } catch(e) {}
+  }
+
+  /* ── Batalkan booking di SEMUA storage: global + namespace klinik + mitraKlinik.bookedSlots ── */
+  function cancelInAllStorage(booking, reason) {
+    if (!booking) return;
+    try {
+      /* 1. Global anabulku_bookings */
+      var bks = JSON.parse(localStorage.getItem("anabulku_bookings")) || [];
+      var gi = bks.findIndex(function(b) { return b.id === booking.id; });
+      if (gi >= 0) {
+        bks[gi].status = "dibatalkan";
+        bks[gi].statusPembayaran = "dibatalkan";
+        bks[gi].cancelledReason = reason || "timeout";
+        localStorage.setItem("anabulku_bookings", JSON.stringify(bks));
+      }
+      /* 2. Namespace per klinik + mitraKlinik.bookedSlots */
+      var mitraList = JSON.parse(localStorage.getItem("mitraKlinik")) || [];
+      mitraList.forEach(function(k) {
+        if (!k.id) return;
+        var nsKey = "anabulku_bookings_" + k.id;
+        var nsRaw = localStorage.getItem(nsKey);
+        if (nsRaw) {
+          var nsBks = JSON.parse(nsRaw);
+          var ni = nsBks.findIndex(function(b) { return b.id === booking.id; });
+          if (ni >= 0) {
+            nsBks[ni].status = "dibatalkan";
+            nsBks[ni].statusPembayaran = "dibatalkan";
+            nsBks[ni].cancelledReason = reason || "timeout";
+            localStorage.setItem(nsKey, JSON.stringify(nsBks));
+          }
+        }
+        /* Bebaskan dari mitraKlinik.bookedSlots */
+        if (Array.isArray(k.bookedSlots)) {
+          var before = k.bookedSlots.length;
+          k.bookedSlots = k.bookedSlots.filter(function(s) {
+            return !(s.dokter === booking.dokter &&
+                     s.tanggal === booking.tanggal &&
+                     s.jam === booking.jam);
+          });
+          if (k.bookedSlots.length !== before) {
+            /* tulis balik mitraKlinik */
+            try {
+              var ml2 = JSON.parse(localStorage.getItem("mitraKlinik")) || [];
+              var mi2 = ml2.findIndex(function(x) { return x.id === k.id; });
+              if (mi2 >= 0) { ml2[mi2].bookedSlots = k.bookedSlots; localStorage.setItem("mitraKlinik", JSON.stringify(ml2)); }
+            } catch(e2) {}
+          }
+        }
+      });
+    } catch(e) {}
+  }
+
+  /* ── Format tanggal lokal ── */
+  function formatTanggal(iso) {
+    if (!iso) return "—";
+    var d = new Date(iso + "T00:00");
+    return d.toLocaleDateString("id-ID", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+  }
+
+  /* ── Konstanta biaya platform ── */
+  var BIAYA_PLATFORM = 5000;
+
+  /* ── Format harga ── */
+  function formatHarga(val) {
+    if (!val) return "Konfirmasi klinik";
+    var num = parseInt(String(val).replace(/\D/g, ""), 10);
+    if (isNaN(num) || num === 0) return "Konfirmasi klinik";
+    return "Rp " + num.toLocaleString("id-ID");
+  }
+
+  /* ── Isi data ke halaman ── */
+  function setText(id, val) {
+    var el = document.getElementById(id);
+    if (el) el.textContent = val || "—";
+  }
+
+  setText("payKlinik",    pending.namaKlinik);
+  setText("payDokter",    "dr. " + (pending.dokter || "—"));
+  setText("payTanggal",   formatTanggal(pending.tanggal));
+  setText("payJam",       pending.jam ? "Pukul " + pending.jam : "—");
+  setText("payHewan",     (pending.namaHewan || "—") + " · " + (pending.jenisHewan || ""));
+  setText("payNama",      pending.namaPemilik);
+  setText("payNoHP",      pending.noHP);
+  setText("payJenisHewan", pending.jenisHewan);
+
+  /* Hitung total termasuk biaya platform */
+  var biayaNum   = parseInt(String(pending.biaya || "0").replace(/\D/g, ""), 10) || 0;
+  var totalBayar = biayaNum + BIAYA_PLATFORM;
+
+  setText("payBiaya", formatHarga(pending.biaya));
+  setText("payTotal", biayaNum > 0 ? "Rp " + totalBayar.toLocaleString("id-ID") : "Konfirmasi klinik");
+
+  /* ── Pilih metode pembayaran ── */
+  var selectedMethod = "qris";
+  var options = document.querySelectorAll(".method-option");
+  var btnPayEl = document.getElementById("btnPay");
+
+  /* QRIS sudah terpilih otomatis — aktifkan tombol dan tampilkan footer */
+  var footerTotalRow = document.getElementById("footerTotalRow");
+  var footerTotal    = document.getElementById("footerTotal");
+  if (footerTotalRow && footerTotal) {
+    footerTotal.textContent = biayaNum > 0
+      ? "Rp " + totalBayar.toLocaleString("id-ID")
+      : "Konfirmasi klinik";
+    footerTotalRow.style.display = "flex";
+  }
+  btnPayEl.disabled = false;
+  btnPayEl.style.opacity = "";
+  btnPayEl.style.cursor  = "";
+
+  options.forEach(function(opt) {
+    opt.addEventListener("click", function() {
+      options.forEach(function(o) { o.classList.remove("is-selected"); });
+      opt.classList.add("is-selected");
+      selectedMethod = opt.getAttribute("data-method");
+
+      /* Tampilkan footer total dan aktifkan tombol */
+      if (footerTotalRow && footerTotal) {
+        footerTotal.textContent = biayaNum > 0
+          ? "Rp " + totalBayar.toLocaleString("id-ID")
+          : "Konfirmasi klinik";
+        footerTotalRow.style.display = "flex";
+      }
+      btnPayEl.disabled = false;
+      btnPayEl.style.opacity = "";
+      btnPayEl.style.cursor  = "";
+    });
+  });
+
+  var paymentDone = false;
+
+  /* ── Batalkan booking (dipanggil saat user konfirmasi keluar) ── */
+  function cancelBooking() {
+    cancelInAllStorage(pending, "user_leave");
+    localStorage.removeItem("anabulku_pending_payment");
+  }
+
+  /* ── Leave overlay ── */
+  var leaveOverlay  = document.getElementById("leaveOverlay");
+  var pendingNavUrl = null; /* URL tujuan setelah konfirmasi */
+
+  function showLeaveOverlay(url) {
+    pendingNavUrl = url || null;
+    leaveOverlay.classList.add("is-open");
+  }
+
+  /* Batalkan booking → navigasi keluar */
+  document.getElementById("btnLeaveCancel").addEventListener("click", function() {
+    cancelBooking();
+    leaveOverlay.classList.remove("is-open");
+    if (pendingNavUrl) {
+      window.location.href = pendingNavUrl;
+    } else {
+      history.back();
+    }
+  });
+
+  /* Lanjutkan pembayaran → tutup overlay */
+  document.getElementById("btnLeaveStay").addEventListener("click", function() {
+    leaveOverlay.classList.remove("is-open");
+    pendingNavUrl = null;
+  });
+
+  /* ── Tombol Kembali ── */
+  document.getElementById("btnBack").addEventListener("click", function() {
+    if (!paymentDone) {
+      var url = (document.referrer && document.referrer.includes("riwayat.html"))
+        ? "riwayat.html"
+        : null;
+      showLeaveOverlay(url);
+    } else {
+      history.back();
+    }
+  });
+
+  /* ── Tombol Kembali ke Beranda (expired) ── */
+  document.getElementById("btnExpiredHome").addEventListener("click", function() {
+    window.location.replace("home.html");
+  });
+
+  /* ── Data VA per metode pembayaran ── */
+  var VA_DATA = {
+    bca:     { icon: "🔵", name: "BCA Virtual Account",     sub: "Transfer via ATM / m-BCA",      prefix: "70720" },
+    bni:     { icon: "🟠", name: "BNI Virtual Account",     sub: "Transfer via ATM / BNI Mobile",  prefix: "98814" },
+    bri:     { icon: "🔵", name: "BRI Virtual Account",     sub: "Transfer via ATM / BRImo",       prefix: "26215" },
+    mandiri: { icon: "🟡", name: "Mandiri Virtual Account", sub: "Transfer via ATM / Livin",       prefix: "70012" },
+    transfer: { icon: "🏦", name: "Transfer Bank",          sub: "Transfer ke nomor berikut",      prefix: "88800" },
+  };
+
+  /* Generate VA number deterministik dari booking id */
+  function generateVA(method, bookingId) {
+    var data   = VA_DATA[method] || VA_DATA["transfer"];
+    var suffix = bookingId ? bookingId.replace(/[^0-9]/g, "").slice(-8).padStart(8, "0") : "00000000";
+    return data.prefix + suffix;
+  }
+
+  /* Format rupiah */
+  function formatRupiah(val) {
+    var num = parseInt(String(val).replace(/\D/g, ""), 10);
+    if (!num || isNaN(num)) return "Hubungi klinik";
+    return "Rp " + num.toLocaleString("id-ID");
+  }
+
+  /* ── Tampilkan VA overlay ── */
+  function showVAOverlay() {
+    var data = VA_DATA[selectedMethod] || VA_DATA["transfer"];
+    var vaNum = generateVA(selectedMethod, pending.id);
+
+    document.getElementById("vaBankIcon").textContent  = data.icon;
+    document.getElementById("vaBankName").textContent  = data.name;
+    document.getElementById("vaBankSub").textContent   = data.sub;
+    document.getElementById("vaNumber").textContent    = vaNum;
+    document.getElementById("vaKlinik").textContent    = pending.namaKlinik  || "—";
+    document.getElementById("vaDokter").textContent    = pending.dokter      || "—";
+    document.getElementById("vaJadwal").textContent    =
+      (pending.tanggal || "—") + (pending.jam ? " · " + pending.jam : "");
+    document.getElementById("vaTotal").textContent     = biayaNum > 0 ? "Rp " + totalBayar.toLocaleString("id-ID") : "Hubungi klinik";
+
+    document.getElementById("vaOverlay").classList.add("is-open");
+  }
+
+  /* ── Tampilkan QRIS overlay ── */
+  var qrisCountdownInterval = null;
+
+  function showQrisOverlay() {
+    document.getElementById("qrisKlinik").textContent = pending.namaKlinik || "—";
+    document.getElementById("qrisDokter").textContent = pending.dokter     || "—";
+    document.getElementById("qrisJadwal").textContent =
+      (pending.tanggal || "—") + (pending.jam ? " · " + pending.jam : "");
+    document.getElementById("qrisTotal").textContent  = biayaNum > 0 ? "Rp " + totalBayar.toLocaleString("id-ID") : "Hubungi klinik";
+    document.getElementById("qrisOverlay").classList.add("is-open");
+
+    /* ── Countdown 5 menit — tidak pernah reset ── */
+    var DURATION = 5 * 60 * 1000; /* ms */
+    var timerEl   = document.getElementById("qrisTimer");
+    var timerText = document.getElementById("qrisTimerText");
+
+    /* Simpan deadline ke localStorage agar riwayat bisa baca */
+    var stored = null;
+    try { stored = JSON.parse(localStorage.getItem("anabulku_pending_payment")); } catch(e) {}
+    if (stored && !stored.paymentDeadline) {
+      stored.paymentDeadline = new Date(Date.now() + DURATION).toISOString();
+      try { localStorage.setItem("anabulku_pending_payment", JSON.stringify(stored)); } catch(e) {}
+    }
+    var deadline = stored && stored.paymentDeadline ? new Date(stored.paymentDeadline).getTime() : Date.now() + DURATION;
+
+    function updateTimer() {
+      var remaining = Math.max(0, deadline - Date.now());
+      var totalSec  = Math.ceil(remaining / 1000);
+      var m = Math.floor(totalSec / 60);
+      var s = totalSec % 60;
+      timerText.textContent = (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s;
+      if (remaining <= 60000) {
+        timerEl.classList.add("urgent");
+      } else {
+        timerEl.classList.remove("urgent");
+      }
+      if (remaining <= 0) {
+        clearInterval(qrisCountdownInterval);
+        qrisCountdownInterval = null;
+        document.getElementById("qrisOverlay").classList.remove("is-open");
+        /* Batalkan booking di semua storage + bebaskan slot */
+        cancelInAllStorage(pending, "timeout");
+        localStorage.removeItem("anabulku_pending_payment");
+        alert("⏰ Waktu pembayaran habis. Booking dibatalkan dan jadwal kembali tersedia.");
+        window.location.replace("riwayat.html");
+      }
+    }
+
+    if (qrisCountdownInterval) clearInterval(qrisCountdownInterval);
+    timerEl.classList.remove("urgent");
+    updateTimer();
+    qrisCountdownInterval = setInterval(updateTimer, 1000);
+  }
+
+  /* ── Tombol OK QRIS — sudah bayar, tunggu konfirmasi admin ── */
+  document.getElementById("btnQrisOk").addEventListener("click", function() {
+    if (qrisCountdownInterval) { clearInterval(qrisCountdownInterval); qrisCountdownInterval = null; }
+    /* Tandai booking sebagai menunggu konfirmasi admin */
+    try {
+      var bookings = JSON.parse(localStorage.getItem("anabulku_bookings")) || [];
+      var idx = bookings.findIndex(function(b) { return b.id === pending.id; });
+      if (idx >= 0) {
+        bookings[idx].statusPembayaran  = "menunggu_konfirmasi";
+        bookings[idx].metodePembayaran  = selectedMethod;
+        /* paymentDeadline tetap — tidak di-reset */
+      }
+      localStorage.setItem("anabulku_bookings", JSON.stringify(bookings));
+      /* Update pending_payment juga agar timer di riwayat tetap akurat */
+      var stored = JSON.parse(localStorage.getItem("anabulku_pending_payment")) || null;
+      if (stored && stored.id === pending.id) {
+        stored.statusPembayaran = "menunggu_konfirmasi";
+        stored.metodePembayaran = selectedMethod;
+        localStorage.setItem("anabulku_pending_payment", JSON.stringify(stored));
+      }
+    } catch(e) {}
+    document.getElementById("qrisOverlay").classList.remove("is-open");
+    window.location.replace("home.html");
+  });
+
+  /* ── Tombol Download QRIS ── */
+  document.getElementById("btnQrisDownload").addEventListener("click", function() {
+    var img = document.getElementById("qrisImg");
+    var canvas = document.createElement("canvas");
+    canvas.width  = img.naturalWidth  || img.width;
+    canvas.height = img.naturalHeight || img.height;
+    var ctx = canvas.getContext("2d");
+    ctx.drawImage(img, 0, 0);
+    try {
+      var link = document.createElement("a");
+      link.download = "qris-anabulku.png";
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+    } catch (e) {
+      /* Fallback: buka gambar di tab baru jika canvas terkena CORS */
+      var a = document.createElement("a");
+      a.href = img.src;
+      a.download = "qris-anabulku.png";
+      a.target = "_blank";
+      a.click();
+    }
+  });
+
+  /* ── Salin VA number ── */
+  document.getElementById("btnCopyVA").addEventListener("click", function() {
+    var btn   = document.getElementById("btnCopyVA");
+    var vaNum = document.getElementById("vaNumber").textContent;
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(vaNum).catch(function() {});
+    } else {
+      var ta = document.createElement("textarea");
+      ta.value = vaNum;
+      ta.style.position = "fixed";
+      ta.style.opacity  = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand("copy"); } catch (e) {}
+      document.body.removeChild(ta);
+    }
+    btn.textContent = "Tersalin ✓";
+    btn.classList.add("copied");
+    setTimeout(function() {
+      btn.textContent = "Salin";
+      btn.classList.remove("copied");
+    }, 2000);
+  });
+
+
+  /* ── Mode Lihat Pembayaran dari riwayat ── */
+  if (new URLSearchParams(window.location.search).get('view') === '1' && pending._viewMetode) {
+    selectedMethod = pending._viewMetode;
+    options.forEach(function(o) {
+      o.classList.toggle('is-selected', o.getAttribute('data-method') === selectedMethod);
+    });
+    if (selectedMethod === 'qris') { showQrisOverlay(); } else { showVAOverlay(); }
+  }
+  /* ── Tombol Bayar Sekarang → tampil VA / QRIS overlay ── */
+  document.getElementById("btnPay").addEventListener("click", function() {
+    if (selectedMethod === "tunai" || selectedMethod === "bayar_ditempat") {
+      /* Metode tunai — langsung proses tanpa VA */
+      var btn = document.getElementById("btnPay");
+      btn.disabled    = true;
+      btn.textContent = "Memproses…";
+      paymentDone = true;
+      setTimeout(function() {
+        try {
+          var bookings = JSON.parse(localStorage.getItem("anabulku_bookings")) || [];
+          var idx = bookings.findIndex(function(b) { return b.id === pending.id; });
+          if (idx >= 0) {
+            bookings[idx].metodePembayaran = selectedMethod;
+            bookings[idx].statusPembayaran = "bayar_ditempat";
+            delete bookings[idx].paymentDeadline;
+          }
+          localStorage.setItem("anabulku_bookings", JSON.stringify(bookings));
+          localStorage.removeItem("anabulku_pending_payment");
+        } catch (e) { /* silent */ }
+        var ref = "ANB-" + pending.id.slice(-6).toUpperCase();
+        document.getElementById("successRef").textContent = "Kode Booking: " + ref;
+        document.getElementById("successOverlay").classList.add("is-open");
+      }, 900);
+    } else if (selectedMethod === "qris") {
+      /* Metode QRIS — tampilkan QRIS overlay */
+      try {
+        var bookings = JSON.parse(localStorage.getItem("anabulku_bookings")) || [];
+        var idx = bookings.findIndex(function(b) { return b.id === pending.id; });
+        if (idx >= 0) {
+          bookings[idx].metodePembayaran = selectedMethod;
+          bookings[idx].statusPembayaran = "menunggu_pembayaran";
+        }
+        localStorage.setItem("anabulku_bookings", JSON.stringify(bookings));
+
+        var pendingList = JSON.parse(localStorage.getItem("anabulku_pending_payment") || "[]");
+        if (!Array.isArray(pendingList)) pendingList = [];
+        if (!pendingList.find(function(p) { return p.bookingId === pending.id; })) {
+          pendingList.push({ bookingId: pending.id, time: new Date().toISOString() });
+          localStorage.setItem("anabulku_pending_payment", JSON.stringify(pendingList));
+        }
+      } catch (e) { /* silent */ }
+      showQrisOverlay();
+    } else {
+      /* Metode transfer / VA → update statusPembayaran dulu, lalu tampilkan VA overlay */
+      try {
+        var bookings = JSON.parse(localStorage.getItem("anabulku_bookings")) || [];
+        var idx = bookings.findIndex(function(b) { return b.id === pending.id; });
+        if (idx >= 0) {
+          bookings[idx].metodePembayaran = selectedMethod;
+          bookings[idx].statusPembayaran = "menunggu_pembayaran";
+        }
+        localStorage.setItem("anabulku_bookings", JSON.stringify(bookings));
+
+        /* Simpan juga ke pending_payment agar badge riwayat user aktif */
+        var pendingList = JSON.parse(localStorage.getItem("anabulku_pending_payment") || "[]");
+        if (!Array.isArray(pendingList)) pendingList = [];
+        if (!pendingList.find(function(p) { return p.bookingId === pending.id; })) {
+          pendingList.push({ bookingId: pending.id, time: new Date().toISOString() });
+          localStorage.setItem("anabulku_pending_payment", JSON.stringify(pendingList));
+        }
+      } catch (e) { /* silent */ }
+      showVAOverlay();
+    }
+  });
+
+  /* ── Tombol OK — hanya tutup VA overlay ── */
+  document.getElementById("btnPaid").addEventListener("click", function() {
+    document.getElementById("vaOverlay").classList.remove("is-open");
+  });
+
+  /* ── Tombol Kembali ke Beranda (success) ── */
+  document.getElementById("btnHome").addEventListener("click", function() {
+    window.location.replace("home.html");
+  });
+
+})();
+</script>
+
+<script>
+/* ── Force sembunyikan bottomnav dari halaman sebelumnya ── */
+(function hideNav() {
+  function removeNav() {
+    document.querySelectorAll('.bottomnav, .nav-spacer').forEach(function(el) {
+      el.style.setProperty('display', 'none', 'important');
+    });
+  }
+  removeNav();
+  document.addEventListener('DOMContentLoaded', removeNav);
+  window.addEventListener('load', removeNav);
+  /* Observer kalau ada yang diinject setelah load */
+  var obs = new MutationObserver(removeNav);
+  obs.observe(document.body, { childList: true, subtree: true });
+})();
+</script>
+</body>
+</html>

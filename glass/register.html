@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0f0c29" />
+  <title>AnabulKu - Daftar</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <style>
+    :root{--orange:#ff9800;--orange-d:#f57c00;--orange-l:#ffbd5d;--green:#22c55e;--green-d:#16a34a;--red:#ef4444;--white:#fff;--gb-md:rgba(255,255,255,0.13);--gbd:rgba(255,255,255,0.18);}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{-webkit-text-size-adjust:100%}
+    body{font-family:"Poppins",system-ui,sans-serif;background:linear-gradient(135deg,#0f0c29 0%,#302b63 50%,#24243e 100%);background-attachment:fixed;display:flex;justify-content:center;min-height:100vh;min-height:100dvh;-webkit-font-smoothing:antialiased;color:#fff}
+    button{font-family:inherit;border:none;background:none;cursor:pointer;color:inherit;-webkit-tap-highlight-color:transparent}
+    a{-webkit-tap-highlight-color:transparent;color:inherit}
+    .app{width:100%;max-width:393px;min-height:100vh;min-height:100dvh;background:rgba(255,255,255,0.05);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-left:1px solid var(--gbd);border-right:1px solid var(--gbd);padding:0 20px 24px;display:flex;flex-direction:column;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,0.26)}
+    .app::-webkit-scrollbar{width:0}
+    .page-header{padding:18px 0 8px;flex-shrink:0}
+    .header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+    .brand-row{display:flex;align-items:center;gap:7px;text-decoration:none;color:#fff;cursor:pointer}
+    .brand-icon{width:32px;height:32px;background:linear-gradient(135deg,#ff9800 0%,#ffbd5d 100%);border:1px solid rgba(255,255,255,0.25);border-radius:9px;box-shadow:0 4px 12px rgba(255,152,0,0.4);display:grid;place-items:center;font-size:14px;flex-shrink:0}
+    .brand-name{font-size:15px;font-weight:800;color:#fff;letter-spacing:-.3px}
+    .btn-back{display:inline-flex;align-items:center;gap:4px;background:rgba(255,255,255,0.10);border:1px solid rgba(255,255,255,0.18);border-radius:10px;padding:6px 12px;color:rgba(255,255,255,0.80);font-size:11px;font-weight:600;text-decoration:none;font-family:inherit;flex-shrink:0;transition:background .15s}
+    .btn-back svg{width:11px;height:11px}
+    .btn-back:hover{background:rgba(255,255,255,0.16)}
+    .page-title{font-size:21px;font-weight:800;color:#fff;line-height:1.2;letter-spacing:-.5px;margin-bottom:3px}
+    .page-title span{color:var(--orange-l)}
+    .page-sub{font-size:11.5px;color:rgba(255,255,255,0.55);line-height:1.4}
+    .steps-wrap{flex-shrink:0;margin-bottom:8px}
+    .steps{display:flex;align-items:center}
+    .step-item{display:flex;align-items:center;gap:4px}
+    .step-circle{width:26px;height:26px;border-radius:50%;border:1.5px solid rgba(255,255,255,0.25);background:rgba(255,255,255,0.08);display:grid;place-items:center;font-size:10px;font-weight:700;color:rgba(255,255,255,0.40);flex-shrink:0;transition:background .2s,color .2s,border-color .2s}
+    .step-circle.active{background:var(--orange);color:#fff;border-color:var(--orange-d);box-shadow:0 2px 10px rgba(255,152,0,0.4)}
+    .step-circle.done{background:var(--green);color:#fff;border-color:var(--green-d);box-shadow:0 2px 10px rgba(34,197,94,0.3)}
+    .step-label{font-size:10px;font-weight:600;color:rgba(255,255,255,0.35);white-space:nowrap}
+    .step-label.active{color:var(--orange-l)}
+    .step-label.done{color:var(--green)}
+    .step-line{flex:1;height:2px;background:rgba(255,255,255,0.12);margin:0 5px;border-radius:2px;transition:background .2s}
+    .step-line.done{background:var(--green)}
+    .section-title{font-size:11px;font-weight:700;color:var(--orange-l);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px}
+    .form-card{background:var(--gb-md);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--gbd);border-radius:18px;box-shadow:0 4px 20px rgba(0,0,0,0.18);padding:16px;margin-bottom:10px;flex-shrink:0}
+    .field{margin-bottom:13px}
+    .field:last-child{margin-bottom:0}
+    .field-label{display:block;font-size:11px;font-weight:700;color:rgba(255,255,255,0.65);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px}
+    .field-input{width:100%;padding:11px 14px;border-radius:12px;border:1px solid rgba(255,255,255,0.18);background:rgba(255,255,255,0.08);color:#fff;font-size:13.5px;font-weight:500;font-family:inherit;outline:none;transition:border-color .15s,background .15s;-webkit-appearance:none}
+    .field-input::placeholder{color:rgba(255,255,255,0.30)}
+    .field-input:focus{border-color:rgba(255,152,0,0.6);background:rgba(255,255,255,0.12)}
+    .field-input.is-error{border-color:rgba(239,68,68,0.7);background:rgba(239,68,68,0.08)}
+    .field-hint{font-size:11px;color:rgba(255,255,255,0.40);margin-top:4px;display:block}
+    .field-hint.is-error{color:#fca5a5}
+    .pw-wrap{position:relative}
+    .pw-wrap .field-input{padding-right:42px}
+    .pw-toggle{position:absolute;right:12px;top:50%;transform:translateY(-50%);display:grid;place-items:center;width:24px;height:24px;color:rgba(255,255,255,0.40)}
+    .pw-toggle svg{width:16px;height:16px}
+    .pw-strength{height:3px;border-radius:3px;margin-top:6px;background:rgba(255,255,255,0.08);overflow:hidden}
+    .pw-strength-fill{height:100%;border-radius:3px;width:0;transition:width .3s,background .3s}
+    .pw-strength-text{font-size:10px;color:rgba(255,255,255,0.45);margin-top:3px;display:block;min-height:14px}
+    .btn-cta{width:100%;padding:14px;border-radius:14px;background:linear-gradient(135deg,#ff9800 0%,#ffbd5d 100%);color:#fff;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;border:none;box-shadow:0 6px 20px rgba(255,152,0,0.38);transition:transform .1s,opacity .1s}
+    .btn-cta:disabled{opacity:.7}
+    .btn-cta:active{transform:scale(.97);opacity:.92}
+    .summ-row{display:flex;justify-content:space-between;align-items:baseline;font-size:12.5px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,0.07)}
+    .summ-row:last-child{border-bottom:none}
+    .summ-lbl{color:rgba(255,255,255,0.55);font-weight:500}
+    .summ-val{color:#fff;font-weight:700;text-align:right;max-width:55%;word-break:break-all}
+    .tos-row{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:rgba(255,255,255,0.60)}
+    .tos-row input[type="checkbox"]{width:14px;height:14px;margin-top:2px;accent-color:#ff9800;flex-shrink:0}
+    .tos-row a{color:var(--orange-l);font-weight:600}
+    .login-link{text-align:center;font-size:13px;color:rgba(255,255,255,0.50);flex-shrink:0;padding-top:4px}
+    .login-link a{color:var(--orange-l);font-weight:700}
+    .footer-note{text-align:center;font-size:11.5px;color:rgba(255,255,255,0.28);flex-shrink:0;padding:8px 0 4px}
+    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.55);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:flex;align-items:flex-end;justify-content:center;z-index:200;padding:0 16px 24px;opacity:0;pointer-events:none;transition:opacity .25s}
+    .modal-overlay.is-open{opacity:1;pointer-events:auto}
+    .modal-box{width:100%;max-width:361px;background:rgba(22,20,50,0.96);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.18);border-radius:24px;padding:24px 20px 20px;box-shadow:0 20px 60px rgba(0,0,0,0.5);transform:translateY(40px);transition:transform .25s}
+    .modal-overlay.is-open .modal-box{transform:translateY(0)}
+    .modal-title{font-size:16px;font-weight:700;color:#fff;margin-bottom:6px}
+    .modal-body{font-size:13px;color:rgba(255,255,255,0.60);line-height:1.55;margin-bottom:18px}
+    .modal-btn{width:100%;padding:13px;border-radius:14px;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;border:none;transition:transform .1s,opacity .1s}
+    .modal-btn:active{transform:scale(.97);opacity:.9}
+    .modal-btn--primary{background:linear-gradient(135deg,#25d366 0%,#128c7e 100%);color:#fff;box-shadow:0 4px 16px rgba(37,211,102,0.35)}
+    .modal-btn--secondary{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:#fff;margin-top:8px}
+    @keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-5px)}40%,80%{transform:translateX(5px)}}
+    @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+    .form-card{background:var(--white);border:1.5px solid var(--gray-e5);border-radius:13px;box-shadow:var(--shadow);padding:16px;margin-bottom:10px;flex-shrink:0}
+    .field{margin-bottom:12px}
+    .field:last-child{margin-bottom:0}
+    .field-label{display:block;font-size:11px;font-weight:700;color:var(--ink-2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
+    .field-hint{font-size:10px;color:var(--ink-3);margin-top:3px}
+    .input-wrap{position:relative}
+    .input-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:15px;height:15px;color:var(--gray-d1);pointer-events:none}
+    .field-input{width:100%;height:48px;border:1.5px solid var(--gray-e5);border-radius:10px;background:#fafafa;padding:0 42px 0 38px;font-size:13.5px;font-family:inherit;color:var(--ink);outline:none;transition:border-color .15s,box-shadow .15s,background .15s;-webkit-appearance:none}
+    .field-input.no-right-pad{padding-right:14px}
+    .field-input:focus{border-color:var(--orange);background:var(--white);box-shadow:0 0 0 3px rgba(255,152,0,.13)}
+    .field-input.is-error{border-color:var(--red);box-shadow:0 0 0 3px rgba(239,68,68,.1)}
+    .field-input::placeholder{color:#c0c8d2;font-size:12.5px}
+    .toggle-pass{position:absolute;right:10px;top:50%;transform:translateY(-50%);padding:4px;color:var(--gray-d1);display:flex;align-items:center;transition:color .15s;-webkit-tap-highlight-color:transparent}
+    .toggle-pass svg{width:16px;height:16px}
+    .toggle-pass:hover{color:var(--ink-2)}
+    .strength-bar{height:3px;border-radius:99px;background:var(--gray-e5);margin-top:5px;overflow:hidden}
+    .strength-fill{height:100%;border-radius:99px;width:0%;transition:width .3s,background .3s}
+    .strength-text{font-size:10px;font-weight:600;margin-top:2px;color:var(--ink-3)}
+    .step-panel{display:none;flex-direction:column;flex:1}
+    .step-panel.is-active{display:flex}
+    .btn-next{width:100%;height:50px;flex-shrink:0;background:linear-gradient(180deg,#ff9800 0%,#ffbd5d 100%);color:var(--white);border:1.5px solid var(--black);border-radius:12px;box-shadow:var(--shadow);font-size:14px;font-weight:700;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:7px;transition:transform .1s ease,box-shadow .1s ease;margin-bottom:10px}
+    .btn-next:active{transform:translate(1px,1px);box-shadow:1px 1px 0 #000}
+    .btn-next:disabled{opacity:.6;cursor:not-allowed;transform:none !important}
+    .btn-row{display:flex;gap:8px;margin-bottom:10px;flex-shrink:0}
+    .btn-prev{height:50px;padding:0 16px;flex-shrink:0;background:var(--white);color:var(--ink-2);border:1.5px solid var(--black);border-radius:12px;box-shadow:var(--shadow);font-size:12.5px;font-weight:600;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:5px;transition:transform .1s ease,box-shadow .1s ease;white-space:nowrap}
+    .btn-prev:active{transform:translate(1px,1px);box-shadow:1px 1px 0 #000}
+    .summary-card{background:linear-gradient(135deg,#fff7ed 0%,#ffedd5 100%);border:1.5px solid #fed7aa;border-radius:12px;box-shadow:var(--shadow);padding:12px 14px;margin-bottom:10px;flex-shrink:0}
+    .summary-card-title{font-size:10px;font-weight:700;color:var(--ink-3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:7px}
+    .summary-row{display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:4px 0;border-bottom:1px solid rgba(255,152,0,.15)}
+    .summary-row:last-child{border-bottom:none}
+    .summary-key{color:var(--ink-3);font-weight:500}
+    .summary-val{font-weight:700;color:var(--ink);max-width:60%;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .summary-val--orange{color:var(--orange-d)}
+    .tos-wrap{display:flex;align-items:flex-start;gap:7px;cursor:pointer;user-select:none;margin-bottom:10px;flex-shrink:0}
+    .tos-wrap input[type=checkbox]{width:14px;height:14px;accent-color:var(--orange);flex-shrink:0;margin-top:2px}
+    .tos-text{font-size:11px;color:var(--ink-2);line-height:1.5}
+    .tos-text a{color:var(--orange);font-weight:600;text-decoration:none}
+    .login-link{text-align:center;font-size:11.5px;color:var(--ink-2);font-weight:500;margin-top:auto;padding-top:4px;flex-shrink:0}
+    .login-link a{color:var(--orange);font-weight:700;text-decoration:none}
+    .success-screen{display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:32px 20px 48px;flex:1}
+    .success-screen.is-active{display:flex}
+    .success-icon{width:70px;height:70px;background:linear-gradient(180deg,#ff9800 0%,#ffbd5d 100%);border:1.5px solid var(--black);border-radius:50%;box-shadow:var(--shadow);display:grid;place-items:center;font-size:32px;margin-bottom:18px;animation:popIn .4s cubic-bezier(.34,1.56,.64,1) both}
+    @keyframes popIn{from{transform:scale(.3);opacity:0}to{transform:scale(1);opacity:1}}
+    .success-title{font-size:18px;font-weight:800;color:var(--ink);margin-bottom:7px}
+    .success-sub{font-size:12px;color:var(--ink-3);line-height:1.6;max-width:270px}
+    .btn-goto-login{margin-top:22px;width:100%;height:50px;flex-shrink:0;background:linear-gradient(180deg,#ff9800 0%,#ffbd5d 100%);color:var(--white);border:1.5px solid var(--black);border-radius:12px;box-shadow:var(--shadow);font-size:14px;font-weight:700;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:8px;transition:transform .1s ease,box-shadow .1s ease}
+    .btn-goto-login:active{transform:translate(1px,1px);box-shadow:1px 1px 0 #000}
+    /* -- Modal Verifikasi WA -- */
+    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:999;display:flex;align-items:flex-end;justify-content:center;padding:0;opacity:0;pointer-events:none;transition:opacity .25s ease}
+    .modal-overlay.is-open{opacity:1;pointer-events:all}
+    .modal-sheet{width:100%;max-width:393px;background:var(--frame-bg);border:1.5px solid var(--black);border-radius:22px 22px 0 0;box-shadow:0 -4px 24px rgba(0,0,0,.18);padding:28px 24px 36px;display:flex;flex-direction:column;align-items:center;text-align:center;transform:translateY(100%);transition:transform .3s cubic-bezier(.34,1.2,.64,1)}
+    .modal-overlay.is-open .modal-sheet{transform:translateY(0)}
+    .modal-wa-icon{width:64px;height:64px;background:#25d366;border:1.5px solid var(--black);border-radius:50%;box-shadow:var(--shadow);display:grid;place-items:center;font-size:30px;margin-bottom:16px;flex-shrink:0;animation:popIn .4s cubic-bezier(.34,1.56,.64,1) both}
+    .modal-title{font-size:17px;font-weight:800;color:var(--ink);margin-bottom:8px;line-height:1.3}
+    .modal-desc{font-size:12.5px;color:var(--ink-2);line-height:1.65;max-width:280px;margin-bottom:6px}
+    .modal-time-badge{display:inline-flex;align-items:center;gap:5px;background:#fff7ed;border:1.5px solid #ffbd5d;border-radius:99px;padding:4px 12px;font-size:11px;font-weight:700;color:#ac6600;margin-bottom:20px}
+    .modal-time-badge svg{width:12px;height:12px;color:#f57c00;flex-shrink:0}
+    .btn-modal-home{width:100%;height:50px;flex-shrink:0;background:linear-gradient(180deg,#ff9800 0%,#ffbd5d 100%);color:var(--white);border:1.5px solid var(--black);border-radius:12px;box-shadow:var(--shadow);font-size:14px;font-weight:700;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:8px;transition:transform .1s ease,box-shadow .1s ease;text-decoration:none}
+    .btn-modal-home:active{transform:translate(1px,1px);box-shadow:1px 1px 0 #000}
+    .modal-divider{width:40px;height:3px;background:var(--gray-d1);border-radius:99px;margin-bottom:20px}
+    @media(max-width:340px){.app{padding-left:14px;padding-right:14px}}
+    @media(prefers-reduced-motion:reduce){*{transition:none !important;animation:none !important}}
+  </style>
+  <link rel="stylesheet" href="glass-theme.css" />
+</head><body>
+<div class="app">
+
+  <div class="page-header">
+    <div class="header-top">
+      <a href="home.html" class="brand-row" aria-label="Kembali ke Beranda">
+        <div class="brand-icon">&#x1F43E;</div>
+        <span class="brand-name">AnabulKu</span>
+      </a>
+      <a class="btn-back" href="login.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+        Kembali
+      </a>
+    </div>
+    <h1 class="page-title">Daftar,<br><span>Yuk Mulai!</span></h1>
+    <p class="page-sub">Buat akun gratis dan temukan klinik terbaik buat hewan kesayanganmu.</p>
+  </div>
+
+  <div class="steps-wrap">
+    <div class="steps">
+      <div class="step-item">
+        <div class="step-circle active" id="circle1">1</div>
+        <span class="step-label active" id="label1">Data Diri</span>
+      </div>
+      <div class="step-line" id="line1"></div>
+      <div class="step-item">
+        <div class="step-circle" id="circle2">2</div>
+        <span class="step-label" id="label2">Akun</span>
+      </div>
+      <div class="step-line" id="line2"></div>
+      <div class="step-item">
+        <div class="step-circle" id="circle3">3</div>
+        <span class="step-label" id="label3">Konfirmasi</span>
+      </div>
+    </div>
+  </div>
+
+  <div id="regBody" style="display:flex;flex-direction:column;flex:1">
+
+    <!-- Step 1 -->
+    <div class="step-panel is-active" id="step1">
+      <p class="section-title">Data Diri</p>
+      <div class="form-card">
+        <div class="field">
+          <label class="field-label" for="inputNama">Nama Lengkap</label>
+          <div class="input-wrap">
+            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <input class="field-input no-right-pad" type="text" id="inputNama" placeholder="Nama lengkap Anda" autocomplete="name" />
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label" for="inputNoHp">Nomor HP</label>
+          <div class="input-wrap">
+            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.42 2 2 0 0 1 3.6 1.24h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.87a16 16 0 0 0 6.08 6.08l.97-1.87a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21.72 15z"/></svg>
+            <input class="field-input no-right-pad" type="tel" id="inputNoHp" placeholder="08xxxxxxxxxx" autocomplete="tel" />
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label" for="inputKota">Kota / Kabupaten</label>
+          <div class="input-wrap">
+            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <input class="field-input no-right-pad" type="text" id="inputKota" placeholder="Kota tempat tinggal" autocomplete="address-level2" />
+          </div>
+        </div>
+      </div>
+      <button class="btn-next" id="btnStep1">Lanjut <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true" width="15" height="15"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+      <p class="login-link">Sudah punya akun? <a href="login.html">Masuk di sini</a></p>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="step-panel" id="step2">
+      <p class="section-title">Buat Akun</p>
+      <div class="form-card">
+        <div class="field">
+          <label class="field-label" for="inputUsername">Username</label>
+          <div class="input-wrap">
+            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M6 20v-2a6 6 0 0 1 12 0v2"/></svg>
+            <input class="field-input no-right-pad" type="text" id="inputUsername" placeholder="Username kamu" autocomplete="username" />
+          </div>
+          <p class="field-hint">Min. 4 karakter.</p>
+        </div>
+        <div class="field">
+          <label class="field-label" for="inputRegEmail">Email</label>
+          <div class="input-wrap">
+            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            <input class="field-input no-right-pad" type="email" id="inputRegEmail" placeholder="contoh@email.com" autocomplete="email" />
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label" for="inputRegPass">Kata Sandi</label>
+          <div class="input-wrap">
+            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <input class="field-input" type="password" id="inputRegPass" placeholder="Min. 8 karakter" autocomplete="new-password" />
+            <button type="button" class="toggle-pass" id="toggleRegPass" aria-label="Tampilkan kata sandi" tabindex="-1">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/><line id="regEyeSlash" x1="2" y1="2" x2="22" y2="22"/></svg>
+            </button>
+          </div>
+          <div class="strength-bar"><div class="strength-fill" id="strengthFill"></div></div>
+          <p class="strength-text" id="strengthText"></p>
+        </div>
+        <div class="field">
+          <label class="field-label" for="inputConfirmPass2">Konfirmasi Kata Sandi</label>
+          <div class="input-wrap">
+            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <input class="field-input" type="password" id="inputConfirmPass2" placeholder="Ulangi kata sandi" autocomplete="new-password" />
+            <button type="button" class="toggle-pass" id="toggleConfirmPass2" aria-label="Tampilkan konfirmasi" tabindex="-1">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/><line id="confirmEyeSlash" x1="2" y1="2" x2="22" y2="22"/></svg>
+            </button>
+          </div>
+          <p class="field-hint" id="confirmPassHint" style="display:none;color:var(--red)">Kata sandi tidak cocok.</p>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-prev" id="btnBack1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true" width="12" height="12"><path d="M19 12H5M12 5l-7 7 7 7"/></svg> Kembali</button>
+        <button class="btn-next" id="btnStep2" style="flex:1;margin-bottom:0">Lanjut <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true" width="15" height="15"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+      </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="step-panel" id="step3">
+      <p class="section-title">Konfirmasi Data</p>
+      <div class="summary-card">
+        <p class="summary-card-title">Ringkasan Pendaftaran</p>
+        <div class="summary-row"><span class="summary-key">Nama</span><span class="summary-val" id="summNama">-</span></div>
+        <div class="summary-row"><span class="summary-key">Username</span><span class="summary-val summary-val--orange" id="summUsername">-</span></div>
+        <div class="summary-row"><span class="summary-key">Email</span><span class="summary-val" id="summEmail">-</span></div>
+        <div class="summary-row"><span class="summary-key">No. HP</span><span class="summary-val" id="summNoHp">-</span></div>
+        <div class="summary-row"><span class="summary-key">Kota</span><span class="summary-val" id="summKota">-</span></div>
+      </div>
+      <label class="tos-wrap">
+        <input type="checkbox" id="chkTos" />
+        <span class="tos-text">Saya setuju dengan <a href="#">Syarat &amp; Ketentuan</a> dan <a href="#">Kebijakan Privasi</a> AnabulKu</span>
+      </label>
+      <div class="btn-row">
+        <button class="btn-prev" id="btnBack2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true" width="12" height="12"><path d="M19 12H5M12 5l-7 7 7 7"/></svg> Kembali</button>
+        <button class="btn-next" id="btnRegister" style="flex:1;margin-bottom:0"><span id="regBtnText">Buat Akun</span> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg></button>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="success-screen" id="successScreen">
+    <div class="success-icon">&#x1F389;</div>
+    <h2 class="success-title">Akun Berhasil Dibuat!</h2>
+    <p class="success-sub">Selamat bergabung di AnabulKu. Sekarang kamu bisa mencari klinik dan booking layanan untuk hewan kesayanganmu.</p>
+    <button class="btn-goto-login" id="btnGoLogin">Masuk Sekarang <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true" width="15" height="15"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+  </div>
+
+</div>
+
+<!-- Modal Verifikasi WhatsApp -->
+<div class="modal-overlay" id="modalWaOverlay" role="dialog" aria-modal="true" aria-labelledby="modalWaTitle">
+  <div class="modal-sheet">
+    <div class="modal-divider"></div>
+    <div class="modal-wa-icon">&#x1F4AC;</div>
+    <h2 class="modal-title" id="modalWaTitle">Akun Sedang Diverifikasi</h2>
+    <p class="modal-desc">Akun kamu akan diverifikasi melalui <strong>WhatsApp</strong> oleh Tim AnabulKu dalam kurang lebih</p>
+    <span class="modal-time-badge">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      1 Menit
+    </span>
+    <a href="home.html" class="btn-modal-home">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true" width="16" height="16"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Kembali ke Beranda
+    </a>
+  </div>
+</div>
+
+</div><script>
+(function(){
+var LS={get:function(k,d){try{return JSON.parse(localStorage.getItem(k))??d;}catch(e){return d;}},set:function(k,v){localStorage.setItem(k,JSON.stringify(v));}};
+var TOTAL=3;
+function goStep(n){for(var i=1;i<=TOTAL;i++)document.getElementById("step"+i).classList.toggle("is-active",i===n);for(var i=1;i<=TOTAL;i++){var c=document.getElementById("circle"+i);var l=document.getElementById("label"+i);c.classList.remove("active","done");l.classList.remove("active","done");if(i<n){c.classList.add("done");l.classList.add("done");c.textContent="?";}else if(i===n){c.classList.add("active");l.classList.add("active");c.textContent=String(i);}else{c.textContent=String(i);}}for(var i=1;i<TOTAL;i++)document.getElementById("line"+i).classList.toggle("done",i<n);}
+function markErr(id){var el=document.getElementById(id);if(!el)return;el.classList.add("is-error");el.addEventListener("input",function(){el.classList.remove("is-error");},{once:true});}
+document.getElementById("inputRegPass").addEventListener("input",function(){var val=this.value,fill=document.getElementById("strengthFill"),text=document.getElementById("strengthText");var score=0;if(val.length>=8)score++;if(/[A-Z]/.test(val))score++;if(/[0-9]/.test(val))score++;if(/[^A-Za-z0-9]/.test(val))score++;var lvl=[{w:"0%",bg:"transparent",t:""},{w:"25%",bg:"#ef4444",t:"Sangat lemah"},{w:"50%",bg:"#f59e0b",t:"Cukup"},{w:"75%",bg:"#3b82f6",t:"Kuat"},{w:"100%",bg:"#22c55e",t:"Sangat kuat"}][score]||{w:"0%",bg:"transparent",t:""};fill.style.width=lvl.w;fill.style.background=lvl.bg;text.textContent=lvl.t;text.style.color=lvl.bg;});
+var rP=document.getElementById("inputRegPass");var rE=document.getElementById("regEyeSlash");
+document.getElementById("toggleRegPass").addEventListener("mousedown",function(e){e.preventDefault();});
+document.getElementById("toggleRegPass").addEventListener("click",function(){var h=rP.type==="password";rP.type=h?"text":"password";rE.style.display=h?"none":"";});
+var cP=document.getElementById("inputConfirmPass2");var cE=document.getElementById("confirmEyeSlash");
+document.getElementById("toggleConfirmPass2").addEventListener("mousedown",function(e){e.preventDefault();});
+document.getElementById("toggleConfirmPass2").addEventListener("click",function(){var h=cP.type==="password";cP.type=h?"text":"password";cE.style.display=h?"none":"";});
+cP.addEventListener("input",function(){var hint=document.getElementById("confirmPassHint");hint.style.display=(cP.value&&cP.value!==rP.value)?"":"none";});
+document.getElementById("btnStep1").addEventListener("click",function(){var nama=document.getElementById("inputNama").value.trim();var hp=document.getElementById("inputNoHp").value.trim();var kota=document.getElementById("inputKota").value.trim();if(!nama){markErr("inputNama");return;}if(!hp||!/^0[0-9]{8,13}$/.test(hp)){markErr("inputNoHp");return;}if(!kota){markErr("inputKota");return;}goStep(2);});
+document.getElementById("btnBack1").addEventListener("click",function(){goStep(1);});
+document.getElementById("btnStep2").addEventListener("click",function(){var username=document.getElementById("inputUsername").value.trim();var email=document.getElementById("inputRegEmail").value.trim();var pass=rP.value;var confirm=cP.value;if(!username||username.length<4){markErr("inputUsername");return;}if(!email||!/^[^s@]+@[^s@]+.[^s@]+$/.test(email)){markErr("inputRegEmail");return;}if(!pass||pass.length<8){markErr("inputRegPass");return;}if(!confirm||confirm!==pass){markErr("inputConfirmPass2");document.getElementById("confirmPassHint").style.display="";return;}document.getElementById("confirmPassHint").style.display="none";var users=LS.get("anabulku_users",[]);if(users.find(function(u){return u.username===username;})){markErr("inputUsername");return;}if(users.find(function(u){return u.email===email;})){markErr("inputRegEmail");return;}document.getElementById("summNama").textContent=document.getElementById("inputNama").value.trim();document.getElementById("summUsername").textContent=username;document.getElementById("summEmail").textContent=email;document.getElementById("summNoHp").textContent=document.getElementById("inputNoHp").value.trim();document.getElementById("summKota").textContent=document.getElementById("inputKota").value.trim()||"-";goStep(3);});
+document.getElementById("btnBack2").addEventListener("click",function(){goStep(2);});
+document.getElementById("btnRegister").addEventListener("click",function(){var tos=document.getElementById("chkTos").checked;var btn=document.getElementById("btnRegister");var btnTxt=document.getElementById("regBtnText");if(!tos){document.getElementById("chkTos").focus();return;}btnTxt.textContent="Memproses...";btn.disabled=true;setTimeout(function(){var newUser={nama:document.getElementById("inputNama").value.trim(),noHp:document.getElementById("inputNoHp").value.trim(),kota:document.getElementById("inputKota").value.trim(),username:document.getElementById("inputUsername").value.trim(),email:document.getElementById("inputRegEmail").value.trim(),password:rP.value,role:"user",accountStatus:"pending",createdAt:new Date().toISOString()};var users=LS.get("anabulku_users",[]);users.push(newUser);LS.set("anabulku_users",users);localStorage.setItem("anabulku_notifications",JSON.stringify([]));document.getElementById("modalWaOverlay").classList.add("is-open");},600);});
+})();
+</script>
+</body>
+</html>

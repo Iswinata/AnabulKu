@@ -1,0 +1,114 @@
+/* ===================================================================
+   AnabulKu — Glass Theme Overlay (modern glassmorphism)
+   Loaded LAST on every page so it refreshes the look without
+   touching page markup / logic. Safe, additive overrides only.
+   =================================================================== */
+
+:root {
+  --glass-bg: rgba(255, 255, 255, 0.14);
+  --glass-bg-strong: rgba(255, 255, 255, 0.22);
+  --glass-border: rgba(255, 255, 255, 0.35);
+  --glass-shadow: 0 8px 32px rgba(31, 38, 135, 0.18);
+  --glass-radius: 18px;
+  --glass-blur: 16px;
+  --glass-accent: #7c5cff;
+  --glass-accent-2: #23d5ab;
+  --glass-ink: #1b1c2e;
+}
+
+/* Animated aurora gradient backdrop for every page */
+body {
+  min-height: 100vh;
+  background:
+    radial-gradient(1200px 800px at 8% -10%, rgba(124, 92, 255, 0.35), transparent 60%),
+    radial-gradient(1000px 700px at 110% 10%, rgba(35, 213, 171, 0.30), transparent 55%),
+    linear-gradient(135deg, #e9ecff 0%, #f4f0ff 45%, #eafff8 100%) !important;
+  background-attachment: fixed !important;
+  color: var(--glass-ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: -20%;
+  z-index: -1;
+  background:
+    radial-gradient(40% 40% at 20% 30%, rgba(124, 92, 255, 0.25), transparent 70%),
+    radial-gradient(35% 35% at 80% 70%, rgba(35, 213, 171, 0.22), transparent 70%);
+  filter: blur(30px);
+  animation: glassFloat 18s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+@keyframes glassFloat {
+  0%   { transform: translate3d(0, 0, 0) scale(1); }
+  50%  { transform: translate3d(3%, -2%, 0) scale(1.06); }
+  100% { transform: translate3d(-3%, 3%, 0) scale(1.02); }
+}
+
+/* Generic glass surface applied to common containers/cards.
+   Broad but low-risk: only visual props. */
+.card, .clinic-card, .g-card, .banner, .panel, .box,
+.modal, .sheet, .app-bar, .navbar, .bottom-nav, .topbar,
+.section, .list-item, .profile-card, .history-card,
+.form-card, .auth-card, .glass {
+  background: var(--glass-bg) !important;
+  backdrop-filter: blur(var(--glass-blur)) saturate(140%);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(140%);
+  border: 1px solid var(--glass-border) !important;
+  border-radius: var(--glass-radius) !important;
+  box-shadow: var(--glass-shadow) !important;
+}
+
+/* Buttons */
+button, .btn, .button, input[type="submit"], input[type="button"], a.btn {
+  border-radius: 14px !important;
+  border: 1px solid var(--glass-border) !important;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: transform 0.15s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+button:hover, .btn:hover, .button:hover, a.btn:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.03);
+  box-shadow: 0 10px 26px rgba(31, 38, 135, 0.22);
+}
+
+.btn-primary, .primary, button.primary,
+input[type="submit"] {
+  background: linear-gradient(135deg, var(--glass-accent), var(--glass-accent-2)) !important;
+  color: #fff !important;
+  border: none !important;
+}
+
+/* Inputs & selects */
+input, select, textarea {
+  background: var(--glass-bg-strong) !important;
+  border: 1px solid var(--glass-border) !important;
+  border-radius: 12px !important;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: none !important;
+  border-color: var(--glass-accent) !important;
+  box-shadow: 0 0 0 3px rgba(124, 92, 255, 0.25) !important;
+}
+
+/* Fixed nav bars get a stronger frosted look */
+.bottom-nav, .navbar, .app-bar, .topbar, header, footer, nav {
+  background: var(--glass-bg-strong) !important;
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  border: 1px solid var(--glass-border);
+}
+
+/* Reduce motion respect */
+@media (prefers-reduced-motion: reduce) {
+  body::before { animation: none; }
+  button, .btn, .button, a.btn { transition: none; }
+}
