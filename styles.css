@@ -72,13 +72,22 @@ img { display:block; max-width:100%; }
   width:100%; max-width:393px;
   min-height:100vh; min-height:100dvh;
   background: rgba(255,255,255,0.05);
-  backdrop-filter: var(--blur);
-  -webkit-backdrop-filter: var(--blur);
   padding: 20px 18px 0;
   overflow-x: hidden;
   border-left:  1px solid var(--gbd);
   border-right: 1px solid var(--gbd);
   box-shadow: var(--sh-soft);
+}
+
+/* backdrop blur terpisah agar tidak menjebak position:fixed */
+.app::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+  pointer-events: none;
+  z-index: -1;
 }
 
 /* ===== Top bar ===== */
@@ -439,7 +448,7 @@ img { display:block; max-width:100%; }
 
 .bottomnav {
   position: fixed;
-  bottom: 16px;
+  bottom: max(20px, env(safe-area-inset-bottom) + 16px);
   left: 50%;
   transform: translateX(-50%);
   width: calc(100% - 40px);

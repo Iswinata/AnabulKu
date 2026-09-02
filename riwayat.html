@@ -519,39 +519,37 @@
     </div>
   </div>
 
-  </div>
+  <nav class="bottomnav" aria-label="Navigasi utama">
+    <button class="nav-btn" type="button" aria-label="Beranda" onclick="location.href='home.html'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M12 3 2.4 11.1a1 1 0 0 0 .65 1.76H4.5V20a1 1 0 0 0 1 1H9.5v-5.5h5V21H18.5a1 1 0 0 0 1-1v-7.14h1.45a1 1 0 0 0 .65-1.76L12 3z"/>
+      </svg>
+      <span class="nav-label">Beranda</span>
+    </button>
+    <button class="nav-btn is-active" type="button" aria-label="Riwayat" aria-current="page" style="position:relative">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M12 8v4l3 3"/>
+        <circle cx="12" cy="12" r="9"/>
+      </svg>
+      <span id="pendingBadge" hidden style="position:absolute;top:4px;right:10px;min-width:16px;height:16px;padding:0 4px;border-radius:99px;background:#EF4444;color:#fff;font-size:9px;font-weight:700;display:none;align-items:center;justify-content:center;line-height:1;">0</span>
+      <span class="nav-label">Riwayat</span>
+    </button>
+    <button class="nav-btn" type="button" aria-label="Favorit" onclick="location.href='favorit.html'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/>
+      </svg>
+      <span class="nav-label">Favorit</span>
+    </button>
+    <button class="nav-btn" type="button" aria-label="Profil" onclick="location.href='profil.html'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="12" cy="8" r="4"/>
+        <path d="M5 20a7 7 0 0 1 14 0"/>
+      </svg>
+      <span class="nav-label">Profil</span>
+    </button>
+  </nav>
 
 </div>
-
-<nav class="bottomnav" aria-label="Navigasi utama">
-  <button class="nav-btn" type="button" aria-label="Beranda" onclick="location.href='home.html'">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-      <path d="M12 3 2.4 11.1a1 1 0 0 0 .65 1.76H4.5V20a1 1 0 0 0 1 1H9.5v-5.5h5V21H18.5a1 1 0 0 0 1-1v-7.14h1.45a1 1 0 0 0 .65-1.76L12 3z"/>
-    </svg>
-    <span class="nav-label">Beranda</span>
-  </button>
-  <button class="nav-btn is-active" type="button" aria-label="Riwayat" aria-current="page" style="position:relative">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-      <path d="M12 8v4l3 3"/>
-      <circle cx="12" cy="12" r="9"/>
-    </svg>
-    <span id="pendingBadge" hidden style="position:absolute;top:4px;right:10px;min-width:16px;height:16px;padding:0 4px;border-radius:99px;background:#EF4444;color:#fff;font-size:9px;font-weight:700;display:none;align-items:center;justify-content:center;line-height:1;">0</span>
-    <span class="nav-label">Riwayat</span>
-  </button>
-  <button class="nav-btn" type="button" aria-label="Favorit" onclick="location.href='favorit.html'">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-      <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/>
-    </svg>
-    <span class="nav-label">Favorit</span>
-  </button>
-  <button class="nav-btn" type="button" aria-label="Profil" onclick="location.href='profil.html'">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-      <circle cx="12" cy="8" r="4"/>
-      <path d="M5 20a7 7 0 0 1 14 0"/>
-    </svg>
-    <span class="nav-label">Profil</span>
-  </button>
-</nav>
 <script>
 (function () {
   "use strict";
