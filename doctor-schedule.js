@@ -275,6 +275,7 @@
     var hewanOptions='<option value="">Pilih jenis hewan</option>'+hewanList.map(function(h){return'<option value="'+esc(h)+'">'+esc(h)+'</option>';}).join("");
 
     var backdrop=document.createElement("div");backdrop.className="ds-modal-backdrop";modalEl=backdrop;
+    var nav=document.querySelector(".bottomnav");if(nav)nav.style.display="none";
     backdrop.innerHTML='<div class="ds-modal" role="dialog" aria-modal="true" aria-labelledby="dsModalTitle">'
       +'<div class="ds-modal-header"><span class="ds-modal-title" id="dsModalTitle">Konfirmasi Booking</span>'
       +'<button class="ds-modal-close" type="button" aria-label="Tutup">&times;</button></div>'
@@ -295,8 +296,8 @@
         +'<button class="ds-modal-confirm" type="button" id="dsConfirmBtn">Konfirmasi Booking</button>'
       +'</div></div>';
     document.body.appendChild(backdrop);
-    backdrop.querySelector(".ds-modal-close").onclick=function(){backdrop.remove();modalEl=null;};
-    backdrop.addEventListener("click",function(e){if(e.target===backdrop){backdrop.remove();modalEl=null;}});
+    backdrop.querySelector(".ds-modal-close").onclick=function(){backdrop.remove();modalEl=null;var nav=document.querySelector(".bottomnav");if(nav)nav.style.display="";};
+    backdrop.addEventListener("click",function(e){if(e.target===backdrop){backdrop.remove();modalEl=null;var nav=document.querySelector(".bottomnav");if(nav)nav.style.display="";}});
     document.getElementById("dsConfirmBtn").onclick=function(){
       var nama=(document.getElementById("dsNamaPemilik").value||"").trim();
       var nohp=(document.getElementById("dsNoHpPemilik").value||"").trim();
