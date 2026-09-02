@@ -332,79 +332,121 @@
     }
     .btn-explore:active { transform: scale(.97); opacity: .92; }
 
+    /* ══ Payment Overlay — simple centered card ══ */
     .pay-overlay {
       display: none; position: fixed; inset: 0; z-index: 999;
-      background: rgba(0,0,0,0.60); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
-      align-items: flex-end; justify-content: center;
+      background: rgba(0,0,0,0.72);
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      align-items: center; justify-content: center;
+      padding: 20px;
     }
-    .pay-overlay.open { display: flex; animation: pmFadeIn .22s ease forwards; }
-    @keyframes pmFadeIn { from{opacity:0} to{opacity:1} }
-    .pay-sheet {
-      width: 100%; max-width: 393px;
-      background: rgba(18,16,46,0.96);
+    .pay-overlay.open { display: flex; animation: pmFadeIn .2s ease forwards; }
+    @keyframes pmFadeIn { from{opacity:0;transform:scale(.96)} to{opacity:1;transform:scale(1)} }
+
+    .pay-card {
+      width: 100%; max-width: 340px;
+      background: rgba(20,18,50,0.97);
       backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-      border-radius: 24px 24px 0 0;
-      border-top: 1px solid rgba(255,255,255,0.18);
-      border-left: 1px solid rgba(255,255,255,0.12);
-      border-right: 1px solid rgba(255,255,255,0.12);
-      box-shadow: 0 -4px 40px rgba(0,0,0,.40);
-      animation: pmSlideUp .32s cubic-bezier(.22,.72,0,1) forwards;
-      max-height: 92dvh; display: flex; flex-direction: column; overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 22px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.60);
+      overflow: hidden;
     }
-    @keyframes pmSlideUp { from{transform:translateY(110%)} to{transform:translateY(0)} }
-    .pay-handle { width: 44px; height: 5px; background: #E5E7EB; border-radius: 99px; margin: 12px auto 0; flex-shrink: 0; }
-    .pay-head {
-      padding: 14px 18px; display: flex; align-items: center; justify-content: space-between;
-      border-bottom: 1px solid rgba(255,255,255,0.10); flex-shrink: 0;
-      background: rgba(255,255,255,0.05);
-      border-radius: 24px 24px 0 0;
+
+    /* top bar */
+    .pay-card-top {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 16px 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
     }
-    .pay-head-left { display: flex; flex-direction: column; gap: 4px; }
-    .pay-head-title { font-size: 15px; font-weight: 800; color: #f1f5f9; }
-    .pay-head-sub {
-      font-size: 11px; font-weight: 600; color: #ffb74d;
-      background: rgba(255,152,0,0.12); border: 1px solid rgba(255,152,0,0.30);
-      border-radius: 99px; padding: 2px 10px; display: inline-block; width: fit-content;
-    }
-    .pay-head-close {
-      width: 34px; height: 34px; border-radius: 10px;
-      border: 1px solid rgba(255,255,255,0.18);
-      background: rgba(255,255,255,0.10); display: grid; place-items: center; color: #f1f5f9;
+    .pay-card-title { font-size: 14px; font-weight: 700; color: #fff; }
+    .pay-card-close {
+      width: 28px; height: 28px; border-radius: 8px;
+      background: rgba(255,255,255,0.09); border: 1px solid rgba(255,255,255,0.14);
+      display: grid; place-items: center; color: rgba(255,255,255,0.7);
       transition: background .15s;
     }
-    .pay-head-close:active { background: rgba(255,255,255,0.22); }
-    .pay-head-close svg { width: 14px; height: 14px; }
-    .pay-body { padding: 16px 18px 20px; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; flex: 1; -webkit-overflow-scrolling: touch; }
-    .pay-body::-webkit-scrollbar { width: 0; }
-    .pm-card { border: 1px solid rgba(255,255,255,0.16); border-radius: 18px; box-shadow: 0 4px 16px rgba(0,0,0,0.20); background: rgba(255,255,255,0.08); overflow: hidden; }
-    .pm-card-head { padding: 12px 14px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.05); }
-    .pm-card-ico { width: 40px; height: 40px; border-radius: 10px; border: 1px solid rgba(255,152,0,0.35); display: grid; place-items: center; flex-shrink: 0; font-size: 20px; background: rgba(255,152,0,0.15); }
-    .pm-card-ico.bank { background: rgba(14,165,233,0.15); border-color: rgba(14,165,233,0.35); }
-    .pm-card-ico.cash { background: rgba(16,185,129,0.15); border-color: rgba(16,185,129,0.35); }
-    .pm-card-meta { flex: 1; min-width: 0; }
-    .pm-card-name { font-size: 13px; font-weight: 800; color: #fff; }
-    .pm-card-desc { font-size: 11px; color: rgba(255,255,255,0.45); margin-top: 1px; }
-    .pm-badge { font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 99px; border: 2px solid; white-space: nowrap; flex-shrink: 0; }
-    .pm-badge.menunggu { background: #FEF3C7; color: #92400E; border-color: #F59E0B; }
-    .pm-badge.belum    { background: #FEE2E2; color: #991B1B; border-color: #EF4444; }
-    .pm-badge.lunas    { background: #D1FAE5; color: #065F46; border-color: #10B981; }
+    .pay-card-close:active { background: rgba(255,255,255,0.20); }
+    .pay-card-close svg { width: 13px; height: 13px; }
 
-    /* ── Metode pill di header modal ── */
-    .pm-metode-banner {
-      display: flex; align-items: center; gap: 12px;
-      background: linear-gradient(135deg,#FFF7ED,#FFFBEB);
-      border: 2px solid #F97316; border-radius: 14px;
-      padding: 12px 14px; box-shadow: 2px 2px 0 #111827;
+    /* body */
+    .pay-card-body {
+      padding: 18px 18px 20px;
+      display: flex; flex-direction: column; align-items: center; gap: 14px;
     }
-    .pm-metode-ico-wrap {
-      width: 44px; height: 44px; border-radius: 12px;
-      background: #fff; border: 2px solid #111827; box-shadow: 2px 2px 0 #111827;
-      display: grid; place-items: center; font-size: 22px; flex-shrink: 0;
+
+    /* QRIS */
+    .pc-qris-frame {
+      width: 200px; height: 200px;
+      background: #fff; border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.35), 0 0 40px rgba(255,152,0,0.18);
+      display: grid; place-items: center; overflow: hidden; flex-shrink: 0;
     }
-    .pm-metode-ico { font-size: 22px; flex-shrink: 0; }
-    .pm-metode-info { flex: 1; min-width: 0; }
-    .pm-metode-label { font-size: 10px; font-weight: 700; color: #F97316; text-transform: uppercase; letter-spacing: .6px; }
-    .pm-metode-name  { font-size: 14px; font-weight: 800; color: #111827; margin-top: 2px; line-height: 1.2; }
+    .pc-qris-frame img { width: 180px; height: 180px; object-fit: contain; display: block; }
+    .pc-qris-label { font-size: 11px; color: rgba(255,255,255,0.45); text-align: center; line-height: 1.6; }
+    .pc-qris-amount {
+      font-size: 20px; font-weight: 800; color: #fff;
+      background: rgba(255,152,0,0.18); border: 1px solid rgba(255,152,0,0.40);
+      border-radius: 10px; padding: 6px 18px;
+    }
+    .pc-apps { display: flex; gap: 5px; flex-wrap: wrap; justify-content: center; }
+    .pc-app  {
+      font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.65);
+      background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 99px; padding: 3px 8px;
+    }
+
+    /* Badge status */
+    .pc-badge {
+      font-size: 10px; font-weight: 700; padding: 3px 10px;
+      border-radius: 99px; border: 1px solid; align-self: center;
+    }
+    .pc-badge.menunggu { background: rgba(251,191,36,0.15); color: #fcd34d; border-color: rgba(251,191,36,0.40); }
+    .pc-badge.lunas    { background: rgba(34,197,94,0.15);  color: #4ade80; border-color: rgba(34,197,94,0.40); }
+    .pc-badge.belum    { background: rgba(239,68,68,0.15);  color: #fca5a5; border-color: rgba(239,68,68,0.40); }
+
+    /* cash / non-QRIS */
+    .pc-info-row {
+      width: 100%; display: flex; align-items: flex-start; gap: 10px;
+      font-size: 12px; color: rgba(255,255,255,0.70); line-height: 1.5;
+      padding: 10px 12px;
+      background: rgba(255,255,255,0.06); border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.10);
+    }
+    .pc-info-ico { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+
+    /* summary rows */
+    .pc-summary { width: 100%; display: flex; flex-direction: column; gap: 7px; }
+    .pc-sum-row {
+      display: flex; justify-content: space-between; align-items: baseline;
+      font-size: 11.5px; gap: 8px;
+    }
+    .pc-sum-row span:first-child { color: rgba(255,255,255,0.45); }
+    .pc-sum-row span:last-child  { font-weight: 600; color: #fff; text-align: right; }
+    .pc-sum-row.total { padding-top: 8px; border-top: 1px dashed rgba(255,255,255,0.12); margin-top: 2px; }
+    .pc-sum-row.total span:last-child { color: #ffbd5d; font-size: 14px; font-weight: 800; }
+
+    /* divider */
+    .pc-divider { width: 100%; height: 1px; background: rgba(255,255,255,0.08); }
+
+    /* close btn */
+    .pc-close-btn {
+      width: 100%; padding: 11px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.80);
+      font-size: 13px; font-weight: 600;
+      border: 1px solid rgba(255,255,255,0.14);
+      transition: background .15s, transform .1s;
+    }
+    .pc-close-btn:active { transform: scale(.97); background: rgba(255,255,255,0.15); }
+
+    /* no-metode state */
+    .pc-no-metode { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; padding: 8px 0 4px; }
+    .pc-no-metode-ico { font-size: 40px; }
+    .pc-no-metode-title { font-size: 14px; font-weight: 800; color: #fff; }
+    .pc-no-metode-sub { font-size: 11.5px; color: rgba(255,255,255,0.45); line-height: 1.6; }
+    .pm-no-metode-btn { width: 100%; padding: 12px; border-radius: 10px; background: linear-gradient(135deg,#ff9800,#ffbd5d); color: #fff; font-size: 13px; font-weight: 700; border: none; box-shadow: 0 4px 14px rgba(255,152,0,0.30); cursor: pointer; font-family: inherit; transition: transform .1s, opacity .1s; }
+    .pm-no-metode-btn:active { transform: scale(.97); opacity: .9; }
     /* ── QRIS Hero ── */
     .pm-qris-hero {
       display: flex; flex-direction: column; align-items: center;
@@ -471,40 +513,10 @@
       border-radius: 99px; padding: 3px 9px; white-space: nowrap;
     }
     .pm-qris-label { font-size: 10.5px; color: rgba(255,255,255,0.40); text-align: center; line-height: 1.6; }
-    .pm-va-box { padding: 14px; display: flex; flex-direction: column; gap: 10px; background: rgba(255,255,255,0.04); }
-    .pm-va-bank-row { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-radius: 10px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.14); }
-    .pm-va-bank-ico { font-size: 20px; flex-shrink: 0; }
-    .pm-va-bank-name { font-size: 13px; font-weight: 700; color: #fff; }
-    .pm-va-num-box { background: rgba(0,0,0,0.30); border-radius: 12px; padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; gap: 8px; border: 1px solid rgba(255,255,255,0.18); }
-    .pm-va-num { font-family: monospace; font-size: 18px; font-weight: 700; color: #fff; letter-spacing: 3px; }
-    .pm-va-copy { padding: 6px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.30); background: rgba(255,255,255,0.10); color: #fff; font-size: 11px; font-weight: 700; transition: background .15s; }
-    .pm-va-copy:active { background: rgba(255,255,255,.25); }
-    .pm-va-note { font-size: 11px; color: rgba(255,255,255,0.40); line-height: 1.6; padding: 0 2px; }
-    .pm-cash-box { padding: 14px; display: flex; flex-direction: column; gap: 8px; background: rgba(255,255,255,0.04); }
-    .pm-cash-row { display: flex; align-items: center; gap: 10px; font-size: 12px; color: rgba(255,255,255,0.75); line-height: 1.4; padding: 9px 12px; background: rgba(255,255,255,0.07); border-radius: 8px; border: 1px solid rgba(255,255,255,0.12); }
-    .pm-cash-icon { font-size: 16px; flex-shrink: 0; }
-    .pm-summary { border: 1px solid rgba(255,255,255,0.15); border-radius: 14px; overflow: hidden; }
-    .pm-summary-title { padding: 10px 14px; background: rgba(255,255,255,0.06); font-size: 10px; font-weight: 800; color: rgba(255,255,255,0.50); text-transform: uppercase; letter-spacing: .6px; border-bottom: 1px solid rgba(255,255,255,0.10); display: flex; align-items: center; gap: 6px; }
-    .pm-summary-title::before { content: "📋"; font-size: 13px; }
-    .pm-summary-rows { padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; }
-    .pm-summary-row { display: flex; justify-content: space-between; align-items: flex-start; font-size: 12px; gap: 8px; }
-    .pm-summary-row span:first-child { color: rgba(255,255,255,0.45); flex-shrink: 0; }
-    .pm-summary-row span:last-child  { font-weight: 700; color: #fff; text-align: right; }
-    .pm-summary-row.total { padding-top: 10px; border-top: 1px dashed rgba(255,255,255,0.15); margin-top: 2px; }
-    .pm-summary-row.total span:first-child { color: rgba(255,255,255,0.75); font-weight: 700; font-size: 13px; }
-    .pm-summary-row.total span:last-child { color: #ffbd5d; font-size: 15px; font-weight: 800; }
-    .pay-footer { padding: 14px 18px env(safe-area-inset-bottom, 20px); flex-shrink: 0; border-top: 1px solid rgba(255,255,255,0.10); }
-    .pay-close-btn {
-      width: 100%; padding: 13px; border-radius: 12px;
-      background: rgba(255,255,255,0.10); color: #fff; font-size: 13px; font-weight: 700;
-      border: 1px solid rgba(255,255,255,0.20);
-      transition: background .15s, transform .1s;
-    }
-    .pay-close-btn:active { transform: scale(.97); background: rgba(255,255,255,0.18); }
-    .pm-no-metode { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 28px 16px 16px; gap: 8px; }
-    .pm-no-metode-ico { width: 72px; height: 72px; border-radius: 20px; background: rgba(255,152,0,0.18); border: 1px solid rgba(255,152,0,0.35); box-shadow: 0 4px 16px rgba(255,152,0,0.25); display: grid; place-items: center; font-size: 32px; margin-bottom: 4px; }
-    .pm-no-metode-title { font-size: 15px; font-weight: 800; color: #fff; }
-    .pm-no-metode-sub { font-size: 12px; color: rgba(255,255,255,0.50); line-height: 1.6; margin-bottom: 8px; }
+    .pm-no-metode { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 8px 0 4px; gap: 8px; }
+    .pm-no-metode-ico { font-size: 40px; }
+    .pm-no-metode-title { font-size: 14px; font-weight: 800; color: #fff; }
+    .pm-no-metode-sub { font-size: 11.5px; color: rgba(255,255,255,0.45); line-height: 1.6; }
     .pm-no-metode-btn { width: 100%; padding: 13px; border-radius: 12px; background: linear-gradient(135deg,#ff9800,#ffbd5d); color: #fff; font-size: 13px; font-weight: 700; border: none; box-shadow: 0 4px 16px rgba(255,152,0,0.35); cursor: pointer; font-family: inherit; transition: transform .1s, opacity .1s; }
     .pm-no-metode-btn:active { transform: scale(.97); opacity: .9; }
     .btn-clear {
@@ -562,21 +574,14 @@
   <!-- ═════ Bottom nav ═════ -->
   <!-- Modal Pembayaran -->
   <div class="pay-overlay" id="payOverlay" role="dialog" aria-modal="true" aria-labelledby="payTitle">
-    <div class="pay-sheet">
-      <div class="pay-handle"></div>
-      <div class="pay-head">
-        <div class="pay-head-left">
-          <span class="pay-head-title" id="payTitle">Detail Pembayaran</span>
-          <span class="pay-head-sub" id="payHeadSub"></span>
-        </div>
-        <button class="pay-head-close" id="payClose" type="button" aria-label="Tutup">
+    <div class="pay-card" id="payCard">
+      <div class="pay-card-top">
+        <span class="pay-card-title" id="payTitle">Detail Pembayaran</span>
+        <button class="pay-card-close" id="payClose" type="button" aria-label="Tutup">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
       </div>
-      <div class="pay-body" id="payBody"></div>
-      <div class="pay-footer">
-        <button class="pay-close-btn" id="payCloseBtn" type="button">Tutup</button>
-      </div>
+      <div class="pay-card-body" id="payBody"></div>
     </div>
   </div>
 
@@ -1142,14 +1147,13 @@
     /* Fallback 4: kalau masih tidak ketemu, tampilkan modal "tidak ditemukan" */
     if(!b){
       document.getElementById('payTitle').textContent='Info Pembayaran';
-      var elSub0=document.getElementById('payHeadSub');
-      if(elSub0) elSub0.textContent='';
       document.getElementById('payBody').innerHTML=
         '<div class="pm-no-metode">'+
           '<div class="pm-no-metode-ico">🔍</div>'+
           '<div class="pm-no-metode-title">Data booking tidak ditemukan</div>'+
           '<div class="pm-no-metode-sub">Data pembayaran untuk booking ini belum tersedia.<br>Coba lakukan booking ulang jika diperlukan.</div>'+
-        '</div>';
+        '</div>'+
+        '<button class="pc-close-btn" type="button" onclick="closePayModal()">Tutup</button>';
       document.getElementById('payOverlay').classList.add('open');
       return;
     }
@@ -1157,8 +1161,6 @@
     /* Kalau belum ada metode pembayaran - tampilkan modal info
        agar user tahu harus memilih metode dulu */
     if(!b.metodePembayaran && !b.metode){
-      var elSub=document.getElementById('payHeadSub');
-      if(elSub) elSub.textContent='Pilih Metode';
       var _b=b;
       document.getElementById('payBody').innerHTML=
         '<div class="pm-no-metode">'+
@@ -1166,7 +1168,8 @@
           '<div class="pm-no-metode-title">Metode pembayaran belum dipilih</div>'+
           '<div class="pm-no-metode-sub">Silakan pilih metode pembayaran<br>untuk melanjutkan booking ini.</div>'+
           '<button type="button" id="btnGoPayment" class="pm-no-metode-btn">Pilih Metode Pembayaran &#x2192;</button>'+
-        '</div>';
+        '</div>'+
+        '<button class="pc-close-btn" type="button" onclick="closePayModal()">Tutup</button>';
       document.getElementById('payOverlay').classList.add('open');
       setTimeout(function(){
         var gbtn=document.getElementById('btnGoPayment');
@@ -1221,189 +1224,77 @@
     } else {
       metodeIco='🏦'; metodeNama='Transfer Bank';
     }
-    var metodeBannerHtml=
-      '<div class="pm-metode-banner">'+
-        '<div class="pm-metode-ico-wrap">'+metodeIco+'</div>'+
-        '<div class="pm-metode-info">'+
-          '<div class="pm-metode-label">Metode Pembayaran</div>'+
-          '<div class="pm-metode-name">'+esc(metodeNama)+'</div>'+
-        '</div>'+
-        '<span class="pm-badge '+badgeCls+'">'+badgeTxt+'</span>'+
-      '</div>';
-
+    var metodeBannerHtml = ''; // unused, kept for compat
 
     function genVA(m,id){
-
       var d=VA[m]||VA['transfer'];
-
       var suf=id?id.replace(/[^0-9]/g,'').slice(-8).padStart(8,'0'):'00000000';
-
       return d.prefix+suf;
-
     }
 
     var sumHtml=
-
-      '<div class="pm-summary">'+
-
-        '<div class="pm-summary-title">Ringkasan Booking</div>'+
-
-        '<div class="pm-summary-rows">'+
-
-          '<div class="pm-summary-row"><span>Klinik</span><span>'+esc(b.namaKlinik||'—')+'</span></div>'+
-
-          '<div class="pm-summary-row"><span>Dokter</span><span>'+esc(b.dokter||'—')+'</span></div>'+
-
-          '<div class="pm-summary-row"><span>Jadwal</span><span>'+esc(fmtTanggal(b.tanggal))+' '+esc(b.jam||'')+'</span></div>'+
-
-          (hargaTxt?'<div class="pm-summary-row total"><span>Total</span><span>'+hargaTxt+'</span></div>':'')+
-
-        '</div>'+
-
+      '<div class="pc-divider"></div>'+
+      '<div class="pc-summary">'+
+        '<div class="pc-sum-row"><span>Klinik</span><span>'+esc(b.namaKlinik||'—')+'</span></div>'+
+        '<div class="pc-sum-row"><span>Dokter</span><span>'+esc(b.dokter||'—')+'</span></div>'+
+        '<div class="pc-sum-row"><span>Jadwal</span><span>'+esc(fmtTanggal(b.tanggal))+' '+esc(b.jam||'')+'</span></div>'+
+        (hargaTxt?'<div class="pc-sum-row total"><span>Total</span><span>'+hargaTxt+'</span></div>':'')+
       '</div>';
-
-
 
     var payHtml = '';
 
     if(metode==='qris'){
-
       payHtml=
-        '<div class="pm-card pm-qris-hero">'+
-
-          /* ── brand bar ── */
-          '<div class="pm-qris-brand-bar">'+
-            '<div class="pm-qris-brand-left">'+
-              '<div class="pm-qris-brand-ico">📱</div>'+
-              '<div>'+
-                '<div class="pm-qris-brand-name">QRIS</div>'+
-                '<div class="pm-qris-brand-sub">Scan dengan aplikasi apapun</div>'+
-              '</div>'+
-            '</div>'+
-            '<span class="pm-badge '+badgeCls+'">'+badgeTxt+'</span>'+
-          '</div>'+
-
-          /* ── QR frame + nominal ── */
-          '<div class="pm-qris-stage">'+
-            '<div class="pm-qris-frame">'+
-              '<span class="pm-qris-corner tl"></span>'+
-              '<span class="pm-qris-corner tr"></span>'+
-              '<span class="pm-qris-corner bl"></span>'+
-              '<span class="pm-qris-corner br"></span>'+
-              '<img src="qris.png" alt="QR Code Pembayaran">'+
-            '</div>'+
-            (hargaTxt ? '<div class="pm-qris-amount">'+hargaTxt+'</div>' : '')+
-            '<div class="pm-qris-apps">'+
-              '<span class="pm-qris-app-chip">GoPay</span>'+
-              '<span class="pm-qris-app-chip">OVO</span>'+
-              '<span class="pm-qris-app-chip">DANA</span>'+
-              '<span class="pm-qris-app-chip">m-Banking</span>'+
-              '<span class="pm-qris-app-chip">ShopeePay</span>'+
-            '</div>'+
-            '<div class="pm-qris-label">Buka aplikasi dompet digital atau m-Banking,<br>pilih Scan QR, lalu arahkan ke kode di atas.</div>'+
-          '</div>'+
-
-        '</div>';
+        '<div class="pc-badge '+badgeCls+'">'+badgeTxt+'</div>'+
+        '<div class="pc-qris-frame">'+
+          '<img src="qris.png" alt="QR Code Pembayaran">'+
+        '</div>'+
+        (hargaTxt?'<div class="pc-qris-amount">'+hargaTxt+'</div>':'')+
+        '<div class="pc-apps">'+
+          '<span class="pc-app">GoPay</span>'+
+          '<span class="pc-app">OVO</span>'+
+          '<span class="pc-app">DANA</span>'+
+          '<span class="pc-app">m-Banking</span>'+
+          '<span class="pc-app">ShopeePay</span>'+
+        '</div>'+
+        '<div class="pc-qris-label">Buka aplikasi dompet digital atau m-Banking,<br>pilih Scan QR, lalu arahkan ke kode di atas.</div>';
 
     } else if(metode==='cash'){
-
       payHtml=
-
-        '<div class="pm-card">'+
-
-          '<div class="pm-card-head">'+
-
-            '<div class="pm-card-ico cash">💵</div>'+
-
-            '<div class="pm-card-meta"><div class="pm-card-name">Bayar di Tempat</div>'+
-
-            '<div class="pm-card-desc">Bayar tunai saat tiba di klinik</div></div>'+
-
-            '<span class="pm-badge '+badgeCls+'">'+badgeTxt+'</span>'+
-
-          '</div>'+
-
-          '<div class="pm-cash-box">'+
-
-            '<div class="pm-cash-row"><span class="pm-cash-icon">💵</span>Siapkan uang tunai sesuai tagihan</div>'+
-
-            '<div class="pm-cash-row"><span class="pm-cash-icon">🪪</span>Tunjukkan bukti booking saat tiba</div>'+
-
-            '<div class="pm-cash-row"><span class="pm-cash-icon">🏥</span>Bayar di kasir klinik</div>'+
-
-            (hargaTxt?'<div class="pm-cash-row" style="font-weight:800;color:#EA580C;border-color:#FECACA;background:#FFF5F5;"><span class="pm-cash-icon">💰</span>Total: '+hargaTxt+'</div>':'')+
-
-          '</div>'+
-
-        '</div>';
+        '<span class="pc-badge '+badgeCls+'">'+badgeTxt+'</span>'+
+        '<div class="pc-info-row"><span class="pc-info-ico">💵</span>Siapkan uang tunai sesuai tagihan saat tiba di klinik</div>'+
+        '<div class="pc-info-row"><span class="pc-info-ico">🪪</span>Tunjukkan bukti booking saat tiba</div>'+
+        '<div class="pc-info-row"><span class="pc-info-ico">🏥</span>Bayar di kasir klinik</div>'+
+        (hargaTxt?'<div class="pc-info-row" style="color:#ffbd5d;font-weight:700;"><span class="pc-info-ico">💰</span>Total: '+hargaTxt+'</div>':'');
 
     } else {
-
       var vk=VA[metode]?metode:'transfer';
-
       var vi=VA[vk];
-
       var vn=genVA(vk,b.id);
-
       payHtml=
-
-        '<div class="pm-card">'+
-
-          '<div class="pm-card-head">'+
-
-            '<div class="pm-card-ico bank">🏦</div>'+
-
-            '<div class="pm-card-meta"><div class="pm-card-name">'+vi.name+'</div>'+
-
-            '<div class="pm-card-desc">Transfer via ATM / Mobile Banking</div></div>'+
-
-            '<span class="pm-badge '+badgeCls+'">'+badgeTxt+'</span>'+
-
+        '<span class="pc-badge '+badgeCls+'">'+badgeTxt+'</span>'+
+        '<div class="pc-info-row"><span class="pc-info-ico">'+vi.ico+'</span><strong style="color:#fff;">'+vi.name+'</strong></div>'+
+        '<div class="pc-info-row" style="flex-direction:column;gap:6px;align-items:stretch;">'+
+          '<div style="font-size:10px;color:rgba(255,255,255,0.45);margin-bottom:2px;">Nomor Virtual Account</div>'+
+          '<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">'+
+            '<span style="font-size:15px;font-weight:800;color:#fff;letter-spacing:.04em;">'+vn+'</span>'+
+            '<button class="pc-copy-btn" type="button" onclick="(function(btn){navigator.clipboard&&navigator.clipboard.writeText(\''+vn+'\');btn.textContent=\'Tersalin!\';setTimeout(function(){btn.textContent=\'Salin\';},1500);})(this)">Salin</button>'+
           '</div>'+
-
-          '<div class="pm-va-box">'+
-
-            '<div class="pm-va-bank-row">'+
-
-              '<span class="pm-va-bank-ico">'+vi.ico+'</span>'+
-
-              '<span class="pm-va-bank-name">'+vi.name+'</span>'+
-
-            '</div>'+
-
-            '<div class="pm-va-num-box">'+
-
-              '<span class="pm-va-num">'+vn+'</span>'+
-
-              '<button class="pm-va-copy" type="button" onclick="(function(btn){navigator.clipboard&&navigator.clipboard.writeText(\''+vn+'\');btn.textContent=\'Tersalin!\';setTimeout(function(){btn.textContent=\'Salin\';},1500);})(this)">Salin</button>'+
-
-            '</div>'+
-
-            (hargaTxt?'<div class="pm-va-note">Transfer tepat <strong>'+hargaTxt+'</strong> ke nomor Virtual Account di atas</div>':'')+
-
-            '<div class="pm-va-note">Pembayaran dikonfirmasi otomatis dalam 1×24 jam</div>'+
-
-          '</div>'+
-
-        '</div>';
-
+        '</div>'+
+        (hargaTxt?'<div class="pc-info-row"><span class="pc-info-ico">💳</span>Transfer tepat <strong style="color:#ffbd5d;">'+hargaTxt+'</strong></div>':'')+
+        '<div class="pc-info-row" style="font-size:11px;"><span class="pc-info-ico">⏱️</span>Dikonfirmasi otomatis dalam 1×24 jam</div>';
     }
 
-    var hs=metode==='qris'?'QRIS':metode==='cash'?'Bayar di Tempat':(VA[metode]||VA['transfer']).name;
-
-    var el=document.getElementById('payHeadSub');if(el)el.textContent=hs;
-
-    document.getElementById('payBody').innerHTML=payHtml+sumHtml;
-
+    document.getElementById('payBody').innerHTML=payHtml+sumHtml+
+      '<button class="pc-close-btn" type="button" id="payCloseBtn">Tutup</button>';
     document.getElementById('payOverlay').classList.add('open');
-
+    document.getElementById('payCloseBtn').addEventListener('click', closePayModal);
   }
 
 
 
     function closePayModal() { document.getElementById('payOverlay').classList.remove('open'); }
   document.getElementById('payClose').addEventListener('click', closePayModal);
-  document.getElementById('payCloseBtn').addEventListener('click', closePayModal);
   document.getElementById('payOverlay').addEventListener('click', function(e){ if(e.target===this) closePayModal(); });
 
   // Hapus semua riwayat
