@@ -405,11 +405,72 @@
     .pm-metode-info { flex: 1; min-width: 0; }
     .pm-metode-label { font-size: 10px; font-weight: 700; color: #F97316; text-transform: uppercase; letter-spacing: .6px; }
     .pm-metode-name  { font-size: 14px; font-weight: 800; color: #111827; margin-top: 2px; line-height: 1.2; }
-    .pm-qris-box { padding: 20px 14px; display: flex; flex-direction: column; align-items: center; gap: 12px; background: rgba(255,255,255,0.04); }
-    .pm-qris-wrap { width: min(220px, 72vw); height: min(220px, 72vw); border-radius: 14px; border: 1px solid rgba(255,255,255,0.20); box-shadow: 0 4px 20px rgba(0,0,0,0.25); background: #fff; display: grid; place-items: center; overflow: hidden; padding: 8px; }
-    .pm-qris-wrap svg { width: 136px; height: 136px; }
-    .pm-qris-label { font-size: 11px; color: rgba(255,255,255,0.55); text-align: center; line-height: 1.6; }
-    .pm-qris-amount { font-size: 18px; font-weight: 800; color: #fff; background: rgba(255,152,0,0.20); border: 1px solid rgba(255,152,0,0.50); border-radius: 10px; padding: 6px 18px; box-shadow: 0 4px 14px rgba(255,152,0,0.25); }
+    /* ── QRIS Hero ── */
+    .pm-qris-hero {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 0; padding-bottom: 4px;
+    }
+    .pm-qris-brand-bar {
+      width: 100%; display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 16px 10px;
+      background: linear-gradient(135deg, rgba(255,152,0,0.18), rgba(255,189,93,0.10));
+      border-bottom: 1px solid rgba(255,152,0,0.20);
+    }
+    .pm-qris-brand-left { display: flex; align-items: center; gap: 8px; }
+    .pm-qris-brand-ico {
+      width: 34px; height: 34px; border-radius: 9px;
+      background: linear-gradient(135deg,#ff9800,#ffbd5d);
+      display: grid; place-items: center; font-size: 17px;
+      box-shadow: 0 3px 10px rgba(255,152,0,0.40);
+      flex-shrink: 0;
+    }
+    .pm-qris-brand-name { font-size: 14px; font-weight: 800; color: #fff; letter-spacing: .01em; }
+    .pm-qris-brand-sub  { font-size: 10px; color: rgba(255,255,255,0.50); margin-top: 1px; }
+    .pm-qris-status-pill {
+      font-size: 10px; font-weight: 700; padding: 4px 10px;
+      border-radius: 99px; white-space: nowrap; flex-shrink: 0;
+    }
+    .pm-qris-stage {
+      width: 100%; display: flex; flex-direction: column; align-items: center;
+      padding: 20px 18px 16px; gap: 14px;
+    }
+    .pm-qris-frame {
+      position: relative; width: 210px; height: 210px;
+      background: #fff; border-radius: 20px;
+      box-shadow: 0 0 0 6px rgba(255,255,255,0.10),
+                  0 8px 32px rgba(0,0,0,0.40),
+                  0 0 60px rgba(255,152,0,0.22);
+      display: grid; place-items: center; overflow: hidden;
+      flex-shrink: 0;
+    }
+    .pm-qris-frame img {
+      width: 186px; height: 186px; object-fit: contain; display: block;
+    }
+    .pm-qris-corner {
+      position: absolute; width: 22px; height: 22px;
+      border-color: #ff9800; border-style: solid; border-width: 0;
+    }
+    .pm-qris-corner.tl { top: 7px; left: 7px;  border-top-width: 3px; border-left-width: 3px;  border-radius: 5px 0 0 0; }
+    .pm-qris-corner.tr { top: 7px; right: 7px; border-top-width: 3px; border-right-width: 3px; border-radius: 0 5px 0 0; }
+    .pm-qris-corner.bl { bottom: 7px; left: 7px;  border-bottom-width: 3px; border-left-width: 3px;  border-radius: 0 0 0 5px; }
+    .pm-qris-corner.br { bottom: 7px; right: 7px; border-bottom-width: 3px; border-right-width: 3px; border-radius: 0 0 5px 0; }
+    .pm-qris-amount {
+      font-size: 22px; font-weight: 800; color: #fff;
+      background: linear-gradient(135deg, rgba(255,152,0,0.25), rgba(255,189,93,0.15));
+      border: 1px solid rgba(255,152,0,0.45);
+      border-radius: 12px; padding: 8px 22px;
+      box-shadow: 0 4px 16px rgba(255,152,0,0.20);
+      letter-spacing: .01em;
+    }
+    .pm-qris-apps {
+      display: flex; align-items: center; gap: 6px; flex-wrap: wrap; justify-content: center;
+    }
+    .pm-qris-app-chip {
+      font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.70);
+      background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 99px; padding: 3px 9px; white-space: nowrap;
+    }
+    .pm-qris-label { font-size: 10.5px; color: rgba(255,255,255,0.40); text-align: center; line-height: 1.6; }
     .pm-va-box { padding: 14px; display: flex; flex-direction: column; gap: 10px; background: rgba(255,255,255,0.04); }
     .pm-va-bank-row { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-radius: 10px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.14); }
     .pm-va-bank-ico { font-size: 20px; flex-shrink: 0; }
@@ -1208,29 +1269,38 @@
     if(metode==='qris'){
 
       payHtml=
+        '<div class="pm-card pm-qris-hero">'+
 
-        '<div class="pm-card">'+
-
-          '<div class="pm-card-head">'+
-
-            '<div class="pm-card-ico">📱</div>'+
-
-            '<div class="pm-card-meta"><div class="pm-card-name">QRIS</div>'+
-
-            '<div class="pm-card-desc">Scan QR dengan aplikasi apapun</div></div>'+
-
+          /* ── brand bar ── */
+          '<div class="pm-qris-brand-bar">'+
+            '<div class="pm-qris-brand-left">'+
+              '<div class="pm-qris-brand-ico">📱</div>'+
+              '<div>'+
+                '<div class="pm-qris-brand-name">QRIS</div>'+
+                '<div class="pm-qris-brand-sub">Scan dengan aplikasi apapun</div>'+
+              '</div>'+
+            '</div>'+
             '<span class="pm-badge '+badgeCls+'">'+badgeTxt+'</span>'+
-
           '</div>'+
 
-          '<div class="pm-qris-box">'+
-
-            '<div class="pm-qris-wrap"><img src="qris.png" alt="QR Code Pembayaran" style="width:100%;height:100%;object-fit:contain;display:block;"></div>'+
-
-            (hargaTxt?'<div class="pm-qris-amount">'+hargaTxt+'</div>':'')+
-
-            '<div class="pm-qris-label">Scan dengan GoPay, OVO, Dana,<br>m-Banking, atau aplikasi lainnya</div>'+
-
+          /* ── QR frame + nominal ── */
+          '<div class="pm-qris-stage">'+
+            '<div class="pm-qris-frame">'+
+              '<span class="pm-qris-corner tl"></span>'+
+              '<span class="pm-qris-corner tr"></span>'+
+              '<span class="pm-qris-corner bl"></span>'+
+              '<span class="pm-qris-corner br"></span>'+
+              '<img src="qris.png" alt="QR Code Pembayaran">'+
+            '</div>'+
+            (hargaTxt ? '<div class="pm-qris-amount">'+hargaTxt+'</div>' : '')+
+            '<div class="pm-qris-apps">'+
+              '<span class="pm-qris-app-chip">GoPay</span>'+
+              '<span class="pm-qris-app-chip">OVO</span>'+
+              '<span class="pm-qris-app-chip">DANA</span>'+
+              '<span class="pm-qris-app-chip">m-Banking</span>'+
+              '<span class="pm-qris-app-chip">ShopeePay</span>'+
+            '</div>'+
+            '<div class="pm-qris-label">Buka aplikasi dompet digital atau m-Banking,<br>pilih Scan QR, lalu arahkan ke kode di atas.</div>'+
           '</div>'+
 
         '</div>';
