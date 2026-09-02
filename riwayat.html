@@ -31,9 +31,6 @@
     }
 
     .header {
-      background: rgba(255,255,255,0.06);
-      backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
-      border-bottom: 1px solid rgba(255,255,255,0.10);
       padding: 20px 22px 14px; flex-shrink: 0;
     }
     .header-top { display: flex; align-items: center; gap: 12px; }
@@ -52,8 +49,6 @@
     .header-sub { font-size: 12px; color: rgba(255,255,255,0.45); font-weight: 400; line-height: 1.4; margin-top: 1px; }
 
     .filter-wrap {
-      background: rgba(255,255,255,0.04);
-      border-bottom: 1px solid rgba(255,255,255,0.08);
       padding: 8px 0 0; flex-shrink: 0;
     }
     .filter-bar { display: flex; gap: 8px; padding: 0 20px 14px; overflow-x: auto; scrollbar-width: none; }
@@ -359,25 +354,25 @@
     @keyframes pmSlideUp { from{transform:translateY(110%)} to{transform:translateY(0)} }
     .pay-handle { width: 44px; height: 5px; background: #E5E7EB; border-radius: 99px; margin: 12px auto 0; flex-shrink: 0; }
     .pay-head {
-      padding: 14px 18px 14px; display: flex; align-items: center; justify-content: space-between;
-      border-bottom: 1.5px solid #F3F4F6; flex-shrink: 0;
-      background: linear-gradient(135deg,#FFF7ED 0%,#fff 100%);
-      border-radius: 22px 22px 0 0;
+      padding: 14px 18px; display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 1px solid rgba(255,255,255,0.10); flex-shrink: 0;
+      background: rgba(255,255,255,0.05);
+      border-radius: 24px 24px 0 0;
     }
-    .pay-head-left { display: flex; flex-direction: column; gap: 2px; }
-    .pay-head-title { font-size: 15px; font-weight: 800; color: #111827; }
+    .pay-head-left { display: flex; flex-direction: column; gap: 4px; }
+    .pay-head-title { font-size: 15px; font-weight: 800; color: #f1f5f9; }
     .pay-head-sub {
-      font-size: 11px; font-weight: 600; color: #F97316;
+      font-size: 11px; font-weight: 600; color: #ffb74d;
       background: rgba(255,152,0,0.12); border: 1px solid rgba(255,152,0,0.30);
-      border-radius: 99px; padding: 2px 8px; display: inline-block; width: fit-content;
+      border-radius: 99px; padding: 2px 10px; display: inline-block; width: fit-content;
     }
     .pay-head-close {
       width: 34px; height: 34px; border-radius: 10px;
-      border: 2px solid #111827; box-shadow: 2px 2px 0 #111827;
-      background: #fff; display: grid; place-items: center; color: #374151;
-      transition: transform .1s, box-shadow .1s;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.10); display: grid; place-items: center; color: #f1f5f9;
+      transition: background .15s;
     }
-    .pay-head-close:active { transform: translate(1px,1px); box-shadow: 1px 1px 0 #111827; }
+    .pay-head-close:active { background: rgba(255,255,255,0.22); }
     .pay-head-close svg { width: 14px; height: 14px; }
     .pay-body { padding: 16px 18px 20px; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; flex: 1; -webkit-overflow-scrolling: touch; }
     .pay-body::-webkit-scrollbar { width: 0; }
@@ -531,7 +526,7 @@
       </svg>
       <span class="nav-label">Beranda</span>
     </button>
-    <button class="nav-btn active" type="button" aria-label="Riwayat" aria-current="page" style="position:relative">
+    <button class="nav-btn is-active" type="button" aria-label="Riwayat" aria-current="page" style="position:relative">
       <svg viewBox="0 0 24 24" fill="none" stroke="#F97316" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <path d="M12 8v4l3 3"/>
         <circle cx="12" cy="12" r="9"/>
@@ -609,10 +604,11 @@
     dibatalkan:            { label:"Dibatalkan",           strip:"s-dibatalkan",   pill:"s-dibatalkan"   },
   };
   var STATUS_BAYAR = {
-    menunggu_pembayaran: { label:"Belum Dibayar",    strip:"s-pending",      pill:"s-pending"      },
-    bayar_ditempat:      { label:"Bayar di Tempat",  strip:"s-menunggu",     pill:"s-menunggu"     },
-    lunas:               { label:"Lunas",            strip:"s-dikonfirmasi", pill:"s-dikonfirmasi" },
-    dibatalkan:          { label:"Dibatalkan",       strip:"s-dibatalkan",   pill:"s-dibatalkan"   },
+    menunggu_pembayaran:  { label:"Belum Dibayar",         strip:"s-pending",      pill:"s-pending"      },
+    menunggu_konfirmasi:  { label:"Menunggu Konfirmasi",   strip:"s-menunggu",     pill:"s-menunggu"     },
+    bayar_ditempat:       { label:"Bayar di Tempat",       strip:"s-menunggu",     pill:"s-menunggu"     },
+    lunas:                { label:"Lunas",                 strip:"s-dikonfirmasi", pill:"s-dikonfirmasi" },
+    dibatalkan:           { label:"Dibatalkan",            strip:"s-dibatalkan",   pill:"s-dibatalkan"   },
   };
   function getStatus(b) {
     var st = (b.status || "").toLowerCase();
@@ -871,10 +867,10 @@
         '<div class="card-field"><div class="card-field-label">Jam</div><div class="card-field-val">' + esc(b.jam || '—') + '</div></div>' +
         '<div class="card-field"><div class="card-field-label">Dokter</div><div class="card-field-val">' + esc(b.dokter || '—') + '</div></div>' +
         '<div class="card-field"><div class="card-field-label">Hewan</div><div class="card-field-val">' + esc(b.namaHewan || '—') + '</div></div>' +
-        (harga && b.paymentDeadline && ['dibatalkan','selesai','dikonfirmasi'].indexOf((b.status||'').toLowerCase()) < 0
-          ? '<div class="card-field"><div class="card-field-label">Total Biaya</div><div class="card-field-val harga">' + harga + '</div></div>' +
+        (total && b.paymentDeadline && ['dibatalkan','selesai','dikonfirmasi'].indexOf((b.status||'').toLowerCase()) < 0
+          ? '<div class="card-field"><div class="card-field-label">Total Biaya</div><div class="card-field-val harga">' + total + '</div></div>' +
             '<div class="card-field"><div class="card-field-label">Batas Waktu</div><div class="card-field-val timer-val">' + buildTimerPill(b.paymentDeadline) + '</div></div>'
-          : (harga ? '<div class="card-field full"><div class="card-field-label">Total Biaya</div><div class="card-field-val harga">' + harga + '</div></div>' : '')) +
+          : (total ? '<div class="card-field full"><div class="card-field-label">Total Biaya</div><div class="card-field-val harga">' + total + '</div></div>' : '')) +
       '</div><div class="card-divider"></div>' +
       foot +
       '</article>';
@@ -992,7 +988,7 @@
             }
           }
         } catch(e) {}
-        location.href = "payment.html";
+        location.href = "pembayaran.html";
       });
     });
     list.querySelectorAll("[data-action='cancel-pending']").forEach(function(btn) {
@@ -1115,7 +1111,7 @@
         var gbtn=document.getElementById('btnGoPayment');
         if(gbtn) gbtn.addEventListener('click',function(){
           try{localStorage.setItem('anabulku_pending_payment',JSON.stringify(_b));}catch(e){}
-          location.href='payment.html';
+          location.href='pembayaran.html';
         });
       },50);
       return;
@@ -1327,7 +1323,7 @@
 
     var el=document.getElementById('payHeadSub');if(el)el.textContent=hs;
 
-    document.getElementById('payBody').innerHTML=metodeBannerHtml+payHtml+sumHtml;
+    document.getElementById('payBody').innerHTML=payHtml+sumHtml;
 
     document.getElementById('payOverlay').classList.add('open');
 

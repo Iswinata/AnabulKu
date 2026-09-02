@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#00b3a4" />
+  <title>Vetiloka — Perawatan Anabul</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icons/icon.svg" />
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="app" class="phone">
+    <!-- SPLASH -->
+    <section class="screen splash active" data-screen="splash">
+      <div class="splash-logo">🐾</div>
+      <h1 class="splash-title">Vetiloka</h1>
+      <p class="splash-sub">Sahabat sehat anabul kesayanganmu</p>
+      <div class="splash-loader"><span></span></div>
+    </section>
+
+    <!-- ONBOARDING -->
+    <section class="screen onboarding" data-screen="onboarding">
+      <div class="onb-slides" id="onbSlides">
+        <div class="onb-slide">
+          <div class="onb-art">🩺</div>
+          <h2>Konsultasi & Klinik</h2>
+          <p>Booking layanan vet dan grooming untuk anabul kapan saja.</p>
+        </div>
+        <div class="onb-slide">
+          <div class="onb-art">🛒</div>
+          <h2>Pet Shop Lengkap</h2>
+          <p>Belanja makanan, vitamin, dan kebutuhan hewan favoritmu.</p>
+        </div>
+        <div class="onb-slide">
+          <div class="onb-art">📅</div>
+          <h2>Atur Jadwal Mudah</h2>
+          <p>Pantau riwayat perawatan dan pesanan dalam satu aplikasi.</p>
+        </div>
+      </div>
+      <div class="onb-dots" id="onbDots"></div>
+      <div class="onb-actions">
+        <button class="btn-ghost" id="onbSkip">Lewati</button>
+        <button class="btn-primary" id="onbNext">Lanjut</button>
+      </div>
+    </section>
+
+    <!-- AUTH -->
+    <section class="screen auth" data-screen="auth">
+      <div class="auth-head">
+        <div class="splash-logo sm">🐾</div>
+        <h2>Masuk ke Vetiloka</h2>
+        <p>Kelola perawatan anabul dengan mudah</p>
+      </div>
+      <form id="authForm" class="auth-form">
+        <label>Nama</label>
+        <input type="text" id="authName" placeholder="Nama kamu" required />
+        <label>Nomor HP</label>
+        <input type="tel" id="authPhone" placeholder="08xxxxxxxxxx" required />
+        <button type="submit" class="btn-primary block">Masuk</button>
+      </form>
+      <p class="auth-note">Dengan masuk kamu setuju dengan Syarat & Ketentuan Vetiloka.</p>
+    </section>
+
+    <!-- MAIN APP (tab views) -->
+    <main class="screen main" data-screen="main">
+      <!-- HOME -->
+      <section class="view active" data-view="home">
+        <header class="home-header">
+          <div class="home-greet">
+            <span class="loc">📍 Lokasi kamu</span>
+            <strong id="homeCity">Jakarta Selatan</strong>
+          </div>
+          <button class="bell" id="btnNotif">🔔<i class="dot"></i></button>
+        </header>
+        <div class="search-bar" id="homeSearch">
+          <span>🔍</span><input type="text" placeholder="Cari layanan atau produk..." />
+        </div>
+        <div class="scroll-area" id="homeScroll"></div>
+      </section>
+
+      <!-- SERVICES -->
+      <section class="view" data-view="services">
+        <header class="view-header"><h2>Layanan</h2></header>
+        <div class="chips" id="serviceChips"></div>
+        <div class="scroll-area" id="servicesScroll"></div>
+      </section>
+
+      <!-- ORDERS -->
+      <section class="view" data-view="orders">
+        <header class="view-header"><h2>Pesanan</h2></header>
+        <div class="chips" id="orderTabs"></div>
+        <div class="scroll-area" id="ordersScroll"></div>
+      </section>
+
+      <!-- PROFILE -->
+      <section class="view" data-view="profile">
+        <header class="view-header"><h2>Profil</h2></header>
+        <div class="scroll-area" id="profileScroll"></div>
+      </section>
+    </main>
+
+    <!-- BOTTOM NAV -->
+    <nav class="bottom-nav" id="bottomNav">
+      <button data-nav="home" class="active"><span>🏠</span>Beranda</button>
+      <button data-nav="services"><span>🩺</span>Layanan</button>
+      <button data-nav="orders"><span>🧾</span>Pesanan</button>
+      <button data-nav="profile"><span>👤</span>Profil</button>
+    </nav>
+
+    <!-- SHEET / MODAL HOST -->
+    <div class="sheet-host" id="sheetHost"></div>
+    <div class="toast" id="toast"></div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

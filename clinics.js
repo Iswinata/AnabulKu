@@ -97,7 +97,7 @@
 
   function cardHtml(c, idx, userLoc) {
     /* Link to clinic detail page */
-    var href = "clinic-detail.html?id=" + idx;
+    var href = "doctor-schedule.html?id=" + idx;
 
     /* Foto thumbnail — use uploaded photo or logo if available */
     var photoStyle = "";
@@ -325,10 +325,10 @@
             }
             btn.setAttribute('aria-pressed', String(isNow));
             btn.setAttribute('aria-label', isNow ? 'Hapus dari favorit' : 'Tambah ke favorit');
+            /* Animasi love lembut: retrigger keyframe dgn reflow */
+            btn.classList.remove('is-fav');
+            void btn.offsetWidth;
             btn.classList.toggle('is-fav', isNow);
-            /* Animasi pop */
-            btn.style.transform = 'scale(1.3)';
-            setTimeout(function(){ btn.style.transform = ''; }, 180);
           });
         });
       }
@@ -382,8 +382,7 @@
   }
 
   function groomingCardHtml(clinic, idx, userLoc) {
-    var href = "clinic-detail.html?id=" + idx;
-
+    var href = "doctor-schedule.html?id=" + idx;
     var photoStyle = "";
     var _foto = clinic.fotoDataUrl || clinic.logoDataUrl || "";
     if (_foto) {
@@ -524,6 +523,11 @@
                 svg.setAttribute('fill',   isNow ? 'url(#favGrad)' : 'none');
                 svg.setAttribute('stroke', isNow ? '#c0392b' : '#9ca3af');
               }
+              fbtn.setAttribute('aria-pressed', String(isNow));
+              /* Animasi love lembut: retrigger keyframe dgn reflow */
+              fbtn.classList.remove('is-fav');
+              void fbtn.offsetWidth;
+              fbtn.classList.toggle('is-fav', isNow);
             });
           });
         };

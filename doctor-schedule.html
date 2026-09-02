@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0f0c29" />
+  <title>Pilih Dokter & Jadwal – AnabulKu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css?v=17" />
+  <link rel="stylesheet" href="doctor-schedule.css?v=1" />
+</head>
+<body>
+  <div class="app ds-app">
+
+    <header class="topbar ds-topbar">
+      <div class="ds-topbar-left">
+        <button class="ds-btn-back" type="button" aria-label="Kembali" onclick="history.back()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <div class="ds-topbar-info">
+          <span class="ds-topbar-title" id="dsClinicName">Pilih Dokter & Jadwal</span>
+          <span class="ds-topbar-sub" id="dsClinicAddr"></span>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="act-btn" type="button" aria-label="Notifikasi" id="dsNotifBtn">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.667" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 7.5a5 5 0 0 0-10 0c0 5.8-2.5 7.5-2.5 7.5h15S15 13.3 15 7.5"/><path d="M11.25 17.5a1.25 1.25 0 0 1-2.5 0"/></svg>
+          <span class="badge" aria-hidden="true"></span>
+        </button>
+      </div>
+    </header>
+
+    <div class="ds-scroll">
+
+      <!-- Clinic banner -->
+      <section class="ds-clinic-banner" aria-label="Info klinik">
+        <div class="ds-banner-photo" id="dsBannerPhoto" aria-hidden="true"></div>
+        <div class="ds-banner-body">
+          <p class="ds-banner-name" id="dsBannerName">—</p>
+          <p class="ds-banner-addr" id="dsBannerAddr">—</p>
+          <div class="ds-banner-meta">
+            <span class="ds-banner-chip">
+              <svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true"><path fill="#A36233" d="M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg>
+              <span id="dsBannerDist">3.4 km</span>
+            </span>
+            <span class="ds-banner-chip">
+              <svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true"><path fill="#A36233" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <span id="dsBannerRating">4.6</span>
+            </span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Date strip -->
+      <section class="ds-section ds-date-section">
+        <h2 class="ds-section-title">Pilih Tanggal</h2>
+        <div class="ds-date-strip" id="dsDateStrip" role="group" aria-label="Pilih tanggal konsultasi"></div>
+      </section>
+
+      <!-- Doctor list -->
+      <section class="ds-section ds-doctor-section">
+        <h2 class="ds-section-title" id="dsDoctorTitle">Dokter Tersedia</h2>
+        <div id="dsDoctorList"></div>
+      </section>
+
+    </div>
+
+    <nav class="bottomnav" aria-label="Navigasi utama">
+      <button class="nav-btn" type="button" onclick="window.location.href='home.html'">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 2.4 11.1a1 1 0 0 0 .65 1.76H4.5V20a1 1 0 0 0 1 1H9.5v-5.5h5V21H18.5a1 1 0 0 0 1-1v-7.14h1.45a1 1 0 0 0 .65-1.76L12 3z"/></svg>
+        <span class="nav-label">Beranda</span>
+      </button>
+      <button class="nav-btn" type="button" onclick="window.location.href='riwayat.html'">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="9"/></svg>
+        <span class="nav-label">Riwayat</span>
+      </button>
+      <button class="nav-btn" type="button" onclick="window.location.href='favorit.html'">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        <span class="nav-label">Favorit</span>
+      </button>
+      <button class="nav-btn" type="button" onclick="window.location.href='profil.html'">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M5 20a7 7 0 0 1 14 0"/></svg>
+        <span class="nav-label">Profil</span>
+      </button>
+    </nav>
+
+  </div>
+
+  <script src="notif.js"></script>
+  <script src="doctor-schedule.js"></script>
+</body>
+</html>

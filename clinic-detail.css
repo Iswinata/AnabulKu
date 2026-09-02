@@ -5,18 +5,20 @@
 
 .cd-app { padding-bottom: 0; }
 
-/* ── Back row ── */
-.cd-back-row { display:flex; align-items:center; gap:10px; margin-bottom:4px; }
+/* ── Topbar: back + judul ── */
+.cd-topbar-left { display:flex; align-items:center; gap:12px; min-width:0; }
 .cd-btn-back {
   display:grid; place-items:center;
   width:38px; height:38px; border-radius:12px;
   background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15);
   backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
   transition:background 0.15s, transform 0.1s; flex-shrink:0;
+  color:var(--white); cursor:pointer;
 }
+.cd-btn-back:hover  { background:rgba(255,255,255,0.14); }
 .cd-btn-back:active { transform:scale(0.93); }
 .cd-btn-back svg { width:18px; height:18px; }
-.cd-back-title { font-size:15px; font-weight:700; color:var(--white); letter-spacing:-0.2px; }
+.cd-back-title { font-size:16px; font-weight:700; color:var(--white); letter-spacing:-0.2px; }
 
 /* ── Section header (sama dengan home) ── */
 .cd-section-header {
@@ -75,62 +77,69 @@
 
 /* ── Date picker ── */
 .cd-date-section { margin-top:22px; }
-.cd-date-strip { display:grid; grid-template-columns:repeat(7,1fr); gap:6px; padding:2px 0 4px; }
+.cd-date-strip { display:grid; grid-template-columns:repeat(7,1fr); gap:7px; padding:2px 0 4px; }
 .cd-day-btn {
   display:flex; flex-direction:column; align-items:center; justify-content:center;
-  gap:4px; width:100%; height:58px; padding:6px 2px;
-  background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.12);
+  gap:5px; width:100%; height:62px; padding:8px 1px;
+  background:rgba(23,27,58,0.45); border:1px solid rgba(255,255,255,0.12);
   border-radius:14px; cursor:pointer; font-family:'Poppins',sans-serif;
-  transition:background 0.15s, border-color 0.15s, transform 0.1s;
+  backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+  transition:background 0.15s, border-color 0.15s, transform 0.1s, box-shadow 0.15s;
 }
-.cd-day-btn:hover:not(.is-active) { border-color:rgba(255,152,0,0.45); background:rgba(255,152,0,0.10); }
+.cd-day-btn:hover:not(.is-active) { border-color:rgba(255,152,0,0.45); background:rgba(255,152,0,0.12); }
 .cd-day-btn:active { transform:scale(0.94); }
 .cd-day-btn.is-active {
-  background:linear-gradient(160deg, rgba(255,152,0,0.90) 0%, rgba(255,189,93,0.80) 100%);
+  background:linear-gradient(160deg, rgba(255,152,0,0.92) 0%, rgba(255,189,93,0.82) 100%);
   border-color:rgba(255,152,0,0.70); box-shadow:0 4px 14px rgba(255,152,0,0.30);
 }
-.cd-day-letter { font-size:10px; font-weight:600; color:rgba(255,255,255,0.45); line-height:1; text-transform:uppercase; letter-spacing:0.03em; }
-.cd-day-btn.is-active .cd-day-letter { color:rgba(255,255,255,0.88); }
-.cd-day-num { font-size:15px; font-weight:700; color:rgba(255,255,255,0.80); line-height:1; }
+.cd-day-letter { font-size:10.5px; font-weight:600; color:rgba(255,255,255,0.50); line-height:1; text-transform:uppercase; letter-spacing:0.04em; }
+.cd-day-btn.is-active .cd-day-letter { color:rgba(255,255,255,0.90); }
+.cd-day-num { font-size:16px; font-weight:700; color:rgba(255,255,255,0.85); line-height:1; }
 .cd-day-btn.is-active .cd-day-num { color:#fff; }
 
 /* ── Doctor section ── */
 .cd-doctor-section { margin-top:22px; }
 .cd-doc-card {
-  background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.12);
-  border-radius:18px; overflow:hidden; margin-bottom:12px; transition:border-color 0.15s;
+  background:rgba(23,27,58,0.45); border:1px solid rgba(255,255,255,0.12);
+  border-radius:18px; overflow:hidden; margin-bottom:12px;
+  box-shadow:0 4px 18px rgba(0,0,0,0.18);
+  backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+  transition:border-color 0.15s, box-shadow 0.15s;
 }
 .cd-doc-card:last-child { margin-bottom:0; }
-.cd-doc-card:hover { border-color:rgba(255,152,0,0.28); }
-.cd-doc-inner { display:flex; gap:14px; padding:14px 14px 0; }
+.cd-doc-card:hover { border-color:rgba(255,152,0,0.30); box-shadow:0 6px 22px rgba(255,152,0,0.12); }
+.cd-doc-inner { display:flex; gap:14px; padding:15px 15px 0; }
 .cd-doc-photo {
-  width:68px; height:68px; border-radius:14px; flex-shrink:0;
+  width:88px; height:88px; border-radius:14px; flex-shrink:0;
   background:rgba(255,255,255,0.10) center/cover no-repeat;
   border:1.5px solid rgba(255,255,255,0.18);
+  box-shadow:0 3px 10px rgba(0,0,0,0.22);
 }
 .cd-doc-photo--empty { display:grid; place-items:center; background:rgba(255,152,0,0.10); border-color:rgba(255,152,0,0.22); }
 .cd-doc-photo-icon { width:28px; height:28px; opacity:0.40; filter:invert(1); }
 .cd-doc-info { flex:1; min-width:0; display:flex; flex-direction:column; gap:3px; }
-.cd-doc-name { font-size:13.5px; font-weight:700; color:var(--white); line-height:1.25; margin:0; }
-.cd-doc-spec { font-size:11px; font-weight:600; color:rgba(255,152,0,0.90); margin:0; }
+.cd-doc-name { font-size:13.5px; font-weight:700; color:#FFEED5; line-height:1.25; margin:0; }
+.cd-doc-spec { font-size:11px; font-weight:600; color:rgba(255,178,90,0.95); margin:0; }
 .cd-doc-hours { font-size:11px; color:rgba(255,255,255,0.50); margin:2px 0 0; }
-.cd-doc-sched-label { font-size:10px; font-weight:600; color:rgba(255,255,255,0.38); text-transform:uppercase; letter-spacing:0.05em; margin:5px 0 3px; }
+.cd-doc-sched-label { font-size:10.5px; font-weight:500; color:rgba(255,239,216,0.72); letter-spacing:0.01em; margin:6px 0 4px; }
 .cd-doc-days { display:flex; flex-wrap:wrap; gap:4px; }
 .cd-day-tag {
-  display:inline-block; padding:2px 7px; border-radius:20px; font-size:10px; font-weight:600;
-  background:rgba(255,255,255,0.07); color:rgba(255,255,255,0.50); border:1px solid rgba(255,255,255,0.11);
+  display:inline-block; padding:3px 10px; border-radius:8px; font-size:10px; font-weight:600;
+  background:linear-gradient(180deg, #FF9800 0%, #FFBC59 100%);
+  color:#fff; border:1px solid rgba(255,199,116,0.55);
+  box-shadow:0 2px 6px rgba(255,152,0,0.22);
 }
-.cd-day-tag.is-today { background:rgba(255,152,0,0.20); color:rgba(255,210,100,0.95); border-color:rgba(255,152,0,0.38); }
+.cd-day-tag.is-today { box-shadow:0 0 0 2px rgba(255,222,174,0.55), 0 2px 8px rgba(255,152,0,0.35); }
 .cd-doc-divider { height:1px; background:rgba(255,255,255,0.07); margin:12px 14px 0; }
 
 /* ── Time slots ── */
-.cd-time-row { padding:12px 14px 0; }
-.cd-sesi-group { margin-bottom:10px; }
+.cd-time-row { padding:14px 15px 15px; }
+.cd-sesi-group { margin-bottom:12px; }
 .cd-sesi-group:last-child { margin-bottom:0; }
-.cd-sesi-group-header { font-size:10.5px; font-weight:600; color:rgba(255,255,255,0.38); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:7px; }
-.cd-sesi-slots { display:flex; flex-wrap:wrap; gap:6px; }
+.cd-sesi-group-header { font-size:10.5px; font-weight:600; color:rgba(255,255,255,0.42); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:8px; }
+.cd-sesi-slots { display:flex; flex-wrap:wrap; gap:8px; }
 .cd-time-slot {
-  padding:6px 13px; border-radius:20px; font-size:12px; font-weight:600;
+  padding:8px 15px; border-radius:20px; font-size:12.5px; font-weight:600;
   font-family:'Poppins',sans-serif; cursor:pointer; border:1.5px solid transparent;
   transition:background 0.13s, border-color 0.13s, transform 0.1s; line-height:1.2;
 }

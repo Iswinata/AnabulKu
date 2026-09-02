@@ -1,0 +1,26 @@
+/* ===================================================================
+   AnabulKu — minigame.css  (Kucing Lompat)
+=================================================================== */
+.mg-section { display:flex; flex-direction:column; gap:10px; }
+
+.mg-hint {
+  font-size:11px; color:rgba(255,255,255,0.45);
+  text-align:center; font-weight:500;
+  transition:opacity .3s;
+}
+.mg-hint.hidden { opacity:0; pointer-events:none; }
+
+.mg-wrap {
+  width:100%; border-radius:16px; overflow:hidden;
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,200,100,0.25);
+  box-shadow:0 4px 20px rgba(255,152,0,0.12);
+  cursor:pointer; -webkit-tap-highlight-color:transparent;
+}
+.mg-wrap canvas { display:block; width:100%; height:auto; }
+
+.mg-score-row {
+  display:flex; align-items:center; justify-content:center; gap:10px;
+}
+.mg-score-label { font-size:10px; font-weight:700; color:rgba(255,255,255,0.4); text-transform:uppercase; letter-spacing:.06em; }
+.mg-score-val   { font-size:15px; font-weight:800; color:#ff9800; min-width:28px; text-align:center; font-variant-numeric:tabular-nums; }

@@ -58,13 +58,56 @@
   /* ── Aktif klinik dan mitraId-nya ── */
   var activeMitraId = "";
 
+  /* ── Demo data fallback ── */
+  var DEMO_CLINIC = {
+    id: "demo-001",
+    namaKlinik: "Klinik Hewan AnabulKu",
+    alamat: "Jl. Contoh No. 1",
+    kota: "Jakarta",
+    provinsi: "DKI Jakarta",
+    adminStatus: "aktif",
+    rating: "4.9",
+    hewanDilayani: ["kucing", "anjing"],
+    dokters: [
+      {
+        nama: "drh. Siti Rahayu",
+        spesialisasi: "Dokter Umum",
+        jadwal: [
+          { hari: "Senin",  mulai: "08:00", selesai: "12:00" },
+          { hari: "Selasa", mulai: "08:00", selesai: "12:00" },
+          { hari: "Rabu",   mulai: "13:00", selesai: "17:00" },
+          { hari: "Kamis",  mulai: "08:00", selesai: "12:00" },
+          { hari: "Jumat",  mulai: "08:00", selesai: "12:00" },
+          { hari: "Sabtu",  mulai: "09:00", selesai: "14:00" },
+          { hari: "Minggu", mulai: "09:00", selesai: "13:00" }
+        ]
+      },
+      {
+        nama: "drh. Budi Santoso",
+        spesialisasi: "Dokter Bedah",
+        jadwal: [
+          { hari: "Senin",  mulai: "13:00", selesai: "17:00" },
+          { hari: "Rabu",   mulai: "08:00", selesai: "12:00" },
+          { hari: "Jumat",  mulai: "13:00", selesai: "17:00" },
+          { hari: "Sabtu",  mulai: "09:00", selesai: "14:00" },
+          { hari: "Minggu", mulai: "09:00", selesai: "13:00" }
+        ]
+      }
+    ]
+  };
+
   /* ── Load clinic data from localStorage ── */
   function loadClinic(idx) {
     try {
       var raw = localStorage.getItem("mitraKlinik");
       var list = raw ? JSON.parse(raw) : [];
       var c = list[idx] || null;
-      if (!c) return null;
+      if (!c) {
+        /* Fallback ke demo data supaya halaman tetap render */
+        c = DEMO_CLINIC;
+        activeMitraId = c.id;
+        return c;
+      }
       activeMitraId = c.id || "";
 
       /* Jika dokters kosong di mitraKlinik, coba baca langsung dari namespace storage
@@ -435,7 +478,7 @@
       closeModal();
 
       /* Redirect ke halaman pembayaran */
-      window.location.href = "payment.html";
+      window.location.href = "pembayaran.html";
     });
 
     /* Focus first input */
@@ -878,7 +921,7 @@
     }
 
     document.getElementById("cdResumeContinue").addEventListener("click", function() {
-      window.location.href = "payment.html";
+      window.location.href = "pembayaran.html";
     });
 
     document.getElementById("cdResumeDismiss").addEventListener("click", function() {

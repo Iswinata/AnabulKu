@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0f0c29" />
+  <title>Pembayaran – AnabulKu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css?v=17" />
+  <link rel="stylesheet" href="pembayaran.css?v=1" />
+</head>
+<body>
+  <div class="app py-app">
+
+    <!-- Topbar -->
+    <header class="py-topbar">
+      <button class="py-btn-back" type="button" aria-label="Kembali" id="pyBtnBack">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <span class="py-topbar-title">Konfirmasi Pembayaran</span>
+      <div style="width:38px"></div>
+    </header>
+
+    <!-- Scroll body -->
+    <div class="py-scroll">
+
+      <!-- Ringkasan Booking -->
+      <section class="py-section">
+        <h2 class="py-section-title">Ringkasan Booking</h2>
+        <div class="py-order-card">
+          <div class="py-order-header">
+            <p class="py-order-klinik" id="pyKlinik">—</p>
+            <p class="py-order-dokter" id="pyDokter">—</p>
+          </div>
+          <div class="py-order-body">
+            <div class="py-info-row"><span class="py-info-icon">📅</span><div class="py-info-col"><span class="py-info-label">Tanggal</span><span class="py-info-val" id="pyTanggal">—</span></div></div>
+            <div class="py-info-grid">
+              <div class="py-info-cell"><span class="py-info-label">🕐 Pukul</span><span class="py-info-val" id="pyJam">—</span></div>
+              <div class="py-info-cell"><span class="py-info-label">🐾 Hewan</span><span class="py-info-val" id="pyHewan">—</span></div>
+              <div class="py-info-cell"><span class="py-info-label">🩺 Biaya Layanan</span><span class="py-info-val" id="pyBiaya">—</span></div>
+              <div class="py-info-cell"><span class="py-info-label">🏷️ Biaya Platform</span><span class="py-info-val">Rp 5.000</span></div>
+            </div>
+            <div class="py-divider"></div>
+            <div class="py-total-row">
+              <span class="py-total-label">Total Pembayaran</span>
+              <span class="py-total-amount" id="pyTotal">—</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Countdown -->
+      <div class="py-countdown" id="pyCountdown">
+        <div class="py-countdown-icon">⏱️</div>
+        <div class="py-countdown-info">
+          <span class="py-countdown-label">Selesaikan pembayaran dalam</span>
+          <span class="py-countdown-timer" id="pyTimer">05:00</span>
+        </div>
+      </div>
+
+      <!-- QRIS info card -->
+      <div class="py-qris-info-card">
+        <div class="py-qris-info-icon">📲</div>
+        <div class="py-qris-info-text">
+          <span class="py-qris-info-title">Pembayaran via QRIS</span>
+          <span class="py-qris-info-sub">Scan QR — semua e-wallet &amp; mobile banking</span>
+        </div>
+      </div>
+
+    </div><!-- /py-scroll -->
+
+    <!-- Footer -->
+    <div class="py-footer">
+      <div class="py-footer-total">
+        <span class="py-footer-label">Total</span>
+        <span class="py-footer-amount" id="pyFooterTotal">—</span>
+      </div>
+      <button class="py-btn-pay" type="button" id="pyBtnPay">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18" aria-hidden="true"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+        Bayar Sekarang
+      </button>
+    </div>
+
+  </div><!-- /app -->
+
+  <!-- Sheet: QRIS -->
+  <div class="py-overlay" id="pyQrisOverlay" role="dialog" aria-modal="true" aria-label="Pembayaran QRIS" hidden>
+    <div class="py-sheet">
+      <div class="py-sheet-handle"></div>
+      <div class="py-sheet-header">
+        <span class="py-sheet-title">Scan QRIS</span>
+        <button class="py-sheet-close" type="button" id="pyQrisClose" aria-label="Tutup">&times;</button>
+      </div>
+      <div class="py-qris-timer-badge" id="pyQrisTimerBadge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <span id="pyQrisTimer">05:00</span>
+      </div>
+      <p class="py-qris-sub">Scan QR menggunakan e-wallet atau mobile banking kamu</p>
+      <div class="py-qris-wrap">
+        <img src="qris.png" alt="QR Code Pembayaran AnabulKu" style="width:100%;height:100%;object-fit:contain;display:block;" />
+      </div>
+      <div class="py-info-rows" id="pyQrisInfoRows"></div>
+      <button class="py-btn-confirm" type="button" id="pyQrisOk">Konfirmasi</button>
+    </div>
+  </div>
+
+  <!-- Sheet: Virtual Account -->
+  <div class="py-overlay" id="pyVaOverlay" role="dialog" aria-modal="true" aria-label="Virtual Account" hidden>
+    <div class="py-sheet">
+      <div class="py-sheet-handle"></div>
+      <div class="py-sheet-header">
+        <div class="py-va-header-info">
+          <div class="py-va-bank-icon" id="pyVaBankIcon">🏦</div>
+          <div><span class="py-sheet-title" id="pyVaBankName">Transfer Bank</span><span class="py-va-bank-sub">Virtual Account</span></div>
+        </div>
+        <button class="py-sheet-close" type="button" id="pyVaClose" aria-label="Tutup">&times;</button>
+      </div>
+      <p class="py-va-label">Nomor Virtual Account</p>
+      <div class="py-va-number-row">
+        <span class="py-va-number" id="pyVaNumber">—</span>
+        <button class="py-btn-copy" type="button" id="pyBtnCopy">Salin</button>
+      </div>
+      <div class="py-info-rows" id="pyVaInfoRows"></div>
+      <div class="py-va-note">⚠️ Bayar tepat sesuai nominal. Transfer berbeda nominal akan ditolak otomatis.</div>
+      <button class="py-btn-confirm" type="button" id="pyVaOk">Sudah Dibayar ✓</button>
+    </div>
+  </div>
+
+  <!-- Sheet: Menunggu Konfirmasi -->
+  <div class="py-overlay" id="pySuksesOverlay" role="dialog" aria-modal="true" hidden>
+    <div class="py-sheet py-sheet--center">
+      <div class="py-success-icon">⏳</div>
+      <p class="py-success-title">Menunggu Konfirmasi</p>
+      <p class="py-success-sub">Tim AnabulKu sedang mengecek pembayaran kamu. Konfirmasi akan dikirim melalui WhatsApp kamu dalam waktu singkat.</p>
+      <div class="py-success-ref" id="pySuccessRef"></div>
+      <div class="py-pending-info">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="15" height="15" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.81a16 16 0 0 0 6 6l.86-.86a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.5 16h.42z"/></svg>
+        Pastikan nomor WhatsApp kamu aktif
+      </div>
+      <button class="py-btn-confirm" type="button" id="pySuksesHome">Kembali ke Beranda</button>
+    </div>
+  </div>
+
+  <!-- Sheet: Expired -->
+  <div class="py-overlay py-overlay--center" id="pyExpiredOverlay" role="alertdialog" aria-modal="true" hidden>
+    <div class="py-sheet py-sheet--center py-sheet--danger">
+      <div class="py-expired-icon">⏰</div>
+      <p class="py-success-title">Waktu Habis</p>
+      <p class="py-success-sub">Batas waktu pembayaran berakhir. Silakan booking ulang.</p>
+      <button class="py-btn-danger" type="button" id="pyExpiredHome">Kembali ke Beranda</button>
+    </div>
+  </div>
+
+  <!-- Sheet: Konfirmasi Pergi -->
+  <div class="py-overlay" id="pyLeaveOverlay" role="alertdialog" aria-modal="true" hidden>
+    <div class="py-sheet py-sheet--center">
+      <div class="py-leave-icon">⚠️</div>
+      <p class="py-success-title">Yakin Mau Pergi?</p>
+      <p class="py-success-sub">Booking belum selesai. Jika keluar, slot ini bisa diambil orang lain.</p>
+      <button class="py-btn-danger" type="button" id="pyLeaveConfirm" style="margin-bottom:10px">Ya, Batalkan</button>
+      <button class="py-btn-confirm" type="button" id="pyLeaveStay">Lanjutkan Bayar</button>
+    </div>
+  </div>
+
+  <script src="pembayaran.js?v=1"></script>
+</body>
+</html>
+

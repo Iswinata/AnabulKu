@@ -8,19 +8,18 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css" />
-  <link rel="stylesheet" href="clinic-detail.css" />
+  <link rel="stylesheet" href="styles.css?v=17" />
+  <link rel="stylesheet" href="clinic-detail.css?v=4" />
 </head>
 <body>
   <div class="app cd-app">
 
-    <header class="topbar">
-      <div class="user">
-        <span class="avatar" aria-hidden="true" id="userAvatar"></span>
-        <span class="user-text">
-          <span class="welcome">Halo <span class="emoji">&#128075;</span></span>
-          <span class="username" id="userGreeting"></span>
-        </span>
+    <header class="topbar cd-topbar">
+      <div class="cd-topbar-left">
+        <button class="cd-btn-back" type="button" aria-label="Kembali" onclick="history.back()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <span class="cd-back-title">Detail Klinik</span>
       </div>
       <div class="actions">
         <button class="act-btn" type="button" aria-label="Cari">
@@ -34,13 +33,6 @@
     </header>
 
     <div class="cd-scroll">
-
-      <div class="cd-back-row">
-        <button class="cd-btn-back" type="button" aria-label="Kembali" onclick="history.back()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
-        </button>
-        <span class="cd-back-title">Detail Klinik</span>
-      </div>
 
       <section class="cd-main-card" id="cdMainCard" aria-label="Informasi klinik">
         <span class="cd-main-photo" id="cdPhoto" aria-hidden="true"></span>
@@ -56,7 +48,7 @@
 
       <section class="cd-date-section"><div class="cd-section-header"><h2 class="cd-section-title">Pilih Tanggal</h2></div><div class="cd-date-strip" id="cdDateStrip" role="group"></div></section>
 
-      <section class="cd-doctor-section" id="cdDoctors"><div class="cd-section-header"><h2 class="cd-section-title">Dokter Tersedia</h2></div></section>
+      <section class="cd-doctor-section" id="cdDoctors"><div class="cd-section-header"><h2 class="cd-section-title">Dokter Aktif Hari Ini</h2></div></section>
 
     </div>
 
@@ -69,15 +61,6 @@
 
   </div>
 
-  <script>
-  (function(){
-    var s={};try{s=JSON.parse(localStorage.getItem("anabulku_user_session"))||{};}catch(e){}
-    var g=!s.loggedIn,u=g?"Meng":(s.username||s.nama||"Pengguna");
-    var ini=g?String.fromCodePoint(0x1F464):u.slice(0,2).toUpperCase();
-    var a=document.getElementById("userAvatar"),b=document.getElementById("userGreeting");
-    if(a)a.textContent=ini;if(b)b.textContent=u;
-  })();
-  </script>
   <script src="notif.js"></script>
   <script src="clinic-detail.js"></script>
 </body>

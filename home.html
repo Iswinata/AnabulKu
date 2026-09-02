@@ -8,7 +8,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles.css?v=16" />
+  <link rel="stylesheet" href="minigame.css?v=1" />
 </head>
 <body>
   <div class="app">
@@ -108,16 +109,13 @@
       <div class="grooming-grid">
         <button class="g-card g-card--cat" type="button" data-grooming="kucing" aria-label="Grooming Kucing">
           <div class="g-card-body">
-            <span class="g-badge">Populer</span>
             <h3 class="g-title">Grooming<br>Kucing</h3>
-            <span class="g-sub">Mandi • Potong • Sisir</span>
           </div>
           <img class="g-img g-img-cat" src="kucing.png" alt="Kucing memakai kacamata" />
         </button>
         <button class="g-card g-card--dog" type="button" data-grooming="anjing" aria-label="Grooming Anjing">
           <div class="g-card-body">
             <h3 class="g-title">Grooming<br>Anjing</h3>
-            <span class="g-sub">Mandi • Potong • Parfum</span>
           </div>
           <img class="g-img g-img-dog" src="anjingroom.png" alt="Anjing memakai kacamata" />
         </button>
@@ -130,6 +128,20 @@
           <span class="grooming-results-note" id="grooming-note"></span>
         </div>
         <div id="grooming-list"></div>
+      </div>
+    </section>
+
+
+    <!-- ===== Minigame ===== -->
+    <section class="section mg-section" aria-label="Minigame Kucing Lompat">
+      <div class="mg-wrap">
+        <canvas id="mgCanvas" width="349" height="120" aria-label="Minigame kucing lompat" role="img"></canvas>
+      </div>
+      <div class="mg-score-row">
+        <span class="mg-score-label">Skor</span>
+        <span class="mg-score-val" id="mgScore">0</span>
+        <span class="mg-score-label">Terbaik</span>
+        <span class="mg-score-val" id="mgBest">0</span>
       </div>
     </section>
 
@@ -180,8 +192,9 @@
   </div>
 
   <script src="config.js"></script>
-  <script src="clinics.js"></script>
+  <script src="clinics.js?v=16"></script>
   <script src="notif.js"></script>
+  <script src="minigame.js?v=1"></script>
   <script>
   (function () {
     'use strict';

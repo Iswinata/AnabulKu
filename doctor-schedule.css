@@ -1,0 +1,184 @@
+/* ===================================================================
+   AnabulKu — Doctor Schedule  |  Dark-navy glassmorphism
+=================================================================== */
+
+.ds-app { padding-bottom: 0; }
+
+/* ── Topbar ── */
+.ds-topbar { justify-content: space-between; }
+.ds-topbar-left { display:flex; align-items:center; gap:12px; min-width:0; flex:1; }
+.ds-btn-back {
+  display:grid; place-items:center;
+  width:38px; height:38px; border-radius:12px; flex-shrink:0;
+  background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15);
+  backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+  transition:background 0.15s, transform 0.1s;
+  color:var(--white); cursor:pointer;
+}
+
+.ds-btn-back:active { transform:scale(0.93); }
+.ds-btn-back svg { width:18px; height:18px; }
+.ds-topbar-info { display:flex; flex-direction:column; gap:1px; min-width:0; }
+.ds-topbar-title { font-size:15px; font-weight:700; color:var(--white); letter-spacing:-0.2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.ds-topbar-sub { font-size:10.5px; color:rgba(255,255,255,0.45); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+/* ── Scroll ── */
+.ds-scroll { flex:1; overflow-y:auto; padding:16px 0 100px; display:flex; flex-direction:column; }
+
+/* ── Section ── */
+.ds-section { margin-top:12px; }
+.ds-section:first-child { margin-top:0; }
+.ds-section-title {
+  font-size:13px; font-weight:700; color:rgba(255,255,255,0.75);
+  letter-spacing:0.02em; margin:0 0 12px;
+  padding:0; position:static;
+}
+.ds-section-title::before { display:none; }
+
+/* ── Date strip ── */
+.ds-date-strip { display:grid; grid-template-columns:repeat(7,1fr); gap:7px; padding:2px 0 4px; }
+.ds-day-btn {
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:5px; width:100%; height:62px; padding:8px 1px;
+  background:rgba(23,27,58,0.45); border:1px solid rgba(255,255,255,0.12);
+  border-radius:14px; cursor:pointer; font-family:'Poppins',sans-serif;
+  backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+  transition:background 0.15s, border-color 0.15s, transform 0.1s, box-shadow 0.15s;
+}
+
+.ds-day-btn:active { transform:scale(0.94); }
+.ds-day-btn.is-active { background:linear-gradient(160deg,rgba(255,152,0,0.92) 0%,rgba(255,189,93,0.82) 100%); border:1px solid rgba(255,200,100,0.55); box-shadow:0 4px 14px rgba(255,152,0,0.30), inset 0 1px 0 rgba(255,255,255,0.25); }
+.ds-day-letter { font-size:10.5px; font-weight:600; color:rgba(255,255,255,0.50); line-height:1; text-transform:uppercase; letter-spacing:0.04em; }
+.ds-day-btn.is-active .ds-day-letter { color:rgba(255,255,255,0.90); }
+.ds-day-num { font-size:16px; font-weight:700; color:rgba(255,255,255,0.85); line-height:1; }
+.ds-day-btn.is-active .ds-day-num { color:#fff; }
+
+/* ── Doctor card ── */
+.ds-doc-card {
+  background:rgba(23,27,58,0.55); border:1px solid rgba(255,255,255,0.10);
+  border-radius:18px; margin-bottom:14px; overflow:hidden;
+  backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
+  transition:border-color 0.15s, box-shadow 0.15s;
+}
+.ds-doc-card:last-child { margin-bottom:0; }
+
+.ds-doc-inner { display:flex; gap:14px; padding:15px 15px 0; align-items:flex-end; }
+.ds-doc-photo {
+  width:72px; height:72px; border-radius:14px; flex-shrink:0;
+  background:rgba(255,152,0,0.12); border:1.5px solid rgba(255,152,0,0.25);
+  background-size:cover; background-position:center;
+  display:flex; align-items:flex-end; justify-content:center;
+  overflow:visible; position:relative;
+}
+.ds-doc-photo-icon {
+  width:90%; height:90%;
+  object-fit:contain; object-position:bottom center;
+  opacity:0.90;
+  pointer-events:none;
+  display:block; margin:0 auto;
+  align-self:flex-end;
+}
+.ds-doc-info { flex:1; min-width:0; display:flex; flex-direction:column; gap:3px; }
+.ds-doc-name { font-size:13.5px; font-weight:700; color:#FFEED5; line-height:1.25; margin:0; }
+.ds-doc-spec { font-size:11px; font-weight:600; color:rgba(255,178,90,0.95); margin:0; }
+.ds-doc-hours { font-size:11px; color:rgba(255,255,255,0.50); margin:2px 0 0; }
+.ds-doc-sched-label { font-size:10.5px; font-weight:500; color:rgba(255,239,216,0.72); letter-spacing:0.01em; margin:8px 15px 4px; }
+.ds-doc-days { display:flex; flex-wrap:wrap; gap:4px; padding:0 15px; }
+.ds-day-tag { font-size:10px; font-weight:600; padding:3px 8px; border-radius:20px; background:rgba(255,152,0,0.12); border:1px solid rgba(255,152,0,0.25); color:rgba(255,152,0,0.80); font-family:'Poppins',sans-serif; }
+.ds-day-tag.is-today { background:rgba(255,152,0,0.22); border-color:rgba(255,152,0,0.55); color:#FFB74D; box-shadow:0 0 0 2px rgba(255,152,0,0.18); }
+.ds-doc-divider { height:1px; background:rgba(255,255,255,0.07); margin:12px 14px 0; }
+
+/* ── Time slots ── */
+.ds-time-row { padding:14px 15px 15px; }
+.ds-sesi-group { margin-bottom:12px; }
+.ds-sesi-group:last-child { margin-bottom:0; }
+.ds-sesi-group-header { font-size:10.5px; font-weight:600; color:rgba(255,255,255,0.42); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:8px; }
+.ds-sesi-slots { display:flex; flex-wrap:wrap; gap:8px; }
+.ds-time-slot { font-size:12px; font-weight:600; font-family:'Poppins',sans-serif; padding:7px 14px; border-radius:20px; border:1px solid transparent; cursor:pointer; transition:background 0.15s, border-color 0.15s, color 0.15s, transform 0.1s; }
+.ds-time-slot.available { background:rgba(255,255,255,0.07); border-color:rgba(255,255,255,0.14); color:rgba(255,255,255,0.80); }
+
+.ds-time-slot.available:active { transform:scale(0.94); }
+.ds-time-slot.selected { background:linear-gradient(135deg,rgba(255,152,0,0.92) 0%,rgba(255,189,93,0.80) 100%); border-color:rgba(255,152,0,0.70); color:#fff; box-shadow:0 3px 12px rgba(255,152,0,0.30); }
+.ds-time-slot.booked { background:rgba(255,255,255,0.03); border-color:rgba(255,255,255,0.06); color:rgba(255,255,255,0.22); text-decoration:line-through; cursor:not-allowed; }
+.ds-time-slot.past { background:rgba(255,255,255,0.02); border-color:rgba(255,255,255,0.05); color:rgba(255,255,255,0.16); cursor:not-allowed; }
+.ds-no-slots { display:flex; align-items:center; gap:8px; padding:12px 0; color:rgba(255,255,255,0.32); font-size:12px; }
+.ds-time-action-row { padding:12px 14px 14px; display:flex; justify-content:flex-end; }
+.ds-pilih-btn { display:inline-flex; align-items:center; gap:6px; padding:9px 22px; border-radius:20px; background:linear-gradient(135deg,#FF9800 0%,#FFB74D 100%); border:none; color:#fff; font-size:12.5px; font-weight:700; font-family:'Poppins',sans-serif; box-shadow:0 4px 16px rgba(255,152,0,0.35); cursor:pointer; transition:opacity 0.15s, transform 0.1s; }
+
+.ds-pilih-btn:active { transform:scale(0.96); }
+.ds-empty { display:flex; flex-direction:column; align-items:center; gap:10px; padding:40px 20px; text-align:center; color:rgba(255,255,255,0.35); font-size:13px; line-height:1.55; }
+.ds-empty svg { opacity:0.30; }
+.ds-toast { position:fixed; bottom:90px; left:50%; transform:translateX(-50%); background:rgba(30,25,66,0.95); border:1px solid rgba(255,255,255,0.15); border-radius:20px; padding:10px 20px; color:#fff; font-size:12.5px; font-weight:600; font-family:'Poppins',sans-serif; box-shadow:0 8px 32px rgba(0,0,0,0.35); z-index:300; white-space:nowrap; pointer-events:none; animation:dsToastIn .25s ease both; }
+@keyframes dsToastIn { from{opacity:0;transform:translateX(-50%) translateY(10px)} to{opacity:1;transform:translateX(-50%) translateY(0)} }
+
+
+/* ── Booking modal ── */
+.ds-modal-backdrop { position:fixed; inset:0; background:rgba(0,0,0,0.60); z-index:200; display:flex; align-items:flex-end; justify-content:center; font-family:'Poppins',sans-serif; animation:dsBackdropIn .2s ease both; }
+@keyframes dsBackdropIn { from{opacity:0} to{opacity:1} }
+.ds-modal { background:linear-gradient(160deg,#1e1942 0%,#0f0c29 100%); border:1px solid rgba(255,255,255,0.12); border-radius:24px 24px 0 0; width:100%; max-width:480px; max-height:92vh; overflow-y:auto; box-shadow:0 -8px 48px rgba(0,0,0,0.55); animation:dsModalUp .25s ease both; }
+@keyframes dsModalUp { from{transform:translateY(100%)} to{transform:translateY(0)} }
+@media(min-width:480px){ .ds-modal-backdrop{align-items:center;padding:20px} .ds-modal{border-radius:24px;max-height:90vh} }
+.ds-modal-header { display:flex; align-items:center; justify-content:space-between; padding:20px 20px 14px; border-bottom:1px solid rgba(255,255,255,0.08); }
+.ds-modal-title { font-size:16px; font-weight:800; color:#FFEED5; }
+.ds-modal-close { width:30px; height:30px; border-radius:8px; background:rgba(255,255,255,0.08); border:none; color:rgba(255,255,255,0.60); font-size:14px; display:grid; place-items:center; cursor:pointer; }
+
+.ds-modal-body { padding:18px 20px 24px; display:flex; flex-direction:column; gap:14px; }
+.ds-modal-row { display:flex; flex-direction:column; gap:4px; }
+.ds-modal-label { font-size:11px; font-weight:600; color:rgba(255,255,255,0.45); text-transform:uppercase; letter-spacing:0.05em; }
+.ds-modal-value { font-size:13.5px; font-weight:600; color:#fff; }
+.ds-modal-divider { height:1px; background:rgba(255,255,255,0.07); }
+.ds-modal-field { display:flex; flex-direction:column; gap:6px; }
+.ds-modal-field label { font-size:12px; font-weight:600; color:rgba(255,255,255,0.60); }
+.ds-modal-field select, .ds-modal-field input, .ds-modal-field textarea { background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.15); border-radius:10px; color:#fff; font-family:'Poppins',sans-serif; font-size:13px; padding:10px 12px; transition:border-color 0.15s; }
+.ds-modal-field select:focus, .ds-modal-field input:focus, .ds-modal-field textarea:focus { outline:none; border-color:rgba(255,152,0,0.60); }
+.ds-modal-field select option { background:#1e1942; color:#fff; }
+.ds-modal-field textarea { resize:none; min-height:72px; }
+.ds-modal-confirm { width:100%; padding:13px; border-radius:14px; background:linear-gradient(135deg,#FF9800 0%,#FFB74D 100%); border:none; color:#fff; font-size:14px; font-weight:700; font-family:'Poppins',sans-serif; cursor:pointer; box-shadow:0 4px 18px rgba(255,152,0,0.40); transition:opacity 0.15s, transform 0.1s; }
+
+.ds-modal-confirm:active { transform:scale(0.97); }
+
+/* ── Guest modal ── */
+.ds-guest-backdrop { position:fixed; inset:0; background:rgba(10,8,30,0.80); backdrop-filter:blur(6px); display:flex; align-items:flex-end; justify-content:center; z-index:9999; }
+.ds-guest-sheet { background:linear-gradient(160deg,#1e1942 0%,#0f0c29 100%); border:1px solid rgba(255,255,255,0.12); width:100%; max-width:393px; border-radius:24px 24px 0 0; padding:28px 24px 32px; display:flex; flex-direction:column; align-items:center; gap:10px; box-shadow:0 -8px 48px rgba(0,0,0,0.55); animation:dsModalUp .25s ease both; }
+.ds-guest-icon { font-size:44px; line-height:1; margin-bottom:4px; }
+.ds-guest-title { font-size:17px; font-weight:700; color:#FFEED5; text-align:center; }
+.ds-guest-sub { font-size:13px; color:rgba(255,255,255,0.55); text-align:center; line-height:1.55; margin-bottom:6px; }
+.ds-guest-btn-primary { width:100%; padding:13px; border-radius:12px; font-size:14px; font-weight:700; font-family:'Poppins',sans-serif; cursor:pointer; border:2px solid rgba(255,152,0,0.60); background:linear-gradient(180deg,#FF9800,#FFD21F); color:#fff; margin-bottom:8px; }
+.ds-guest-btn-secondary { width:100%; padding:13px; border-radius:12px; font-size:14px; font-weight:700; font-family:'Poppins',sans-serif; cursor:pointer; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.07); color:rgba(255,255,255,0.85); }
+
+
+/* ── Clinic banner ── */
+.ds-clinic-banner {
+  display:flex; align-items:center; gap:13px;
+  background:linear-gradient(135deg,rgba(255,152,0,0.85) 0%,rgba(255,189,93,0.70) 100%);
+  border:1px solid rgba(255,200,100,0.35);
+  border-radius:20px; padding:14px 15px;
+  margin-bottom:14px; position:relative; overflow:hidden;
+  box-shadow:0 8px 32px rgba(255,152,0,0.25), var(--sh-inset);
+  backdrop-filter:var(--blur); -webkit-backdrop-filter:var(--blur);
+}
+.ds-banner-photo {
+  width:80px; height:80px; border-radius:12px; flex-shrink:0;
+  background:rgba(255,255,255,0.25); background-size:cover; background-position:center;
+  border:1px solid rgba(255,255,255,0.30);
+}
+.ds-banner-body { flex:1; min-width:0; display:flex; flex-direction:column; gap:4px; }
+.ds-banner-name { font-size:14px; font-weight:700; color:#FFE5BF; line-height:1.25; margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.ds-banner-addr { font-size:10px; font-weight:400; color:#A36233; line-height:1.35; margin:0; }
+.ds-banner-meta { display:flex; gap:12px; margin-top:4px; }
+.ds-banner-chip { display:inline-flex; align-items:center; gap:4px; font-size:11px; font-weight:600; color:#AC6600; }
+
+/* ── Section titles ── */
+.ds-date-section { margin-top:8px; margin-bottom:4px; }
+.ds-section-title { font-size:13px; font-weight:700; color:rgba(255,255,255,0.80); margin:0 0 10px; padding:0; position:static; }
+.ds-section-title::before { display:none; }
+
+/* ── Doctor section title ── */
+.ds-doctor-title {
+  font-size:12.5px; font-weight:600; color:#AC6600;
+  margin:14px 0 10px; padding-left:2px;
+}
+
+/* ── Doctor list wrapper ── */
+.ds-doctor-list { display:flex; flex-direction:column; }
+

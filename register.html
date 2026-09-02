@@ -83,32 +83,30 @@
     .modal-btn--secondary{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:#fff;margin-top:8px}
     @keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-5px)}40%,80%{transform:translateX(5px)}}
     @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
-    .form-card{background:var(--white);border:1.5px solid var(--gray-e5);border-radius:13px;box-shadow:var(--shadow);padding:16px;margin-bottom:10px;flex-shrink:0}
-    .field{margin-bottom:12px}
-    .field:last-child{margin-bottom:0}
-    .field-label{display:block;font-size:11px;font-weight:700;color:var(--ink-2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
-    .field-hint{font-size:10px;color:var(--ink-3);margin-top:3px}
     .input-wrap{position:relative}
-    .input-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:15px;height:15px;color:var(--gray-d1);pointer-events:none}
-    .field-input{width:100%;height:48px;border:1.5px solid var(--gray-e5);border-radius:10px;background:#fafafa;padding:0 42px 0 38px;font-size:13.5px;font-family:inherit;color:var(--ink);outline:none;transition:border-color .15s,box-shadow .15s,background .15s;-webkit-appearance:none}
+    .input-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:rgba(255,255,255,0.35);pointer-events:none}
+    .field-input{width:100%;height:50px;border:1px solid rgba(255,255,255,0.18);border-radius:12px;background:rgba(255,255,255,0.08);padding:0 44px 0 40px;font-size:14px;font-weight:500;font-family:inherit;color:#fff;outline:none;transition:border-color .15s,background .15s;-webkit-appearance:none}
     .field-input.no-right-pad{padding-right:14px}
-    .field-input:focus{border-color:var(--orange);background:var(--white);box-shadow:0 0 0 3px rgba(255,152,0,.13)}
-    .field-input.is-error{border-color:var(--red);box-shadow:0 0 0 3px rgba(239,68,68,.1)}
-    .field-input::placeholder{color:#c0c8d2;font-size:12.5px}
-    .toggle-pass{position:absolute;right:10px;top:50%;transform:translateY(-50%);padding:4px;color:var(--gray-d1);display:flex;align-items:center;transition:color .15s;-webkit-tap-highlight-color:transparent}
-    .toggle-pass svg{width:16px;height:16px}
-    .toggle-pass:hover{color:var(--ink-2)}
-    .strength-bar{height:3px;border-radius:99px;background:var(--gray-e5);margin-top:5px;overflow:hidden}
+    .field-input:focus{border-color:rgba(255,152,0,0.65);background:rgba(255,255,255,0.13)}
+    .field-input.is-error{border-color:rgba(239,68,68,0.7);background:rgba(239,68,68,0.08)}
+    .field-input::placeholder{color:rgba(255,255,255,0.30);font-size:13px}
+    .toggle-pass{position:absolute;right:11px;top:50%;transform:translateY(-50%);padding:4px;color:rgba(255,255,255,0.40);display:flex;align-items:center;transition:color .15s;-webkit-tap-highlight-color:transparent}
+    .toggle-pass svg{width:17px;height:17px}
+    .toggle-pass:hover{color:rgba(255,255,255,0.70)}
+    .strength-bar{height:3px;border-radius:99px;background:rgba(255,255,255,0.08);margin-top:5px;overflow:hidden}
     .strength-fill{height:100%;border-radius:99px;width:0%;transition:width .3s,background .3s}
-    .strength-text{font-size:10px;font-weight:600;margin-top:2px;color:var(--ink-3)}
+    .strength-text{font-size:10px;font-weight:600;margin-top:2px;color:rgba(255,255,255,0.45)}
     .step-panel{display:none;flex-direction:column;flex:1}
     .step-panel.is-active{display:flex}
-    .btn-next{width:100%;height:50px;flex-shrink:0;background:linear-gradient(180deg,#ff9800 0%,#ffbd5d 100%);color:var(--white);border:1.5px solid var(--black);border-radius:12px;box-shadow:var(--shadow);font-size:14px;font-weight:700;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:7px;transition:transform .1s ease,box-shadow .1s ease;margin-bottom:10px}
-    .btn-next:active{transform:translate(1px,1px);box-shadow:1px 1px 0 #000}
+    .field-input[readonly]{cursor:default;opacity:0.80;border-color:rgba(255,255,255,0.10);background:rgba(255,255,255,0.05)}
+    .field-input[readonly]:focus{border-color:rgba(255,255,255,0.10);background:rgba(255,255,255,0.05)}
+    .btn-next{width:100%;height:48px;flex-shrink:0;background:linear-gradient(135deg,#ff9800 0%,#ffbd5d 100%);color:#fff;border:none;border-radius:14px;box-shadow:0 6px 20px rgba(255,152,0,0.38);font-size:14px;font-weight:700;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:8px;transition:transform .1s,opacity .1s;margin-bottom:10px}
+    .btn-next:active{transform:scale(.97);opacity:.92}
     .btn-next:disabled{opacity:.6;cursor:not-allowed;transform:none !important}
     .btn-row{display:flex;gap:8px;margin-bottom:10px;flex-shrink:0}
-    .btn-prev{height:50px;padding:0 16px;flex-shrink:0;background:var(--white);color:var(--ink-2);border:1.5px solid var(--black);border-radius:12px;box-shadow:var(--shadow);font-size:12.5px;font-weight:600;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:5px;transition:transform .1s ease,box-shadow .1s ease;white-space:nowrap}
-    .btn-prev:active{transform:translate(1px,1px);box-shadow:1px 1px 0 #000}
+    .btn-prev{height:48px;padding:0 18px;flex-shrink:0;background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.75);border:1px solid rgba(255,255,255,0.18);border-radius:14px;font-size:12.5px;font-weight:600;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:5px;transition:background .15s,transform .1s;white-space:nowrap}
+    .btn-prev:active{transform:scale(.97);opacity:.92}
+    .btn-prev:hover{background:rgba(255,255,255,0.14)}
     .summary-card{background:linear-gradient(135deg,#fff7ed 0%,#ffedd5 100%);border:1.5px solid #fed7aa;border-radius:12px;box-shadow:var(--shadow);padding:12px 14px;margin-bottom:10px;flex-shrink:0}
     .summary-card-title{font-size:10px;font-weight:700;color:var(--ink-3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:7px}
     .summary-row{display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:4px 0;border-bottom:1px solid rgba(255,152,0,.15)}
@@ -267,13 +265,42 @@
     <!-- Step 3 -->
     <div class="step-panel" id="step3">
       <p class="section-title">Konfirmasi Data</p>
-      <div class="summary-card">
-        <p class="summary-card-title">Ringkasan Pendaftaran</p>
-        <div class="summary-row"><span class="summary-key">Nama</span><span class="summary-val" id="summNama">-</span></div>
-        <div class="summary-row"><span class="summary-key">Username</span><span class="summary-val summary-val--orange" id="summUsername">-</span></div>
-        <div class="summary-row"><span class="summary-key">Email</span><span class="summary-val" id="summEmail">-</span></div>
-        <div class="summary-row"><span class="summary-key">No. HP</span><span class="summary-val" id="summNoHp">-</span></div>
-        <div class="summary-row"><span class="summary-key">Kota</span><span class="summary-val" id="summKota">-</span></div>
+      <div class="form-card">
+        <div class="field">
+          <label class="field-label">Nama Lengkap</label>
+          <div class="input-wrap">
+            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <input class="field-input no-right-pad" type="text" id="summNama" readonly tabindex="-1" />
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label">Username</label>
+          <div class="input-wrap">
+            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M6 20v-2a6 6 0 0 1 12 0v2"/></svg>
+            <input class="field-input no-right-pad" type="text" id="summUsername" readonly tabindex="-1" />
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label">Email</label>
+          <div class="input-wrap">
+            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            <input class="field-input no-right-pad" type="text" id="summEmail" readonly tabindex="-1" />
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label">Nomor HP</label>
+          <div class="input-wrap">
+            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.42 2 2 0 0 1 3.6 1.24h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.87a16 16 0 0 0 6.08 6.08l.97-1.87a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21.72 15z"/></svg>
+            <input class="field-input no-right-pad" type="text" id="summNoHp" readonly tabindex="-1" />
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label">Kota / Kabupaten</label>
+          <div class="input-wrap">
+            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <input class="field-input no-right-pad" type="text" id="summKota" readonly tabindex="-1" />
+          </div>
+        </div>
       </div>
       <label class="tos-wrap">
         <input type="checkbox" id="chkTos" />
@@ -330,9 +357,9 @@ document.getElementById("toggleConfirmPass2").addEventListener("click",function(
 cP.addEventListener("input",function(){var hint=document.getElementById("confirmPassHint");hint.style.display=(cP.value&&cP.value!==rP.value)?"":"none";});
 document.getElementById("btnStep1").addEventListener("click",function(){var nama=document.getElementById("inputNama").value.trim();var hp=document.getElementById("inputNoHp").value.trim();var kota=document.getElementById("inputKota").value.trim();if(!nama){markErr("inputNama");return;}if(!hp||!/^0[0-9]{8,13}$/.test(hp)){markErr("inputNoHp");return;}if(!kota){markErr("inputKota");return;}goStep(2);});
 document.getElementById("btnBack1").addEventListener("click",function(){goStep(1);});
-document.getElementById("btnStep2").addEventListener("click",function(){var username=document.getElementById("inputUsername").value.trim();var email=document.getElementById("inputRegEmail").value.trim();var pass=rP.value;var confirm=cP.value;if(!username||username.length<4){markErr("inputUsername");return;}if(!email||!/^[^s@]+@[^s@]+.[^s@]+$/.test(email)){markErr("inputRegEmail");return;}if(!pass||pass.length<8){markErr("inputRegPass");return;}if(!confirm||confirm!==pass){markErr("inputConfirmPass2");document.getElementById("confirmPassHint").style.display="";return;}document.getElementById("confirmPassHint").style.display="none";var users=LS.get("anabulku_users",[]);if(users.find(function(u){return u.username===username;})){markErr("inputUsername");return;}if(users.find(function(u){return u.email===email;})){markErr("inputRegEmail");return;}document.getElementById("summNama").textContent=document.getElementById("inputNama").value.trim();document.getElementById("summUsername").textContent=username;document.getElementById("summEmail").textContent=email;document.getElementById("summNoHp").textContent=document.getElementById("inputNoHp").value.trim();document.getElementById("summKota").textContent=document.getElementById("inputKota").value.trim()||"-";goStep(3);});
+document.getElementById("btnStep2").addEventListener("click",function(){var username=document.getElementById("inputUsername").value.trim();var email=document.getElementById("inputRegEmail").value.trim();var pass=rP.value;var confirm=cP.value;if(!username||username.length<4){markErr("inputUsername");return;}if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){markErr("inputRegEmail");return;}if(!pass||pass.length<8){markErr("inputRegPass");return;}if(!confirm||confirm!==pass){markErr("inputConfirmPass2");document.getElementById("confirmPassHint").style.display="";return;}document.getElementById("confirmPassHint").style.display="none";var users=LS.get("anabulku_users",[]);if(users.find(function(u){return u.username===username;})){markErr("inputUsername");return;}if(users.find(function(u){return u.email===email;})){markErr("inputRegEmail");return;}document.getElementById("summNama").value=document.getElementById("inputNama").value.trim();document.getElementById("summUsername").value=username;document.getElementById("summEmail").value=email;document.getElementById("summNoHp").value=document.getElementById("inputNoHp").value.trim();document.getElementById("summKota").value=document.getElementById("inputKota").value.trim()||"-";goStep(3);});
 document.getElementById("btnBack2").addEventListener("click",function(){goStep(2);});
-document.getElementById("btnRegister").addEventListener("click",function(){var tos=document.getElementById("chkTos").checked;var btn=document.getElementById("btnRegister");var btnTxt=document.getElementById("regBtnText");if(!tos){document.getElementById("chkTos").focus();return;}btnTxt.textContent="Memproses...";btn.disabled=true;setTimeout(function(){var newUser={nama:document.getElementById("inputNama").value.trim(),noHp:document.getElementById("inputNoHp").value.trim(),kota:document.getElementById("inputKota").value.trim(),username:document.getElementById("inputUsername").value.trim(),email:document.getElementById("inputRegEmail").value.trim(),password:rP.value,role:"user",accountStatus:"pending",createdAt:new Date().toISOString()};var users=LS.get("anabulku_users",[]);users.push(newUser);LS.set("anabulku_users",users);localStorage.setItem("anabulku_notifications",JSON.stringify([]));document.getElementById("modalWaOverlay").classList.add("is-open");},600);});
+document.getElementById("btnRegister").addEventListener("click",function(){var tos=document.getElementById("chkTos").checked;var btn=document.getElementById("btnRegister");var btnTxt=document.getElementById("regBtnText");if(!tos){document.getElementById("chkTos").focus();return;}btnTxt.textContent="Memproses...";btn.disabled=true;setTimeout(function(){var newUser={nama:document.getElementById("inputNama").value.trim(),noHp:document.getElementById("inputNoHp").value.trim(),kota:document.getElementById("inputKota").value.trim(),username:document.getElementById("inputUsername").value.trim(),email:document.getElementById("inputRegEmail").value.trim(),password:rP.value,role:"user",accountStatus:"pending",createdAt:new Date().toISOString()};var users=LS.get("anabulku_users",[]);users.push(newUser);LS.set("anabulku_users",users);LS.set("anabulku_user_session",{loggedIn:true,nama:newUser.nama,email:newUser.email,username:newUser.username,noHp:newUser.noHp,kota:newUser.kota,createdAt:newUser.createdAt,role:"user"});localStorage.setItem("anabulku_notifications",JSON.stringify([]));document.getElementById("modalWaOverlay").classList.add("is-open");},600);});
 })();
 </script>
 </body>

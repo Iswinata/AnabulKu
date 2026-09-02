@@ -1,0 +1,13 @@
+{
+  "name": "Vetiloka — Perawatan Anabul",
+  "short_name": "Vetiloka",
+  "description": "Booking layanan vet, grooming, dan pet shop untuk anabul kesayanganmu.",
+  "start_url": "index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#00b3a4",
+  "theme_color": "#00b3a4",
+  "icons": [
+    { "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

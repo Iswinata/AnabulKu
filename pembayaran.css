@@ -1,0 +1,208 @@
+/* ===================================================================
+   AnabulKu — pembayaran.css  (part 1: shell → method list)
+=================================================================== */
+.py-app { display:flex; flex-direction:column; overflow:hidden; }
+
+.py-topbar {
+  flex-shrink:0; display:flex; align-items:center; justify-content:space-between;
+  /* margin negatif agar topbar melebar keluar padding .app (18px kiri-kanan) */
+  margin: -20px -18px 0;
+  padding: 18px 18px 14px;
+  background:rgba(255,255,255,0.04);
+  backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px);
+  border-bottom:1px solid rgba(255,255,255,0.10);
+}
+.py-btn-back {
+  display:grid; place-items:center; width:38px; height:38px;
+  border-radius:12px; border:1px solid rgba(255,255,255,0.18);
+  background:rgba(255,255,255,0.10); color:#f1f5f9; transition:background .15s;
+}
+.py-btn-back:active { background:rgba(255,255,255,0.20); }
+.py-btn-back svg { width:18px; height:18px; }
+.py-topbar-title { font-size:15px; font-weight:700; color:#f1f5f9; }
+
+.py-scroll {
+  flex:1; min-height:0; overflow-y:auto; -webkit-overflow-scrolling:touch;
+  /* padding kiri-kanan 0 — ikut padding .app (18px) */
+  padding: 14px 0 100px;
+  display:flex; flex-direction:column; gap:14px;
+}
+
+.py-section { display:flex; flex-direction:column; gap:10px; }
+.py-section-title { font-size:10px; font-weight:700; color:rgba(255,152,0,0.85); text-transform:uppercase; letter-spacing:.08em; }
+
+.py-order-card {
+  background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.14);
+  border-radius:18px; overflow:hidden;
+  backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px);
+}
+.py-order-header { background:linear-gradient(90deg,rgba(255,152,0,0.9) 0%,rgba(255,188,89,0.9) 100%); padding:14px 18px; }
+.py-order-klinik { font-size:13px; font-weight:800; color:#fff; margin-bottom:2px; }
+.py-order-dokter { font-size:11px; color:rgba(255,255,255,0.85); }
+.py-order-body { padding:4px 0 14px; }
+.py-info-row { display:flex; align-items:center; gap:12px; padding:9px 18px; }
+.py-info-icon { font-size:15px; flex-shrink:0; width:20px; text-align:center; }
+.py-info-col { display:flex; flex-direction:column; flex:1; min-width:0; }
+.py-info-label { font-size:10px; color:rgba(255,255,255,0.45); font-weight:500; }
+.py-info-val { font-size:13px; font-weight:600; color:#f1f5f9; }
+
+/* 2-col grid untuk Pukul/Hewan + Biaya */
+.py-info-grid { display:grid; grid-template-columns:1fr 1fr; gap:0; padding:0 18px 10px; }
+.py-info-cell { display:flex; flex-direction:column; padding:7px 0; }
+.py-info-cell .py-info-label { font-size:10px; color:rgba(255,255,255,0.45); font-weight:500; margin-bottom:2px; }
+.py-info-cell .py-info-val { font-size:13px; font-weight:600; color:#f1f5f9; }
+
+/* QRIS info card */
+.py-qris-info-card { display:flex; align-items:center; gap:12px; background:rgba(255,152,0,0.08); border:1px solid rgba(255,152,0,0.25); border-radius:14px; padding:12px 16px; }
+.py-qris-info-icon { font-size:24px; flex-shrink:0; }
+.py-qris-info-text { display:flex; flex-direction:column; }
+.py-qris-info-title { font-size:13px; font-weight:700; color:#ffb74d; }
+.py-qris-info-sub { font-size:11px; color:rgba(255,255,255,0.45); margin-top:2px; }
+.py-divider { height:1px; background:rgba(255,255,255,0.10); margin:6px 18px; }
+.py-total-row { display:flex; justify-content:space-between; align-items:center; padding:6px 18px 0; }
+.py-total-label { font-size:12px; font-weight:600; color:rgba(255,255,255,0.6); }
+.py-total-amount { font-size:18px; font-weight:800; color:#ff9800; }
+
+.py-countdown {
+  display:flex; align-items:center; gap:12px;
+  background:rgba(255,152,0,0.10); border:1px solid rgba(255,152,0,0.30);
+  border-radius:14px; padding:12px 16px; transition:background .3s,border-color .3s;
+}
+.py-countdown.is-urgent { background:rgba(239,68,68,0.12); border-color:rgba(239,68,68,0.4); }
+.py-countdown-icon { font-size:20px; flex-shrink:0; }
+.py-countdown-info { display:flex; flex-direction:column; flex:1; }
+.py-countdown-label { font-size:10px; color:rgba(255,255,255,0.5); font-weight:500; }
+.py-countdown-timer { font-size:22px; font-weight:800; color:#ff9800; letter-spacing:.04em; font-variant-numeric:tabular-nums; }
+.py-countdown.is-urgent .py-countdown-timer { color:#f87171; animation:py-pulse .7s ease-in-out infinite alternate; }
+@keyframes py-pulse { from{opacity:1} to{opacity:.5} }
+
+.py-method-list { display:flex; flex-direction:column; gap:8px; }
+.py-method-item {
+  display:flex; align-items:center; gap:12px;
+  background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12);
+  border-radius:14px; padding:12px 16px;
+  transition:border-color .15s,background .15s; text-align:left;
+}
+.py-method-item:active { background:rgba(255,255,255,0.10); }
+.py-method-item.is-selected { border-color:rgba(255,152,0,0.55); background:rgba(255,152,0,0.08); box-shadow:0 0 0 1px rgba(255,152,0,0.20); }
+.py-method-icon { font-size:20px; flex-shrink:0; width:28px; text-align:center; }
+.py-method-info { display:flex; flex-direction:column; flex:1; min-width:0; }
+.py-method-name { font-size:13px; font-weight:700; color:#f1f5f9; }
+.py-method-sub { font-size:11px; color:rgba(255,255,255,0.45); }
+.py-method-radio { width:18px; height:18px; border-radius:50%; border:2px solid rgba(255,255,255,0.30); display:grid; place-items:center; flex-shrink:0; transition:border-color .15s; }
+.py-method-item.is-selected .py-method-radio { border-color:#ff9800; }
+.py-radio-dot { width:9px; height:9px; border-radius:50%; background:#ff9800; display:none; }
+.py-method-item.is-selected .py-radio-dot { display:block; }
+
+.py-footer {
+  flex-shrink:0; display:flex; align-items:center; gap:14px;
+  /* margin negatif agar footer melebar keluar padding .app (18px) */
+  margin: 0 -18px;
+  padding: 14px 18px max(env(safe-area-inset-bottom),16px);
+  background:rgba(255,255,255,0.05);
+  backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px);
+  border-top:1px solid rgba(255,255,255,0.10);
+}
+.py-footer-total { display:flex; flex-direction:column; flex-shrink:0; }
+.py-footer-label { font-size:10px; color:rgba(255,255,255,0.45); }
+.py-footer-amount { font-size:17px; font-weight:800; color:#ff9800; }
+.py-btn-pay {
+  flex:1; height:50px;
+  background:linear-gradient(180deg,#ff9800 0%,#ffb74d 100%);
+  border-radius:14px; border:none; box-shadow:0 4px 24px rgba(255,152,0,0.35);
+  color:#fff; font-size:14px; font-weight:700;
+  display:flex; align-items:center; justify-content:center; gap:8px;
+  transition:transform .1s,box-shadow .1s,opacity .15s;
+}
+.py-btn-pay:active { transform:translateY(1px); box-shadow:0 2px 12px rgba(255,152,0,0.2); }
+.py-btn-pay:disabled { opacity:.4; cursor:not-allowed; transform:none !important; }
+
+/* ── Overlay + Sheet ── */
+.py-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.65); z-index:200; display:flex; align-items:flex-end; justify-content:center; }
+.py-overlay--center { align-items:center; padding:24px; }
+.py-overlay[hidden] { display:none !important; }
+.py-sheet {
+  background:rgba(12,20,34,0.97);
+  backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px);
+  border-radius:24px 24px 0 0;
+  border-top:1px solid rgba(255,255,255,0.18);
+  border-left:1px solid rgba(255,255,255,0.12);
+  border-right:1px solid rgba(255,255,255,0.12);
+  width:100%; max-width:393px;
+  padding:20px 22px max(env(safe-area-inset-bottom),32px);
+  max-height:92dvh; overflow-y:auto; -webkit-overflow-scrolling:touch;
+  animation:py-slide-up .28s cubic-bezier(.34,1.2,.64,1) both;
+}
+.py-sheet--center { border-radius:22px; text-align:center; padding:28px 24px 32px; max-width:360px; animation:py-scale-in .25s cubic-bezier(.34,1.2,.64,1) both; }
+.py-sheet--danger { border-color:rgba(239,68,68,0.4); }
+@keyframes py-slide-up { from{transform:translateY(100%)} to{transform:translateY(0)} }
+@keyframes py-scale-in { from{transform:scale(.85);opacity:0} to{transform:scale(1);opacity:1} }
+.py-sheet-handle { width:36px; height:4px; background:rgba(255,255,255,0.2); border-radius:2px; margin:0 auto 16px; }
+.py-sheet-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+.py-sheet-title { font-size:15px; font-weight:700; color:#f1f5f9; }
+.py-sheet-close { width:32px; height:32px; border-radius:8px; background:rgba(255,255,255,0.10); border:1px solid rgba(255,255,255,0.15); color:#f1f5f9; font-size:18px; display:grid; place-items:center; }
+
+/* QRIS */
+.py-qris-timer-badge { display:inline-flex; align-items:center; gap:5px; background:rgba(255,152,0,0.12); border:1px solid rgba(255,152,0,0.35); border-radius:20px; padding:4px 12px; font-size:11px; font-weight:700; color:#ffb74d; margin-bottom:10px; }
+.py-qris-timer-badge.is-urgent { background:rgba(239,68,68,0.15); border-color:rgba(239,68,68,0.4); color:#f87171; }
+.py-qris-sub { font-size:12px; color:rgba(255,255,255,0.5); margin-bottom:16px; text-align:center; }
+.py-qris-wrap { width:min(200px,68vw); height:min(200px,68vw); border:1px solid rgba(255,152,0,0.35); border-radius:16px; background:#fff; display:grid; place-items:center; margin:0 auto 16px; overflow:hidden; box-shadow:0 4px 24px rgba(255,152,0,0.2); }
+.py-qris-fallback { display:flex; flex-direction:column; align-items:center; gap:8px; color:rgba(255,152,0,0.55); font-size:11px; width:100%; height:100%; justify-content:center; }
+
+/* Info rows */
+.py-info-rows { width:100%; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.12); border-radius:12px; overflow:hidden; margin-bottom:14px; }
+.py-info-rows-row { display:flex; justify-content:space-between; align-items:center; padding:9px 14px; border-bottom:1px solid rgba(255,255,255,0.07); font-size:12px; }
+.py-info-rows-row:last-child { border-bottom:none; }
+.py-info-rows-key { color:rgba(255,255,255,0.45); font-weight:500; }
+.py-info-rows-val { color:#f1f5f9; font-weight:700; text-align:right; word-break:break-word; }
+
+
+/* VA */
+.py-va-header-info { display:flex; align-items:center; gap:10px; }
+.py-va-bank-icon { width:40px; height:40px; border-radius:10px; background:rgba(255,152,0,0.15); border:1px solid rgba(255,152,0,0.35); display:grid; place-items:center; font-size:20px; flex-shrink:0; }
+.py-va-bank-sub { font-size:11px; color:rgba(255,255,255,0.45); display:block; }
+.py-va-label { font-size:10px; font-weight:700; color:rgba(255,255,255,0.45); text-transform:uppercase; letter-spacing:.06em; margin-bottom:6px; }
+.py-va-number-row { display:flex; align-items:center; gap:10px; background:rgba(255,152,0,0.10); border:1px solid rgba(255,152,0,0.35); border-radius:12px; padding:12px 14px; margin-bottom:14px; }
+.py-va-number { flex:1; font-size:20px; font-weight:800; color:#ff9800; letter-spacing:.06em; font-variant-numeric:tabular-nums; word-break:break-all; }
+.py-btn-copy { height:34px; padding:0 12px; background:rgba(255,255,255,0.10); border:1px solid rgba(255,255,255,0.20); border-radius:8px; font-size:12px; font-weight:700; color:#f1f5f9; white-space:nowrap; transition:background .15s; }
+.py-btn-copy:active { background:rgba(255,255,255,0.18); }
+.py-btn-copy.copied { background:rgba(34,197,94,0.15); border-color:rgba(34,197,94,0.4); color:#4ade80; }
+.py-va-note { font-size:11.5px; color:#ffb74d; background:rgba(255,152,0,0.10); border:1px solid rgba(255,152,0,0.30); border-radius:10px; padding:10px 12px; line-height:1.6; margin-bottom:14px; }
+
+/* Sukses / Expired / Leave */
+.py-success-icon,.py-expired-icon,.py-leave-icon { font-size:44px; margin-bottom:12px; display:block; }
+.py-success-title { font-size:18px; font-weight:800; color:#f1f5f9; margin-bottom:8px; }
+.py-success-sub { font-size:13px; color:rgba(255,255,255,0.55); line-height:1.6; margin-bottom:20px; }
+.py-success-ref { display:inline-block; background:rgba(255,152,0,0.12); border:1px solid rgba(255,152,0,0.35); border-radius:8px; padding:5px 14px; font-size:12px; color:#ffb74d; font-weight:600; margin-bottom:20px; }
+
+/* Buttons */
+.py-btn-confirm {
+  width:100%; height:50px;
+  background:linear-gradient(180deg,#ff9800 0%,#ffb74d 100%);
+  border-radius:14px; border:none; box-shadow:0 4px 20px rgba(255,152,0,0.35);
+  color:#fff; font-size:14px; font-weight:700;
+  display:flex; align-items:center; justify-content:center; gap:8px;
+  transition:transform .1s,box-shadow .1s;
+}
+.py-btn-confirm:active { transform:translateY(1px); box-shadow:0 2px 10px rgba(255,152,0,0.2); }
+.py-btn-danger {
+  width:100%; height:50px;
+  background:rgba(239,68,68,0.85); border:1px solid rgba(239,68,68,0.5);
+  border-radius:14px; box-shadow:0 4px 16px rgba(239,68,68,0.25);
+  color:#fff; font-size:14px; font-weight:700;
+  display:flex; align-items:center; justify-content:center;
+  transition:transform .1s,opacity .15s;
+}
+.py-btn-danger:active { transform:translateY(1px); opacity:.85; }
+
+
+/* ── Pending info ── */
+.py-pending-info {
+  display:flex; align-items:center; gap:8px;
+  background:rgba(255,152,0,0.10);
+  border:1px solid rgba(255,152,0,0.30);
+  border-radius:10px; padding:10px 14px;
+  font-size:12px; font-weight:600; color:#ffb74d;
+  margin-bottom:20px; width:100%;
+}
+
