@@ -454,6 +454,7 @@ img { display:block; max-width:100%; }
   width: calc(100% - 40px);
   max-width: 353px;
   height: 62px;
+  z-index: 1000;
   background: rgba(20,18,40,0.78);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
