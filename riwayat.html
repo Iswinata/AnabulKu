@@ -748,15 +748,18 @@
       var bksAll = JSON.parse(localStorage.getItem("anabulku_bookings")) || [];
       var anyExpired = false;
       bksAll.forEach(function(b) {
-        if (b.paymentDeadline && b.status === "menunggu" && !b.statusPembayaran) {
-          if (new Date(b.paymentDeadline).getTime() <= now) {
-            releaseSlotFromMitra(b);            /* bebaskan jadwal di mitraKlinik */
-            cancelInNamespace(b);               /* update namespace klinik */
-            b.status = "dibatalkan";
-            b.statusPembayaran = "dibatalkan";
-            b.cancelledReason = "timeout";
-            anyExpired = true;
-          }
+        var spb = (b.statusPembayaran || '').toLowerCase();
+        var expired = b.paymentDeadline &&
+                      (b.status === 'menunggu' || spb === 'menunggu_pembayaran') &&
+                      b.status !== 'dibatalkan' &&
+                      new Date(b.paymentDeadline).getTime() <= now;
+        if (expired) {
+          releaseSlotFromMitra(b);
+          cancelInNamespace(b);
+          b.status = 'dibatalkan';
+          b.statusPembayaran = 'dibatalkan';
+          b.cancelledReason = 'timeout';
+          anyExpired = true;
         }
       });
       if (anyExpired) localStorage.setItem("anabulku_bookings", JSON.stringify(bksAll));
@@ -795,6 +798,12 @@
   }
 
   cancelExpiredBookings();
+
+  /* Polling setiap 30 detik — auto-cancel booking expired tanpa reload */
+  setInterval(function() {
+    cancelExpiredBookings();
+    renderList();
+  }, 30000);
 
   /* ── Load data ── */
   /* Baca pending payment sekali, simpan di variabel module-level agar renderCard bisa akses */
@@ -1177,6 +1186,7 @@
         '</div>'+
         '<button class="pc-close-btn" type="button" onclick="closePayModal()">Tutup</button>';
       document.getElementById('payOverlay').classList.add('open');
+      var nav=document.querySelector('.bottomnav');if(nav)nav.style.display='none';
       return;
     }
 
@@ -1193,6 +1203,7 @@
         '</div>'+
         '<button class="pc-close-btn" type="button" onclick="closePayModal()">Tutup</button>';
       document.getElementById('payOverlay').classList.add('open');
+      var nav=document.querySelector('.bottomnav');if(nav)nav.style.display='none';
       setTimeout(function(){
         var gbtn=document.getElementById('btnGoPayment');
         if(gbtn) gbtn.addEventListener('click',function(){
@@ -1313,12 +1324,17 @@
     document.getElementById('payBody').innerHTML=payHtml+sumHtml+
       '<button class="pc-close-btn" type="button" id="payCloseBtn">Tutup</button>';
     document.getElementById('payOverlay').classList.add('open');
+    var nav=document.querySelector('.bottomnav');if(nav)nav.style.display='none';
     document.getElementById('payCloseBtn').addEventListener('click', closePayModal);
   }
 
 
 
-    function closePayModal() { document.getElementById('payOverlay').classList.remove('open'); }
+    function closePayModal() {
+      document.getElementById('payOverlay').classList.remove('open');
+      var nav = document.querySelector('.bottomnav');
+      if (nav) nav.style.display = '';
+    }
   document.getElementById('payClose').addEventListener('click', closePayModal);
   document.getElementById('payOverlay').addEventListener('click', function(e){ if(e.target===this) closePayModal(); });
 
