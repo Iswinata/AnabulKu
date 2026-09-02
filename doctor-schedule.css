@@ -113,29 +113,87 @@
 
 
 /* ── Booking modal ── */
-.ds-modal-backdrop { position:fixed; inset:0; background:rgba(0,0,0,0.60); z-index:200; display:flex; align-items:flex-end; justify-content:center; font-family:'Poppins',sans-serif; animation:dsBackdropIn .2s ease both; }
+.ds-modal-backdrop {
+  position: fixed; inset: 0; z-index: 200;
+  background: rgba(0,0,0,0.60);
+  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+  font-family: 'Poppins', sans-serif;
+  animation: dsBackdropIn .2s ease both;
+}
 @keyframes dsBackdropIn { from{opacity:0} to{opacity:1} }
-.ds-modal { background:linear-gradient(160deg,#1e1942 0%,#0f0c29 100%); border:1px solid rgba(255,255,255,0.12); border-radius:24px 24px 0 0; width:100%; max-width:480px; max-height:92vh; overflow-y:auto; box-shadow:0 -8px 48px rgba(0,0,0,0.55); animation:dsModalUp .25s ease both; }
-@keyframes dsModalUp { from{transform:translateY(100%)} to{transform:translateY(0)} }
-@media(min-width:480px){ .ds-modal-backdrop{align-items:center;padding:20px} .ds-modal{border-radius:24px;max-height:90vh} }
-.ds-modal-header { display:flex; align-items:center; justify-content:space-between; padding:20px 20px 14px; border-bottom:1px solid rgba(255,255,255,0.08); }
-.ds-modal-title { font-size:16px; font-weight:800; color:#FFEED5; }
-.ds-modal-close { width:30px; height:30px; border-radius:8px; background:rgba(255,255,255,0.08); border:none; color:rgba(255,255,255,0.60); font-size:14px; display:grid; place-items:center; cursor:pointer; }
 
-.ds-modal-body { padding:18px 20px 24px; display:flex; flex-direction:column; gap:14px; }
-.ds-modal-row { display:flex; flex-direction:column; gap:4px; }
-.ds-modal-label { font-size:11px; font-weight:600; color:rgba(255,255,255,0.45); text-transform:uppercase; letter-spacing:0.05em; }
-.ds-modal-value { font-size:13.5px; font-weight:600; color:#fff; }
-.ds-modal-divider { height:1px; background:rgba(255,255,255,0.07); }
-.ds-modal-field { display:flex; flex-direction:column; gap:6px; }
-.ds-modal-field label { font-size:12px; font-weight:600; color:rgba(255,255,255,0.60); }
-.ds-modal-field select, .ds-modal-field input, .ds-modal-field textarea { background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.15); border-radius:10px; color:#fff; font-family:'Poppins',sans-serif; font-size:13px; padding:10px 12px; transition:border-color 0.15s; }
-.ds-modal-field select:focus, .ds-modal-field input:focus, .ds-modal-field textarea:focus { outline:none; border-color:rgba(255,152,0,0.60); }
-.ds-modal-field select option { background:#1e1942; color:#fff; }
-.ds-modal-field textarea { resize:none; min-height:72px; }
-.ds-modal-confirm { width:100%; padding:13px; border-radius:14px; background:linear-gradient(135deg,#FF9800 0%,#FFB74D 100%); border:none; color:#fff; font-size:14px; font-weight:700; font-family:'Poppins',sans-serif; cursor:pointer; box-shadow:0 4px 18px rgba(255,152,0,0.40); transition:opacity 0.15s, transform 0.1s; }
+.ds-modal {
+  background: rgba(15,13,40,0.90);
+  backdrop-filter: blur(32px); -webkit-backdrop-filter: blur(32px);
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 22px;
+  width: 100%; max-width: 380px;
+  max-height: 90dvh; overflow-y: auto;
+  box-shadow: 0 12px 48px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.08);
+  animation: dsModalIn .22s cubic-bezier(.22,.72,0,1) both;
+}
+.ds-modal::-webkit-scrollbar { width: 0; }
+@keyframes dsModalIn { from{opacity:0;transform:scale(.95)} to{opacity:1;transform:scale(1)} }
 
-.ds-modal-confirm:active { transform:scale(0.97); }
+.ds-modal-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 18px 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.04);
+  border-radius: 22px 22px 0 0;
+}
+.ds-modal-title { font-size: 14px; font-weight: 800; color: #fff; }
+.ds-modal-close {
+  width: 28px; height: 28px; border-radius: 8px;
+  background: rgba(255,255,255,0.09); border: 1px solid rgba(255,255,255,0.14);
+  color: rgba(255,255,255,0.65); font-size: 16px;
+  display: grid; place-items: center; cursor: pointer;
+  transition: background .15s;
+}
+.ds-modal-close:hover { background: rgba(255,255,255,0.16); }
+
+.ds-modal-body { padding: 16px 18px 20px; display: flex; flex-direction: column; gap: 12px; }
+
+/* info rows (klinik, dokter, tanggal, jam) */
+.ds-modal-row {
+  display: flex; justify-content: space-between; align-items: baseline; gap: 8px;
+  font-size: 12px;
+}
+.ds-modal-label { color: rgba(255,255,255,0.45); font-weight: 600; white-space: nowrap; }
+.ds-modal-value { font-weight: 700; color: #fff; text-align: right; }
+
+.ds-modal-divider { height: 1px; background: rgba(255,255,255,0.08); margin: 2px 0; }
+
+/* form fields */
+.ds-modal-field { display: flex; flex-direction: column; gap: 5px; }
+.ds-modal-field label { font-size: 11.5px; font-weight: 600; color: rgba(255,255,255,0.55); }
+.ds-modal-field input,
+.ds-modal-field select,
+.ds-modal-field textarea {
+  background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 10px; color: #fff; font-family: 'Poppins', sans-serif;
+  font-size: 13px; padding: 9px 12px; transition: border-color .15s;
+}
+.ds-modal-field input:focus,
+.ds-modal-field select:focus,
+.ds-modal-field textarea:focus { outline: none; border-color: rgba(255,152,0,0.55); }
+.ds-modal-field select option { background: #12102e; color: #fff; }
+.ds-modal-field textarea { resize: none; min-height: 68px; }
+
+/* confirm button */
+.ds-modal-confirm {
+  width: 100%; padding: 12px; margin-top: 2px;
+  border-radius: 12px;
+  background: linear-gradient(135deg,#FF9800,#FFB74D);
+  border: none; color: #fff;
+  font-size: 13px; font-weight: 700; font-family: 'Poppins', sans-serif;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(255,152,0,0.35);
+  transition: opacity .15s, transform .1s;
+}
+.ds-modal-confirm:active { transform: scale(0.97); opacity: .92; }
 
 /* ── Guest modal ── */
 .ds-guest-backdrop { position:fixed; inset:0; background:rgba(10,8,30,0.80); backdrop-filter:blur(6px); display:flex; align-items:flex-end; justify-content:center; z-index:9999; }
