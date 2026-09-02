@@ -332,86 +332,119 @@
     }
     .btn-explore:active { transform: scale(.97); opacity: .92; }
 
-    /* ══ Payment Overlay — simple centered card ══ */
+    /* ══ Payment Overlay — transparent glassmorphism ══ */
     .pay-overlay {
       display: none; position: fixed; inset: 0; z-index: 999;
-      background: rgba(0,0,0,0.72);
-      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
       align-items: center; justify-content: center;
       padding: 20px;
     }
-    .pay-overlay.open { display: flex; animation: pmFadeIn .2s ease forwards; }
-    @keyframes pmFadeIn { from{opacity:0;transform:scale(.96)} to{opacity:1;transform:scale(1)} }
+    .pay-overlay.open { display: flex; animation: pmFadeIn .22s ease forwards; }
+    @keyframes pmFadeIn { from{opacity:0;transform:scale(.95)} to{opacity:1;transform:scale(1)} }
 
     .pay-card {
-      width: 100%; max-width: 340px;
-      background: rgba(20,18,50,0.97);
-      backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-      border: 1px solid rgba(255,255,255,0.14);
-      border-radius: 22px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.60);
+      width: 100%; max-width: 320px;
+      background: rgba(255,255,255,0.07);
+      backdrop-filter: blur(32px); -webkit-backdrop-filter: blur(32px);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 24px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.12);
       overflow: hidden;
     }
 
     /* top bar */
     .pay-card-top {
       display: flex; align-items: center; justify-content: space-between;
-      padding: 14px 16px 12px;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
+      padding: 14px 16px 13px;
+      border-bottom: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.05);
     }
-    .pay-card-title { font-size: 14px; font-weight: 700; color: #fff; }
+    .pay-card-title { font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.90); letter-spacing: .01em; }
     .pay-card-close {
-      width: 28px; height: 28px; border-radius: 8px;
-      background: rgba(255,255,255,0.09); border: 1px solid rgba(255,255,255,0.14);
-      display: grid; place-items: center; color: rgba(255,255,255,0.7);
+      width: 26px; height: 26px; border-radius: 7px;
+      background: rgba(255,255,255,0.10); border: 1px solid rgba(255,255,255,0.16);
+      display: grid; place-items: center; color: rgba(255,255,255,0.65);
       transition: background .15s;
     }
-    .pay-card-close:active { background: rgba(255,255,255,0.20); }
-    .pay-card-close svg { width: 13px; height: 13px; }
+    .pay-card-close:active { background: rgba(255,255,255,0.22); }
+    .pay-card-close svg { width: 12px; height: 12px; }
 
     /* body */
     .pay-card-body {
-      padding: 18px 18px 20px;
+      padding: 20px 18px 20px;
       display: flex; flex-direction: column; align-items: center; gap: 14px;
     }
 
-    /* QRIS */
+    /* QRIS frame */
     .pc-qris-frame {
-      width: 200px; height: 200px;
-      background: #fff; border-radius: 16px;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.35), 0 0 40px rgba(255,152,0,0.18);
+      width: 210px; height: 210px;
+      background: #fff; border-radius: 18px;
+      box-shadow: 0 4px 32px rgba(0,0,0,0.30), 0 0 48px rgba(255,152,0,0.15);
       display: grid; place-items: center; overflow: hidden; flex-shrink: 0;
+      position: relative;
     }
-    .pc-qris-frame img { width: 180px; height: 180px; object-fit: contain; display: block; }
+    .pc-qris-frame img { width: 190px; height: 190px; object-fit: contain; display: block; }
+
+    /* download btn di atas frame */
+    .pc-qris-dl {
+      position: absolute; bottom: 8px; right: 8px;
+      width: 28px; height: 28px; border-radius: 8px;
+      background: rgba(255,152,0,0.90); border: none;
+      display: grid; place-items: center; cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+      transition: transform .12s, background .15s;
+    }
+    .pc-qris-dl:active { transform: scale(.92); background: #e65100; }
+    .pc-qris-dl svg { width: 14px; height: 14px; color: #fff; }
+
+    /* download row bawah frame */
+    .pc-dl-row {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 11px; color: rgba(255,255,255,0.50);
+    }
+    .pc-dl-btn {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 11px; font-weight: 600; color: #ffbd5d;
+      background: rgba(255,152,0,0.12); border: 1px solid rgba(255,152,0,0.30);
+      border-radius: 8px; padding: 5px 12px; cursor: pointer;
+      transition: background .15s, transform .1s;
+    }
+    .pc-dl-btn svg { width: 11px; height: 11px; flex-shrink: 0; }
+    .pc-dl-btn:active { transform: scale(.96); background: rgba(255,152,0,0.22); }
+
     .pc-qris-amount {
-      font-size: 20px; font-weight: 800; color: #fff;
-      background: rgba(255,152,0,0.18); border: 1px solid rgba(255,152,0,0.40);
-      border-radius: 10px; padding: 6px 18px;
+      font-size: 19px; font-weight: 800; color: #fff;
+      background: rgba(255,255,255,0.10); border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 10px; padding: 6px 20px;
+      letter-spacing: .01em;
     }
-    .pc-qris-frame {
+
+    /* Badge status */
     .pc-badge {
       font-size: 10px; font-weight: 700; padding: 3px 10px;
       border-radius: 99px; border: 1px solid; align-self: center;
     }
-    .pc-badge.menunggu { background: rgba(251,191,36,0.15); color: #fcd34d; border-color: rgba(251,191,36,0.40); }
-    .pc-badge.lunas    { background: rgba(34,197,94,0.15);  color: #4ade80; border-color: rgba(34,197,94,0.40); }
-    .pc-badge.belum    { background: rgba(239,68,68,0.15);  color: #fca5a5; border-color: rgba(239,68,68,0.40); }
+    .pc-badge.menunggu { background: rgba(251,191,36,0.15); color: #fcd34d; border-color: rgba(251,191,36,0.35); }
+    .pc-badge.lunas    { background: rgba(34,197,94,0.15);  color: #4ade80; border-color: rgba(34,197,94,0.35); }
+    .pc-badge.belum    { background: rgba(239,68,68,0.15);  color: #fca5a5; border-color: rgba(239,68,68,0.35); }
 
-    /* cash / non-QRIS */
+    /* cash / non-QRIS info rows */
     .pc-info-row {
       width: 100%; display: flex; align-items: flex-start; gap: 10px;
-      font-size: 12px; color: rgba(255,255,255,0.70); line-height: 1.5;
-      padding: 10px 12px;
-      background: rgba(255,255,255,0.06); border-radius: 10px;
+      font-size: 12px; color: rgba(255,255,255,0.72); line-height: 1.5;
+      padding: 9px 12px;
+      background: rgba(255,255,255,0.07); border-radius: 10px;
       border: 1px solid rgba(255,255,255,0.10);
     }
-    .pc-info-ico { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+    .pc-info-ico { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
 
     /* summary rows */
     .pc-summary { width: 100%; display: flex; flex-direction: column; gap: 7px; }
     .pc-sum-row {
       display: flex; justify-content: space-between; align-items: baseline;
       font-size: 11.5px; gap: 8px;
+    }
     }
     .pc-sum-row span:first-child { color: rgba(255,255,255,0.45); }
     .pc-sum-row span:last-child  { font-weight: 600; color: #fff; text-align: right; }
@@ -1239,9 +1272,23 @@
       payHtml=
         '<div class="pc-badge '+badgeCls+'">'+badgeTxt+'</div>'+
         '<div class="pc-qris-frame">'+
-          '<img src="Qris.png" alt="QR Code Pembayaran">'+
+          '<img src="Qris.png" alt="QR Code Pembayaran" id="qrisImg">'+
+          '<button class="pc-qris-dl" type="button" title="Download QR" onclick="(function(){'+
+            'var a=document.createElement(\'a\');'+
+            'a.href=\'Qris.png\';'+
+            'a.download=\'QRIS-Pembayaran.png\';'+
+            'a.click();'+
+          '})()">'+
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">'+
+              '<path d="M12 15V3"/><path d="M7 10l5 5 5-5"/><rect x="3" y="17" width="18" height="4" rx="1"/>'+
+            '</svg>'+
+          '</button>'+
         '</div>'+
-        (hargaTxt?'<div class="pc-qris-amount">'+hargaTxt+'</div>':'');
+        (hargaTxt?'<div class="pc-qris-amount">'+hargaTxt+'</div>':'')+
+        '<button class="pc-dl-btn" type="button" onclick="(function(){var a=document.createElement(\'a\');a.href=\'Qris.png\';a.download=\'QRIS-Pembayaran.png\';a.click();})()">'+
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3"/><path d="M7 10l5 5 5-5"/><rect x="3" y="17" width="18" height="4" rx="1"/></svg>'+
+          'Simpan QR Code'+
+        '</button>';
 
     } else if(metode==='cash'){
       payHtml=
