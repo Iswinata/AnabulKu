@@ -24,7 +24,7 @@
 
 .py-scroll {
   flex:1; min-height:0; overflow-y:auto; -webkit-overflow-scrolling:touch;
-  padding: 14px 0 24px;
+  padding: 4px 0 24px;
   display:flex; flex-direction:column; gap:14px;
 }
 
@@ -68,7 +68,7 @@
 .py-countdown {
   display: inline-flex; align-items: center; gap: 6px;
   background: rgba(255,152,0,0.10); border: 1px solid rgba(255,152,0,0.28);
-  border-radius: 20px; padding: 5px 12px 5px 10px;
+  border-radius: 20px; padding: 5px 12px;
   width: fit-content; transition: background .3s, border-color .3s;
 }
 .py-countdown.is-urgent { background:rgba(239,68,68,0.12); border-color:rgba(239,68,68,0.4); }
