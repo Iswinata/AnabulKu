@@ -19,7 +19,10 @@
       <button class="py-btn-back" type="button" aria-label="Kembali" id="pyBtnBack">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
       </button>
-      <span class="py-topbar-title">Konfirmasi Pembayaran</span>
+      <span class="py-topbar-title-wrap">
+        <span class="py-topbar-title">Konfirmasi Pembayaran</span>
+        <span class="py-topbar-sub">Lakukan pembayaran via QRIS yang tersedia</span>
+      </span>
       <div style="width:38px"></div>
     </header>
 
@@ -53,11 +56,8 @@
 
       <!-- Countdown -->
       <div class="py-countdown" id="pyCountdown">
-        <div class="py-countdown-icon">⏱️</div>
-        <div class="py-countdown-info">
-          <span class="py-countdown-label">Selesaikan pembayaran dalam</span>
-          <span class="py-countdown-timer" id="pyTimer">05:00</span>
-        </div>
+        <span class="py-countdown-label">Selesaikan dalam</span>
+        <span class="py-countdown-timer" id="pyTimer">05:00</span>
       </div>
 
       <!-- QRIS info card -->

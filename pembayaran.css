@@ -5,12 +5,10 @@
 
 .py-topbar {
   flex-shrink:0; display:flex; align-items:center; justify-content:space-between;
-  /* margin negatif agar topbar melebar keluar padding .app (18px kiri-kanan) */
   margin: -20px -18px 0;
   padding: 18px 18px 14px;
-  background:rgba(255,255,255,0.04);
-  backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px);
-  border-bottom:1px solid rgba(255,255,255,0.10);
+  background: transparent;
+  border-bottom: none;
 }
 .py-btn-back {
   display:grid; place-items:center; width:38px; height:38px;
@@ -19,7 +17,9 @@
 }
 .py-btn-back:active { background:rgba(255,255,255,0.20); }
 .py-btn-back svg { width:18px; height:18px; }
+.py-topbar-title-wrap { display:flex; flex-direction:column; align-items:center; gap:2px; }
 .py-topbar-title { font-size:15px; font-weight:700; color:#f1f5f9; }
+.py-topbar-sub { font-size:11px; color:rgba(255,255,255,0.45); font-weight:500; }
 
 .py-scroll {
   flex:1; min-height:0; overflow-y:auto; -webkit-overflow-scrolling:touch;
@@ -36,7 +36,7 @@
   border-radius:18px; overflow:hidden;
   backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px);
 }
-.py-order-header { background:linear-gradient(90deg,rgba(255,152,0,0.9) 0%,rgba(255,188,89,0.9) 100%); padding:14px 18px; }
+.py-order-header { padding:14px 18px; border-bottom:1px solid rgba(255,255,255,0.08); }
 .py-order-klinik { font-size:13px; font-weight:800; color:#fff; margin-bottom:2px; }
 .py-order-dokter { font-size:11px; color:rgba(255,255,255,0.85); }
 .py-order-body { padding:4px 0 14px; }
@@ -51,6 +51,8 @@
 .py-info-cell { display:flex; flex-direction:column; padding:7px 0; }
 .py-info-cell .py-info-label { font-size:10px; color:rgba(255,255,255,0.45); font-weight:500; margin-bottom:2px; }
 .py-info-cell .py-info-val { font-size:13px; font-weight:600; color:#f1f5f9; }
+/* hewan & biaya (kolom kanan) rata kanan */
+.py-info-cell:nth-child(even) { align-items:flex-end; text-align:right; }
 
 /* QRIS info card */
 .py-qris-info-card { display:flex; align-items:center; gap:12px; background:rgba(255,152,0,0.08); border:1px solid rgba(255,152,0,0.25); border-radius:14px; padding:12px 16px; }
@@ -64,15 +66,14 @@
 .py-total-amount { font-size:18px; font-weight:800; color:#ff9800; }
 
 .py-countdown {
-  display:flex; align-items:center; gap:12px;
-  background:rgba(255,152,0,0.10); border:1px solid rgba(255,152,0,0.30);
-  border-radius:14px; padding:12px 16px; transition:background .3s,border-color .3s;
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(255,152,0,0.10); border: 1px solid rgba(255,152,0,0.28);
+  border-radius: 20px; padding: 5px 12px 5px 10px;
+  width: fit-content; transition: background .3s, border-color .3s;
 }
 .py-countdown.is-urgent { background:rgba(239,68,68,0.12); border-color:rgba(239,68,68,0.4); }
-.py-countdown-icon { font-size:20px; flex-shrink:0; }
-.py-countdown-info { display:flex; flex-direction:column; flex:1; }
-.py-countdown-label { font-size:10px; color:rgba(255,255,255,0.5); font-weight:500; }
-.py-countdown-timer { font-size:22px; font-weight:800; color:#ff9800; letter-spacing:.04em; font-variant-numeric:tabular-nums; }
+.py-countdown-label { font-size:11px; color:rgba(255,255,255,0.50); font-weight:500; }
+.py-countdown-timer { font-size:13px; font-weight:800; color:#ff9800; letter-spacing:.04em; font-variant-numeric:tabular-nums; }
 .py-countdown.is-urgent .py-countdown-timer { color:#f87171; animation:py-pulse .7s ease-in-out infinite alternate; }
 @keyframes py-pulse { from{opacity:1} to{opacity:.5} }
 
