@@ -283,6 +283,7 @@ img { display:block; max-width:100%; }
 .clinic-meta { display:flex; align-items:center; gap:10px; }
 .clinic-chip { display:inline-flex; align-items:center; gap:3px; font-size:10.5px; font-weight:600; color:rgba(255,255,255,0.75); }
 .clinic-chip svg, .clinic-ico { width:12px; height:12px; flex-shrink:0; }
+.clinic-chip--dist .clinic-ico { width:10px; height:10px; }
 .clinic-chip--rating .clinic-val { color:#ffbd5d; }
 .clinic-val { line-height:1; }
 
@@ -299,11 +300,11 @@ img { display:block; max-width:100%; }
 
 /* Wrapper: card + tombol favorit */
 .clinic-card-wrap { position:relative; }
-.clinic-card-wrap .clinic-card { padding-top:42px; }
+.clinic-card-wrap .clinic-card { padding-right:52px; }
 
 .clinic-fav-btn {
-  position:absolute; top:10px; right:10px; transform:none;
-  width:30px; height:30px; flex-shrink:0;
+  position:absolute; top:50%; right:12px; transform:translateY(-50%);
+  width:34px; height:34px; flex-shrink:0;
   border-radius:9999px;
   background: rgba(255,255,255,0.08);
   border:1px solid rgba(255,255,255,0.15);
