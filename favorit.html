@@ -75,7 +75,7 @@
 
     .fav-card {
       display: flex; align-items: center; gap: 12px;
-      padding: 13px 14px;
+      padding: 10px 14px;
       background: rgba(255,255,255,0.10);
       backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
       border: 1px solid rgba(255,255,255,0.16);
@@ -89,7 +89,7 @@
     .fav-card:active { transform: scale(.98); }
 
     .fav-thumb {
-      width: 58px; height: 58px; border-radius: 14px;
+      width: 90px; height: 90px; border-radius: 14px;
       object-fit: cover; flex-shrink: 0;
       background: rgba(255,255,255,0.08);
       border: 1px solid rgba(255,255,255,0.15);
@@ -161,12 +161,12 @@
     .fav-card:hover { background: rgba(255,255,255,0.15); border-color: rgba(255,152,0,0.35); }
     .fav-card:active { transform: scale(.98); }
     .fav-photo {
-      flex-shrink: 0; width: 64px; height: 64px; border-radius: 12px;
+      flex-shrink: 0; width: 90px; height: 90px; border-radius: 14px;
       background: rgba(255,152,0,0.20);
       background-size: cover; background-position: center;
       border: 1px solid rgba(255,152,0,0.35);
       display: flex; align-items: center; justify-content: center;
-      color: #ffbd5d; font-size: 24px;
+      color: #ffbd5d; font-size: 28px;
     }
     .fav-info { flex: 1; min-width: 0; }
     .fav-name {
@@ -327,7 +327,7 @@
     return rx.test(hewan) || rx.test(tipe) || rx.test(c.namaKlinik || '');
   }
   function cardHtml(c, idx) {
-    var href = 'clinic-detail.html?id=' + idx;
+    var href = 'doctor-schedule.html?id=' + idx;
     var photoStyle = '', photoIcon = '<span style="font-size:26px" aria-hidden="true">🏥</span>';
     var _foto = c.fotoDataUrl || c.logoDataUrl || '';
     if (_foto) {

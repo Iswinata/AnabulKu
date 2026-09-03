@@ -225,6 +225,7 @@ img { display:block; max-width:100%; }
 /* Foto nempel bawah kotak */
 .cat-ico        { width:80%; height:80%; object-fit:contain; display:block; align-self:flex-end; }
 .cat-ico-turtle { width:82%; height:82%; }
+.cat--dog .cat-ico { width:88%; height:88%; margin-bottom:-4px; }
 
 /* Label di bawah kotak */
 .cat-label {
@@ -238,17 +239,19 @@ img { display:block; max-width:100%; }
 .clinic-list { display:flex; flex-direction:column; gap:12px; }
 
 .clinic-card {
-  display:flex; align-items:center; gap:12px;
-  padding:13px 14px;
-  background: var(--gb-md);
+  position:relative; display:flex; align-items:center; gap:12px;
+  padding:12px;
+  background: rgba(255,255,255,0.10);
   backdrop-filter: var(--blur-sm); -webkit-backdrop-filter: var(--blur-sm);
-  border:1px solid var(--gbd);
+  border:1px solid rgba(255,255,255,0.16);
   border-radius:18px;
   cursor:pointer;
   transition: background 0.15s, transform 0.12s, border-color 0.15s;
-  box-shadow: var(--sh-sm);
+  box-shadow: 0 3px 14px rgba(0,0,0,0.18);
+  overflow:hidden;
 }
 
+.clinic-card:hover { background: rgba(255,255,255,0.15); border-color: rgba(255,152,0,0.35); }
 .clinic-card:active { transform: scale(0.98); }
 
 /* Empty state (belum ada klinik/grooming) */
@@ -269,23 +272,31 @@ img { display:block; max-width:100%; }
 
 /* Foto klinik dalam card */
 .clinic-photo {
-  width:60px; height:60px; flex-shrink:0;
+  flex-shrink:0; width:90px; height:90px;
   border-radius:14px;
-  background-color: rgba(255,255,255,0.08);
+  background-color: rgba(255,152,0,0.20);
   background-size: cover; background-position: center; background-repeat: no-repeat;
-  border:1px solid rgba(255,255,255,0.15);
+  border:1px solid rgba(255,152,0,0.35);
+  display:flex; align-items:center; justify-content:center;
+  font-size:28px; color:#ffbd5d;
 }
 
 .clinic-body { flex:1; min-width:0; display:flex; flex-direction:column; }
-.clinic-name { font-size:13.5px; font-weight:700; color:var(--white); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:4px; }
-.clinic-addr { font-size:11px; color:rgba(255,255,255,0.55); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:6px; }
+.clinic-name { font-size:13px; font-weight:700; color:var(--white); line-height:1.3; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.clinic-addr { font-size:11px; color:rgba(255,255,255,0.50); line-height:1.4; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 
-.clinic-meta { display:flex; align-items:center; gap:10px; }
-.clinic-chip { display:inline-flex; align-items:center; gap:3px; font-size:10.5px; font-weight:600; color:rgba(255,255,255,0.75); }
-.clinic-chip svg, .clinic-ico { width:12px; height:12px; flex-shrink:0; }
-.clinic-chip--dist .clinic-ico { width:10px; height:10px; }
-.clinic-chip--rating .clinic-val { color:#ffbd5d; }
+.clinic-chips { display:flex; gap:6px; margin-top:6px; flex-wrap:wrap; }
+.clinic-chip { display:inline-flex; align-items:center; gap:3px; padding:3px 8px; border-radius:99px; font-size:10px; font-weight:600; background:rgba(255,152,0,0.18); border:1px solid rgba(255,152,0,0.35); color:#ffbd5d; }
+.clinic-chip svg, .clinic-ico { width:10px; height:10px; flex-shrink:0; }
 .clinic-val { line-height:1; }
+
+/* Tombol Lihat Detail dalam card klinik */
+.clinic-detail-btn {
+  display:inline-flex; align-items:center; gap:4px;
+  margin-top:7px; font-size:11px; font-weight:600;
+  color:#ffbd5d; text-decoration:none;
+}
+.clinic-detail-btn svg { width:12px; height:12px; }
 
 /* Texture overlay (opsional dekorasi) */
 .clinic-texture { display:none; }
@@ -300,17 +311,15 @@ img { display:block; max-width:100%; }
 
 /* Wrapper: card + tombol favorit */
 .clinic-card-wrap { position:relative; }
-.clinic-card-wrap .clinic-card { padding-right:52px; }
 
 .clinic-fav-btn {
-  position:absolute; top:50%; right:12px; transform:translateY(-50%);
-  width:34px; height:34px; flex-shrink:0;
-  border-radius:9999px;
+  flex-shrink:0; display:grid; place-items:center;
+  width:34px; height:34px; border-radius:50%;
   background: rgba(255,255,255,0.08);
   border:1px solid rgba(255,255,255,0.15);
-  display:grid; place-items:center;
   cursor:pointer;
   transition: background 0.15s, border-color 0.15s;
+  align-self:flex-start; margin-top:2px;
 }
 .clinic-fav-btn svg {
   width:17px; height:17px;
@@ -359,6 +368,24 @@ img { display:block; max-width:100%; }
 
 
 .g-card:active { transform: scale(0.97); }
+
+/* Glow tipis saat card grooming dipilih (is-active) */
+.g-card.is-active {
+  border-color: rgba(255,152,0,0.70);
+  box-shadow:
+    0 4px 20px rgba(0,0,0,0.22),
+    inset 0 1px 0 rgba(255,255,255,0.12),
+    0 0 14px 3px rgba(255,152,0,0.28),
+    0 0 32px 6px rgba(255,189,93,0.12);
+}
+.g-card--dog.is-active {
+  border-color: rgba(99,102,241,0.75);
+  box-shadow:
+    0 4px 20px rgba(0,0,0,0.22),
+    inset 0 1px 0 rgba(255,255,255,0.12),
+    0 0 14px 3px rgba(99,102,241,0.30),
+    0 0 32px 6px rgba(59,130,246,0.14);
+}
 
 /* Konten teks di kiri */
 .g-card-body {

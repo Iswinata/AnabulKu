@@ -149,19 +149,17 @@
           '<stop offset="100%" stop-color="#C62828"/>' +
         '</linearGradient></defs>' +
       '</svg>' +
-      '<div class="clinic-card-wrap">' +
-        '<a class="clinic-card" href="' + esc(href) + '">' +
-          '<span class="clinic-texture" aria-hidden="true"></span>' +
-          '<span class="clinic-photo"' + photoStyle + ' aria-hidden="true"></span>' +
-          '<span class="clinic-body">' +
-            '<span class="clinic-name">' + esc(c.namaKlinik || "Klinik Hewan") + '</span>' +
-            (alamat ? '<span class="clinic-addr">' + alamat + '</span>' : '') +
-            '<span class="clinic-meta">' +
-              ratingChip +
-              (distChip ? distChip : '') +
-            '</span>' +
+      '<div class="clinic-card" onclick="location.href=\'' + esc(href) + '\'" role="link" tabindex="0">' +
+        '<span class="clinic-photo"' + photoStyle + ' aria-hidden="true"></span>' +
+        '<span class="clinic-body">' +
+          '<span class="clinic-name">' + esc(c.namaKlinik || "Klinik Hewan") + '</span>' +
+          (alamat ? '<span class="clinic-addr">' + alamat + '</span>' : '') +
+          '<span class="clinic-chips">' +
+            ratingChip +
+            (distChip ? distChip : '') +
           '</span>' +
-        '</a>' +
+          '<a href="' + esc(href) + '" class="clinic-detail-btn" onclick="event.stopPropagation()">Lihat Detail <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg></a>' +
+        '</span>' +
         '<button class="clinic-fav-btn' + (isFav ? ' is-fav' : '') + '" type="button" data-fav-idx="' + idx + '" aria-label="' + favLabel + '" aria-pressed="' + isFav + '">' +
           '<svg viewBox="0 0 24 24" fill="' + favFill + '" stroke="' + favStroke + '" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
             '<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/>' +
