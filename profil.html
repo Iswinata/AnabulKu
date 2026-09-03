@@ -146,6 +146,15 @@
       border: 1px solid rgba(255,255,255,0.18);
     }
 
+    /* ===== App Version Info ===== */
+    .app-version {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 3px; padding: 24px 16px 8px;
+    }
+    .app-version-name { font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.55); }
+    .app-version-num  { font-size: 11.5px; font-weight: 600; color: rgba(255,255,255,0.30); }
+    .app-version-pow  { font-size: 10px; font-weight: 400; color: rgba(255,255,255,0.22); }
+
   </style>
 </head>
 <body>
@@ -161,11 +170,16 @@
         <div class="guest-avatar">
           <img src="kuguest.png" alt="Foto profil tamu" />
         </div>
-        <div class="guest-title">Halo, Tamu! 👋</div>
+        <div class="guest-title">Halo, Meng! 👋</div>
         <div class="guest-desc">Masuk atau daftar untuk menikmati fitur lengkap AnabulKu — booking, favorit, dan riwayat perawatan anabulmu.</div>
         <div class="guest-actions">
           <button class="guest-btn guest-btn--login" type="button" onclick="location.href='login.html'">Masuk</button>
           <button class="guest-btn guest-btn--register" type="button" onclick="location.href='register.html'">Daftar Akun Baru</button>
+        </div>
+        <div class="app-version">
+          <span class="app-version-name">Vetiloka</span>
+          <span class="app-version-num">versi 1.0</span>
+          <span class="app-version-pow">Powered by Appiloka 2020</span>
         </div>
       </div>
     </div>
@@ -206,6 +220,11 @@
           <div class="mi-body"><div class="mi-title">Keluar dari Akun</div></div>
           <div class="mi-arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></div>
         </button>
+      </div>
+      <div class="app-version">
+        <span class="app-version-name">Vetiloka</span>
+        <span class="app-version-num">versi 1.0</span>
+        <span class="app-version-pow">Powered by Appiloka 2020</span>
       </div>
     </div>
 
